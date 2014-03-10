@@ -47,6 +47,8 @@ namespace Specland {
 
         private static int craftingAreaY = (int)(11 * gridSize);
 
+        public ItemStack currentItem;
+
         public Inventory(){
             for (int i = 0; i < items.Length; i++) {
                 items[i] = new ItemStack(Item.ItemEmpty);
@@ -157,7 +159,7 @@ namespace Specland {
                 items[selectedSlot].draw(game, gameTime, r, (mouseTileDistanceFromPlayer <= items[selectedSlot].getItem().reach) ? Color.White : new Color(.1f, .1f, .1f, .1f));
             }
 
-            ItemStack currentItem = cursorItem.isEmpty() ? items[selectedSlot] : cursorItem;
+            currentItem = cursorItem.isEmpty() ? items[selectedSlot] : cursorItem;
 
             if ((mouseTileDistanceFromPlayer <= currentItem.getItem().reach)) {
                 currentItem.getItem().drawHover(game, mouseTileX, mouseTileY, currentItem);
@@ -376,15 +378,12 @@ namespace Specland {
             }else if (!(mouseItemSlot == -1 && mouseCraftSlot == -1)) {
                 if (mouseItemSlot == -1 && mouseCraftSlot == craftingScroll) {
                     if (leftClick) {
-                        game.console.println("Try");
                         if (cursorItem.sameItem(valaidRecipes[mouseCraftSlot].result)) {
-                            game.console.println("Same Item");
                             if (cursorItem.getCount() + valaidRecipes[mouseCraftSlot].result.getCount() <= cursorItem.getItem().maxStack) {
                                 cursorItem.setCount(cursorItem.getCount() + valaidRecipes[mouseCraftSlot].result.getCount());
                                 removeItemStacks(0, 49, valaidRecipes[mouseCraftSlot].ingredients);
                             }
                         } else if (cursorItem.isEmpty()) {
-                            game.console.println("Empty");
                             cursorItem = valaidRecipes[mouseCraftSlot].result.clone();
                             removeItemStacks(0, 49, valaidRecipes[mouseCraftSlot].ingredients);
                         }

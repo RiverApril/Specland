@@ -53,6 +53,7 @@ namespace Specland {
         public static string saveLocation;
         public static string saveExtention = "world";
 
+
         public Game() {
             instance = this;
             graphicsDeviceManager = new GraphicsDeviceManager(this);
@@ -181,7 +182,7 @@ namespace Specland {
             }
             drawMessage = "";
 
-            console.draw(this);
+            console.draw(this, gameTime);
 
             spriteBatch.End();
             base.Draw(gameTime);

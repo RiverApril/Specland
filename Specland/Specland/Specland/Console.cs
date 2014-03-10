@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
 namespace Specland {
-    public class Console : IStringPrinter{
+    public class Console : Gui, IStringPrinter{
 
         public List<String> lines = new List<string>();
         public List<String> previousInputs = new List<string>();
@@ -45,7 +45,7 @@ namespace Specland {
                         Command c = Command.getCommand(name);
                         try {
                             c.processCommand(this, optionList);
-                        } catch (InvalidNumberOfArgumentsException e) {
+                        } catch (InvalidNumberOfArgumentsException) {
                             println("Propper Usage: " + c.getUsage());
                         } catch (NoSuchItemException e) {
                             println("No such item: " + e.s);
@@ -114,7 +114,7 @@ namespace Specland {
             }
         }
 
-        public void draw(Game game) {
+        public override void draw(Game game, GameTime gameTime) {
 
             Color color = new Color(textFade, textFade, textFade, textFade);
 

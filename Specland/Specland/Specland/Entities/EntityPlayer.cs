@@ -119,6 +119,10 @@ namespace Specland {
         public override void draw(Game game, World world) {
             byte a = (byte)MathHelper.Clamp(world.getLight((int)(position.X + (size.X / 2)) / World.tileSizeInPixels, (int)(position.Y + (size.Y / 2)) / World.tileSizeInPixels), 0, 255);
             game.spriteBatch.Draw(Entity.Texture_Entity_Player, drawBounds, new Rectangle(0, 0, 16, 24), new Color(a, a, a));
+
+            if (game.inventory.currentItem != null) {
+                game.inventory.currentItem.getItem().drawOverPlayer(game, game.inventory.currentItem, facingRight, Vector2.Zero, 0, position);
+            }
         }
 
         public override void beforeRemoval(Game game, World world) {

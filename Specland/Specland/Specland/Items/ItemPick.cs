@@ -5,7 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 
 namespace Specland {
-    public class ItemPick : Item{
+    public class ItemPick : ItemSwingable {
 
         public int power = 1;
         public int delay = 1;
@@ -18,10 +18,12 @@ namespace Specland {
         }
 
         public override ItemStack leftClick(Game game, ItemStack stack, int xTile, int yTile, int distance) {
+            stack = base.leftClick(game, stack, xTile, yTile, distance);
             return mine(game, stack, xTile, yTile, distance, false);
         }
 
         public override ItemStack rightClick(Game game, ItemStack stack, int xTile, int yTile, int distance) {
+            stack = base.rightClick(game, stack, xTile, yTile, distance);
             return mine(game, stack, xTile, yTile, distance, true);
         }
 

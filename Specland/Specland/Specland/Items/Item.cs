@@ -25,7 +25,7 @@ namespace Specland {
         public int maxStack = 1;
         public int renderType;
 
-        public Point textureArea;
+        public TextureInfo textureInfo;
         public int reach = World.tileSizeInPixels * 6;
 
         public Item(int index, string name, int renderType, int textureX, int textureY) {
@@ -33,7 +33,7 @@ namespace Specland {
             this.index = index;
             this.name = name;
             this.renderType = renderType;
-            this.textureArea = new Point(textureX, textureY);
+            this.textureInfo = new TextureInfo(new Rectangle(textureX * 16, textureY * 16, 16, 16), true);
         }
 
         public Item setMaxStack(int q) {
@@ -44,12 +44,8 @@ namespace Specland {
 
         public virtual void drawAsItem(Game game, GameTime gameTime, Rectangle r, int count, int data, Color color) {
             if(renderType == RenderTypeNormal){
-                game.spriteBatch.Draw(ItemSheet, r, getRect(), color);
+                game.spriteBatch.Draw(ItemSheet, r, textureInfo.rectangle, color);
             }
-        }
-
-        private Rectangle getRect() {
-            return new Rectangle(textureArea.X * 16, textureArea.Y * 16, 16, 16);
         }
 
         public virtual ItemStack leftClick(Game game, ItemStack stack, int xTile, int yTile, int distance) {
@@ -65,6 +61,10 @@ namespace Specland {
         }
 
         public virtual void drawHover(Game game, int mouseTileX, int mouseTileY, ItemStack currentItem) {
+            
+        }
+
+        public virtual void drawOverPlayer(Game game, ItemStack currentItem, bool facingRight, Vector2 origin, float rotation, Vector2 position) {
             
         }
     }
