@@ -11,7 +11,8 @@ namespace Specland {
         public int delay = 1;
         private int t = 0;
 
-        public ItemPick(int index, string name, int renderType, int textureX, int textureY, int power, int delay, int reach) : base(index, name, renderType, textureX, textureY) {
+        public ItemPick(int index, string name, int renderType, Rectangle sourceRectangle, int power, int delay, int reach)
+            : base(index, name, renderType, sourceRectangle, Math.Max(delay, 5)) {
             this.power = power;
             this.delay = delay;
             this.reach = reach;

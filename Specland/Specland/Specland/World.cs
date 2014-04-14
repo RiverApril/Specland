@@ -60,7 +60,7 @@ namespace Specland {
 
         Rectangle dr = new Rectangle(0, 0, tileSizeInPixels, tileSizeInPixels);
 
-        private Color[] grayColors = new Color[256];
+        public static Color[] grayColors = new Color[256];
 
         public World(Point size, string name) {
             this.sizeInTiles = size;
@@ -125,7 +125,11 @@ namespace Specland {
         private void calculateLiquidFrame(Game game, int x, int y) {
             if (textureLiquidInfo != null) {
                 if (inWorld(x, y)) {
-                    textureLiquidInfo[x, y] = getLiquidTextureInfo(x, y);
+                    if (getLiquid(x, y - 1) > 0) {
+                        textureLiquidInfo[x, y] = getLiquidTextureInfoVertical(x, y);
+                    } else {
+                        textureLiquidInfo[x, y] = getLiquidTextureInfoHorizontal(x, y);
+                    }
                 }
             }
         }
@@ -137,9 +141,14 @@ namespace Specland {
             return 0;
         }
 
-        private TextureInfo getLiquidTextureInfo(int x, int y) {
-            int a = (int)Math.Ceiling(MathHelper.Clamp(LiquidMatrix[x, y], 0, 100) / (100.0f/8.0f));
-            return new TextureInfo(/*Tile.TextureLiquidWater,*/ new Rectangle(((a%3) * 8), (64)+((a/3) * 8), 8, 8), true);
+        private TextureInfo getLiquidTextureInfoVertical(int x, int y) {
+            int a = (int)(MathHelper.Clamp((float)Math.Ceiling(LiquidMatrix[x, y] * (1.0f / 8.0f)), 0, 8));
+            return new TextureInfo(/*Tile.TextureLiquidWater,*/ new Rectangle((32) + ((a % 3) * 8), (64) + ((a / 3) * 8), 8, 8), true);
+        }
+
+        private TextureInfo getLiquidTextureInfoHorizontal(int x, int y) {
+            int a = (int)(MathHelper.Clamp((float)Math.Ceiling(LiquidMatrix[x, y] * (1.0f / 8.0f)), 0, 8));
+            return new TextureInfo(/*Tile.TextureLiquidWater,*/ new Rectangle(((a % 3) * 8), (64) + ((a / 3) * 8), 8, 8), true);
         }
 
         public Tile getTileObject(int x, int y, bool isWall) {
@@ -312,6 +321,40 @@ namespace Specland {
 
             //TempLiquidMatrix = (int[,])LiquidMatrix.Clone();
 
+            TileUpdates();
+
+            while (EntityRemovalList.Count()>0) {
+                EntityList.Remove(EntityRemovalList[0]);
+                EntityRemovalList.RemoveAt(0);
+            }
+
+            while (EntityAddingList.Count() > 0) {
+                EntityList.Add(EntityAddingList[0]);
+                EntityAddingList.RemoveAt(0);
+            }
+
+
+            if (time > 5000 && time < 8000) {
+                skyLightBrightness = (int)(((time - 5000) / 3000.0) * 300);
+            }
+
+            if (time > 16000 && time < 19000) {
+                skyLightBrightness = (int)(((1.0 - (time - 16000) / 3000.0)) * 300);
+            }
+
+            if (skyLightBrightness<16) {
+                skyLightBrightness = 16;
+            }
+
+            if(time>24000){
+                time -=24000;
+            }
+            time += .1;
+            lightingNeedsUpdate = true;
+        }
+
+        private void TileUpdates() {
+
             int border = 16;
 
             for (int x = viewPortInTiles.X - border; x < viewPortInTiles.X + viewPortInTiles.Width + 1 + border; x++) {
@@ -345,42 +388,14 @@ namespace Specland {
             for (int i = 0; i < 100; i++) {
                 int x = Game.rand.Next(sizeInTiles.X);
                 int y = Game.rand.Next(sizeInTiles.Y);
-                bool d = Game.rand.Next()%2==0;
+                bool d = Game.rand.Next() % 2 == 0;
                 getTileObjectNoCheck(x, y, d).updateRandom(this, x, y, d);
             }
-
-            while (EntityRemovalList.Count()>0) {
-                EntityList.Remove(EntityRemovalList[0]);
-                EntityRemovalList.RemoveAt(0);
-            }
-
-            while (EntityAddingList.Count() > 0) {
-                EntityList.Add(EntityAddingList[0]);
-                EntityAddingList.RemoveAt(0);
-            }
-
-
-            if (time > 5000 && time < 8000) {
-                skyLightBrightness = (int)(((time - 5000) / 3000.0) * 300);
-            }
-
-            if (time > 16000 && time < 19000) {
-                skyLightBrightness = (int)(((1.0 - (time - 16000) / 3000.0)) * 300);
-            }
-
-            if (skyLightBrightness<16) {
-                skyLightBrightness = 16;
-            }
-
-            if(time>24000){
-                time -=24000;
-            }
-            time += .1;
-            lightingNeedsUpdate = true;
         }
 
         private void updateLiquid(int x, int y) {
-            if (!getTileObject(x, y + 1, false).solid)LiquidNeedsUpdateMatrix[x, y + 1] = true;
+            if (!getTileObject(x, y - 1, false).solid) LiquidNeedsUpdateMatrix[x, y - 1] = true;
+            if (!getTileObject(x, y + 1, false).solid) LiquidNeedsUpdateMatrix[x, y + 1] = true;
             if (!getTileObject(x+1, y, false).solid) LiquidNeedsUpdateMatrix[x + 1, y] = true;
             if (!getTileObject(x-1, y, false).solid) LiquidNeedsUpdateMatrix[x - 1, y] = true;
             if(!(inWorld(x, y) && inWorld(x, y+1))){
@@ -464,10 +479,10 @@ namespace Specland {
                         dr.X = (tileSizeInPixels * x) - viewOffset.X;
                         dr.Y = (tileSizeInPixels * y) - viewOffset.Y;
                         if (textureTileInfo[x, y].transparent && wall.renderType != Tile.RenderTypeNone) {
-                            byte b = (byte)Clamp(LightMatrix[x, y] - (255 - wall.wallBrightness), 0, wall.wallBrightness);
+                            byte b = (byte)MathHelper.Clamp(LightMatrix[x, y] - (255 - wall.wallBrightness), 0, wall.wallBrightness);
                             drawRect(game, Tile.TileSheet, dr, textureWallInfo[x, y].rectangle, grayColors[b]);
                         }
-                        byte a = (byte)Clamp(LightMatrix[x, y], 0, 255);
+                        byte a = (byte)MathHelper.Clamp(LightMatrix[x, y], 0, 255);
                         if (textureTileInfo[x, y].transparent) {
                             if (LiquidMatrix[x, y] > 0 && textureLiquidInfo[x, y] != null) {
                                 drawRect(game, Tile.TileSheet, dr, textureLiquidInfo[x, y].rectangle, grayColors[a]);
@@ -600,9 +615,9 @@ namespace Specland {
             }
         }
 
-        public static int Clamp(int value, int min, int max) {
+        /*public static int Clamp(int value, int min, int max) {
             return value > max ? max : (value < min ? min : (value));
-        }
+        }*/
 
         public Color getBgColor() {
             float a = (MathHelper.Clamp(skyLightBrightness, 0, 255))/255.0f;
@@ -699,6 +714,10 @@ namespace Specland {
                 value[1 + index] << 8 |
                 value[2 + index] << 16 |
                 value[3 + index] << 24);
+        }
+
+        internal void SimUpdate() {
+            TileUpdates();
         }
     }
 }

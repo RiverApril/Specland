@@ -42,7 +42,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="fontNormal.spritefont">
+    <Compile Include="Fonts\fontNormal.spritefont">
       <Name>fontNormal</Name>
       <Importer>FontDescriptionImporter</Importer>
       <Processor>FontDescriptionProcessor</Processor>
@@ -50,28 +50,28 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Entity_Player.png">
+    <Compile Include="Images\Entity_Player.png">
       <Name>Entity_Player</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="TileSheet.png">
+    <Compile Include="Images\TileSheet.png">
       <Name>TileSheet</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ItemSheet.png">
+    <Compile Include="Images\ItemSheet.png">
       <Name>ItemSheet</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="fontSmall.spritefont">
+    <Compile Include="Fonts\fontSmall.spritefont">
       <SubType>Designer</SubType>
       <Name>fontSmall</Name>
       <Importer>FontDescriptionImporter</Importer>
@@ -79,21 +79,21 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Gui.png">
+    <Compile Include="Images\Gui.png">
       <Name>Gui</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="pop.wav">
+    <Compile Include="Sounds\pop.wav">
       <Name>pop</Name>
       <Importer>WavImporter</Importer>
       <Processor>SoundEffectProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="tink.wav">
+    <Compile Include="Sounds\tink.wav">
       <Name>tink</Name>
       <Importer>WavImporter</Importer>
       <Processor>SoundEffectProcessor</Processor>

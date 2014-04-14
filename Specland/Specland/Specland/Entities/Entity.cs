@@ -93,7 +93,7 @@ namespace Specland {
         }
 
         public static void loadContent(ContentManager Content) {
-            Texture_Entity_Player = Content.Load<Texture2D>("Entity_Player");
+            Texture_Entity_Player = Content.Load<Texture2D>("Images\\Entity_Player");
         }
     }
 }

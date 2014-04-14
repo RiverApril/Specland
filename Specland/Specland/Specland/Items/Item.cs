@@ -15,10 +15,10 @@ namespace Specland {
 
         public static Item[] Itemlist = new Item[100];
 
-        public static Item ItemEmpty = new Item(0, "", RenderTypeNone, 0, 0);
-        public static ItemTile ItemTile = new ItemTile(1, "Tile", RenderTypeNormal, 0, 0);
-        public static ItemPick ItemCrapick = new ItemPick(2, "Crapick", RenderTypeNormal, 0, 0, 64, 20, 6 * World.tileSizeInPixels);
-        public static ItemPick ItemSupick = new ItemPick(3, "Supick", RenderTypeNormal, 1, 0, 255, 1, 10 * World.tileSizeInPixels);
+        public static Item ItemEmpty = new Item(0, "", RenderTypeNone, Rectangle.Empty);
+        public static ItemTile ItemTile = new ItemTile(1, "Tile", RenderTypeNormal, Rectangle.Empty);
+        public static ItemPick ItemCrapick = new ItemPick(2, "Crapick", RenderTypeNormal, new Rectangle(0, 0, 16, 16), 64, 20, 6 * World.tileSizeInPixels);
+        public static ItemPick ItemSupick = new ItemPick(3, "Supick", RenderTypeNormal, new Rectangle(16, 0, 16, 16), 255, 1, 10 * World.tileSizeInPixels);
 
         public int index;
         public string name;
@@ -28,12 +28,12 @@ namespace Specland {
         public TextureInfo textureInfo;
         public int reach = World.tileSizeInPixels * 6;
 
-        public Item(int index, string name, int renderType, int textureX, int textureY) {
+        public Item(int index, string name, int renderType, Rectangle sourceRectangle) {
             Itemlist[index] = this;
             this.index = index;
             this.name = name;
             this.renderType = renderType;
-            this.textureInfo = new TextureInfo(new Rectangle(textureX * 16, textureY * 16, 16, 16), true);
+            this.textureInfo = new TextureInfo(sourceRectangle, true);
         }
 
         public Item setMaxStack(int q) {
@@ -56,6 +56,10 @@ namespace Specland {
             return stack;
         }
 
+        public virtual void updateAfterClick(Game game, ItemStack currentItem, int mouseTileX, int mouseTileY, int mouseTileDistanceFromPlayer) {
+            
+        }
+
         public virtual string getName(int count, int data) {
             return name;
         }
@@ -64,7 +68,7 @@ namespace Specland {
             
         }
 
-        public virtual void drawOverPlayer(Game game, ItemStack currentItem, bool facingRight, Vector2 origin, float rotation, Vector2 position) {
+        public virtual void drawOverPlayer(Game game, ItemStack currentItem, bool facingRight, Vector2 position, Color color) {
             
         }
     }

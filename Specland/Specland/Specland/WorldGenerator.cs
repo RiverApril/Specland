@@ -201,6 +201,18 @@ namespace Specland {
                 int y = heightMap[x] + 60;
                 CreateBlob(world, rand, 20, 100, x, y + rand.Next(height - y), FillWater);
             }
+
+            for (int i = 0; i < world.sizeInTiles.X;i++ ) {
+                for (int j = 0; j < world.sizeInTiles.Y; j++) {
+                    //world.TileNeedsUpdateMatrix[i, j, World.TILEDEPTH] = true;
+                    //world.TileNeedsUpdateMatrix[i, j, World.WALLDEPTH] = true;
+                    world.LiquidNeedsUpdateMatrix[i, j] = true;
+                }
+            }
+
+            for (int i = 0; i < 1000;i++ ) {
+                world.SimUpdate();
+            }
         }
 
         private static void CreateBlob(World world, Random rand, int circleSize, int blobSize, int x, int y, Action<World, int, int> action) {

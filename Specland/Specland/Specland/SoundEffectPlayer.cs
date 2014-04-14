@@ -38,8 +38,8 @@ namespace Specland {
         }
 
         internal static void loadSounds(ContentManager content) {
-            SoundEffectPlayer.SoundPop = content.Load<SoundEffect>("pop");
-            SoundEffectPlayer.SoundTink = content.Load<SoundEffect>("tink");
+            SoundEffectPlayer.SoundPop = content.Load<SoundEffect>("Sounds\\pop");
+            SoundEffectPlayer.SoundTink = content.Load<SoundEffect>("Sounds\\tink");
         }
     }
 }

@@ -54,6 +54,7 @@ namespace Specland {
                 items[i] = new ItemStack(Item.ItemEmpty);
             }
             pickUp(new ItemStack(Item.ItemSupick));
+            pickUp(new ItemStack(Item.ItemCrapick));
             //pickUp(new ItemStack(Item.ItemTile, Item.ItemTile.maxStack, Tile.TileSand.index));
             updateValaidRecipes();
         }
@@ -325,6 +326,8 @@ namespace Specland {
                 }
 
             }
+
+            currentItem.getItem().updateAfterClick(game, currentItem, mouseTileX, mouseTileY, mouseTileDistanceFromPlayer);
 
             bool leftClick = false;
             bool rightClick = false;

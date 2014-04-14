@@ -48,6 +48,7 @@ namespace Specland {
 
         public static Color cursorColor = Color.LightGray;
 
+
         public static float volume = .05f;
 
         public static string saveLocation;
@@ -87,8 +88,8 @@ namespace Specland {
 
         protected override void LoadContent() {
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            fontNormal = Content.Load<SpriteFont>("fontNormal");
-            fontSmall = Content.Load<SpriteFont>("fontSmall");
+            fontNormal = Content.Load<SpriteFont>("Fonts\\fontNormal");
+            fontSmall = Content.Load<SpriteFont>("Fonts\\fontSmall");
 
             dummyTexture = new Texture2D(GraphicsDevice, 1, 1);
             dummyTexture.SetData(new Color[] { Color.White });
@@ -100,9 +101,9 @@ namespace Specland {
         }
 
         private void loadTextures() {
-            Tile.TileSheet = Content.Load<Texture2D>("TileSheet");
-            Item.ItemSheet = Content.Load<Texture2D>("ItemSheet");
-            Gui.guiTexture = Content.Load<Texture2D>("Gui");
+            Tile.TileSheet = Content.Load<Texture2D>("Images\\TileSheet");
+            Item.ItemSheet = Content.Load<Texture2D>("Images\\ItemSheet");
+            Gui.guiTexture = Content.Load<Texture2D>("Images\\Gui");
             Entity.loadContent(Content);
         }
 

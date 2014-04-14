@@ -7,8 +7,8 @@ using Microsoft.Xna.Framework;
 namespace Specland {
     public class ItemTile : Item {
 
-        public ItemTile(int index, string name, int renderType, int textureX, int textureY)
-            : base(index, name, renderType, textureX, textureY) {
+        public ItemTile(int index, string name, int renderType, Rectangle sourceRectangle)
+            : base(index, name, renderType, sourceRectangle) {
                 maxStack = 99999;
         }
 
@@ -41,7 +41,7 @@ namespace Specland {
             if (Tile.getTileObject(stack.getData()) != null && distance <= reach) {
                 if (game.currentWorld.getTileIndex(xTile, yTile, true) == Tile.TileAir.index) {
                     if (Tile.getTileObject(stack.getData()).canBeWall) {
-                        if (!collision(game.currentWorld, xTile, yTile, Tile.getTileObject(stack.getData()).solid)) {
+                        if (Tile.getTileObject(stack.getData()).canBePlacedHere(game.currentWorld, xTile, yTile, true)) {
                             if (game.currentWorld.setTileWithUpdate(xTile, yTile, stack.getData(), true)) {
                                 stack.setCount(stack.getCount() - 1);
                             }
@@ -80,7 +80,9 @@ namespace Specland {
         }
 
         public override void drawHover(Game game, int mouseTileX, int mouseTileY, ItemStack currentItem) {
-            if (Tile.getTileObject(currentItem.getData()).canBePlacedHere(game.currentWorld, mouseTileX, mouseTileY, true) || Tile.getTileObject(currentItem.getData()).canBePlacedHere(game.currentWorld, mouseTileX, mouseTileY, false)) {
+            bool tileGoesHere = Tile.getTileObject(currentItem.getData()).canBePlacedHere(game.currentWorld, mouseTileX, mouseTileY, true);
+            bool wallGoesHere = Tile.getTileObject(currentItem.getData()).canBePlacedHere(game.currentWorld, mouseTileX, mouseTileY, false);
+            if (tileGoesHere || wallGoesHere) {
                 game.spriteBatch.Draw(Tile.TileSheet, new Rectangle((mouseTileX * World.tileSizeInPixels) - game.currentWorld.viewOffset.X, (mouseTileY * World.tileSizeInPixels) - game.currentWorld.viewOffset.Y, World.tileSizeInPixels, World.tileSizeInPixels), Tile.getTileObject(currentItem.getData()).getTextureInfo(mouseTileX, mouseTileY, game.currentWorld, false).rectangle, new Color(.5f, .5f, .5f, .5f));
             }
         }
