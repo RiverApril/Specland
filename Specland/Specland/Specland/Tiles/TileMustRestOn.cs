@@ -32,12 +32,12 @@ namespace Specland {
         }
 
         public override void updateNearChange(World world, int x, int y, bool isWall) {
-            if (!world.getTileObject(x + restOnX, y + restOnY, isWall).solid) {
+            if (!world.isTileSolid(x + restOnX, y + restOnY, isWall)) {
                 world.mineTile(x, y, Item.ItemSupick,  isWall);
             }
         }
 
-        public override ItemStack dropStack(ItemPick itemPick, Random rand) {
+        public override ItemStack dropStack(World world, ItemPick itemPick, Random rand, int x, int y, bool isWall) {
             return new ItemStack(Item.ItemEmpty);
         } 
     }

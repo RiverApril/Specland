@@ -11,10 +11,16 @@ namespace Specland {
 
         private ItemStack stack = new ItemStack(Item.ItemEmpty);
 
-        private int pickUpDelay = 0;
+        private int maxPickupDelay = 20;
+        private int pickUpDelay = 20;
 
         public EntityItem(Vector2 position, ItemStack stack) : base(position){
             this.stack = stack;
+        }
+
+        public EntityItem(Vector2 position, ItemStack stack, int delay) : this(position, stack){
+            maxPickupDelay = delay;
+            pickUpDelay = maxPickupDelay;
         }
 
         public override void init() {
@@ -38,7 +44,7 @@ namespace Specland {
 
             bool gravityOn = true;
 
-            if (pickUpDelay > 20) {
+            if (pickUpDelay <= 0) {
                 float d = Vector2.Distance(world.player.position, position);
                 Rectangle pr = new Rectangle((int)world.player.position.X, (int)world.player.position.Y, (int)world.player.size.X, (int)world.player.size.Y);
                 Rectangle r = new Rectangle((int)position.X, (int)position.Y, (int)size.X, (int)size.Y);
@@ -63,7 +69,7 @@ namespace Specland {
                             SoundEffectPlayer.playSoundWithRandomPitch(SoundEffectPlayer.SoundPop);
                         }
                     }
-                    pickUpDelay = 0;
+                    pickUpDelay = maxPickupDelay;
                 } else if (d < (6 * World.tileSizeInPixels)) {
                     position += ((world.player.position - position)/d) * 4;
                     gravityOn = false;
@@ -92,7 +98,7 @@ namespace Specland {
                 speed.Y += gravityAcc;
             }
 
-            pickUpDelay++;
+            pickUpDelay--;
         }
     }
 }

@@ -26,8 +26,9 @@ namespace Specland {
             if (Tile.getTileObject(stack.getData()) != null && distance <= reach) {
                 if (game.currentWorld.getTileIndex(xTile, yTile, false) == Tile.TileAir.index) {
                     if (Tile.getTileObject(stack.getData()).canBePlacedHere(game.currentWorld, xTile, yTile, false)) {
-                        if (!collision(game.currentWorld, xTile, yTile, Tile.getTileObject(stack.getData()).solid)) {
+                        if (!collision(game.currentWorld, xTile, yTile, Tile.getTileObject(stack.getData()).isSolid(xTile, yTile))) {
                             if (game.currentWorld.setTileWithUpdate(xTile, yTile, stack.getData(), false)) {
+                                game.currentWorld.getTileObjectNoCheck(xTile, yTile, false).justPlaced(game.currentWorld, xTile, yTile, false);
                                 stack.setCount(stack.getCount() - 1);
                             }
                         }
@@ -43,6 +44,7 @@ namespace Specland {
                     if (Tile.getTileObject(stack.getData()).canBeWall) {
                         if (Tile.getTileObject(stack.getData()).canBePlacedHere(game.currentWorld, xTile, yTile, true)) {
                             if (game.currentWorld.setTileWithUpdate(xTile, yTile, stack.getData(), true)) {
+                                game.currentWorld.getTileObjectNoCheck(xTile, yTile, true).justPlaced(game.currentWorld, xTile, yTile, true);
                                 stack.setCount(stack.getCount() - 1);
                             }
                         }
@@ -54,7 +56,7 @@ namespace Specland {
 
         public override string getName(int count, int data) {
             if (maxStack > 1) {
-                return (Tile.getTileObject(data).name) + " Tile" + (count == 1 ? "" : "s") + " (" + formatNumber(count) + ")";
+                return (Tile.getTileObject(data).displayName) + (count == 1 ? "" : ("s (" + formatNumber(count) + ")"));
             } else {
                 return name;
             }
@@ -80,11 +82,14 @@ namespace Specland {
         }
 
         public override void drawHover(Game game, int mouseTileX, int mouseTileY, ItemStack currentItem) {
-            bool tileGoesHere = Tile.getTileObject(currentItem.getData()).canBePlacedHere(game.currentWorld, mouseTileX, mouseTileY, true);
-            bool wallGoesHere = Tile.getTileObject(currentItem.getData()).canBePlacedHere(game.currentWorld, mouseTileX, mouseTileY, false);
-            if (tileGoesHere || wallGoesHere) {
-                game.spriteBatch.Draw(Tile.TileSheet, new Rectangle((mouseTileX * World.tileSizeInPixels) - game.currentWorld.viewOffset.X, (mouseTileY * World.tileSizeInPixels) - game.currentWorld.viewOffset.Y, World.tileSizeInPixels, World.tileSizeInPixels), Tile.getTileObject(currentItem.getData()).getTextureInfo(mouseTileX, mouseTileY, game.currentWorld, false).rectangle, new Color(.5f, .5f, .5f, .5f));
+            if (!Tile.getTileObject(currentItem.getData()).drawHover(game, mouseTileX, mouseTileY, currentItem)) {
+                bool tileGoesHere = Tile.getTileObject(currentItem.getData()).canBePlacedHere(game.currentWorld, mouseTileX, mouseTileY, true);
+                bool wallGoesHere = Tile.getTileObject(currentItem.getData()).canBePlacedHere(game.currentWorld, mouseTileX, mouseTileY, false);
+                if (tileGoesHere || wallGoesHere) {
+                    game.spriteBatch.Draw(Tile.TileSheet, new Rectangle((mouseTileX * World.tileSizeInPixels) - game.currentWorld.viewOffset.X, (mouseTileY * World.tileSizeInPixels) - game.currentWorld.viewOffset.Y, World.tileSizeInPixels, World.tileSizeInPixels), Tile.getTileObject(currentItem.getData()).getTextureInfo(mouseTileX, mouseTileY, game.currentWorld, false).rectangle, new Color(.5f, .5f, .5f, .5f));
+                }
             }
+
         }
 
 

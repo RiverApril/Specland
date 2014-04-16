@@ -18,7 +18,7 @@ namespace Specland {
         public static Item ItemEmpty = new Item(0, "", RenderTypeNone, Rectangle.Empty);
         public static ItemTile ItemTile = new ItemTile(1, "Tile", RenderTypeNormal, Rectangle.Empty);
         public static ItemPick ItemCrapick = new ItemPick(2, "Crapick", RenderTypeNormal, new Rectangle(0, 0, 16, 16), 64, 20, 6 * World.tileSizeInPixels);
-        public static ItemPick ItemSupick = new ItemPick(3, "Supick", RenderTypeNormal, new Rectangle(16, 0, 16, 16), 255, 1, 10 * World.tileSizeInPixels);
+        public static ItemPick ItemSupick = new ItemPick(3, "Supick", RenderTypeNormal, new Rectangle(16, 0, 16, 16), 255, 0, 10 * World.tileSizeInPixels);
 
         public int index;
         public string name;

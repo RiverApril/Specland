@@ -16,10 +16,10 @@ namespace Specland {
             bool down = world.getTileObject(x, y + 1, isWall).index == index;
             bool up = world.getTileObject(x, y - 1, isWall).index == index;
 
-            bool leftSolid = world.getTileObject(x - 1, y, isWall).solid;
-            bool rightSolid = world.getTileObject(x + 1, y, isWall).solid;
-            bool downSolid = world.getTileObject(x, y + 1, isWall).solid;
-            bool upSolid = world.getTileObject(x, y - 1, isWall).solid;
+            bool leftSolid = world.isTileSolid(x - 1, y, isWall);
+            bool rightSolid = world.isTileSolid(x + 1, y, isWall);
+            bool downSolid = world.isTileSolid(x, y + 1, isWall);
+            bool upSolid = world.isTileSolid(x, y - 1, isWall);
 
             Rectangle r;
             bool t = transparent;
@@ -57,7 +57,7 @@ namespace Specland {
             return new TextureInfo(r, t);
         }
 
-        public override void mine(World world, int x, int y, ItemPick pick, bool isWall) {
+        public override void mine(World world, int x, int y, int data, ItemPick pick, bool isWall) {
             if (world.getTileIndex(x, y - 1, isWall) == index) {
                 world.mineTile(x, y - 1, pick, isWall);
             }
@@ -77,7 +77,7 @@ namespace Specland {
             }
         }
 
-        public override ItemStack dropStack(ItemPick itemPick, Random rand) {
+        public override ItemStack dropStack(World world, ItemPick itemPick, Random rand, int x, int y, bool isWall) {
             return rand.Next(2)==0?new ItemStack(Item.ItemTile, 1, Tile.TileWood.index):new ItemStack(Item.ItemEmpty);
         }
 

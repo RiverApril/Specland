@@ -14,7 +14,8 @@ namespace Specland {
         public static int RenderTypeTerrain = 1;
         public static int RenderTypePlaced = 2;
         public static int RenderTypeBuilding = 3;
-        public static int RenderTypeCustom = 4;
+        public static int RenderTypeAttachToSelf = 4;
+        public static int RenderTypeCustom = 5;
 
         public static Tile[] TileList = new Tile[100];
 
@@ -22,19 +23,22 @@ namespace Specland {
         public static Tile TileGrass = new TileGrass("Grass", RenderTypeTerrain, 0, 0);
         public static Tile TileDirt = new Tile("Dirt", RenderTypeTerrain, 1, 0);
         public static Tile TileStone = new Tile("Stone", RenderTypeTerrain, 2, 0);
-        public static Tile TileStoneBricks = new Tile("StoneBricks", RenderTypeTerrain, 0, 1);
-        public static Tile TileGlass = new Tile("Glass", RenderTypeTerrain, 1, 1).setTransparent().setWallBrightness(240);
-        public static Tile TileCoalOre = new Tile("CoalOre", RenderTypeTerrain, 3, 0);
+        public static Tile TileStoneBricks = new Tile("StoneBricks", RenderTypeBuilding, 0, 1).setDisplayName("Stone Bricks");
+        public static Tile TileGlass = new Tile("Glass", RenderTypeAttachToSelf, 1, 1).setTransparent().setWallBrightness(240);
+        public static Tile TileCoalOre = new Tile("CoalOre", RenderTypeTerrain, 3, 0).setDisplayName("Coal Ore");
         public static Tile TileTorch = new Tile("Torch", RenderTypePlaced, 2, 1).setTransparent().setLight(300).notSolid().notWall();
         public static Tile TileTree = new TileTree("Tree", RenderTypeCustom, 3, 1).setTransparent().notSolid();
         public static Tile TileLeaf = new TileLeaf("Leaf", RenderTypeCustom, 4, 1, TileTree.index).setTransparent().notSolid();
-        public static Tile TileWood = new Tile("Wood", RenderTypeTerrain, 4, 0);
+        public static Tile TileWood = new Tile("Wood", RenderTypeBuilding, 4, 0).setDisplayName("Wooden Plank");
         public static Tile TileSand = new TileFalling("Sand", RenderTypeTerrain, 5, 0);
         public static Tile TileSapling = new TileMustRestOn("Sapling", RenderTypeCustom, 5, 1, 3, 3, 0, 1, TileGrass).notSolid().notWall().setTransparent();
+        public static Tile TileWoodDoor = new TileDoor("WoodDoor", RenderTypeCustom, 2, 2).notWall().setTransparent().setDisplayName("Wooden Door");
+        public static Tile TileWoodTable = new TileFurniture("WoodTable", RenderTypeCustom, 3, 2, 3, 2).notSolid().notWall().setTransparent().setDisplayName("Wooden Table");
+        public static Tile TileWoodChair = new TileFurniture("WoodChair", RenderTypeCustom, 4, 2, 1, 2).notSolid().notWall().setTransparent().setDisplayName("Wooden Chair");
+
 
         public int index;
         public string name;
-        public bool solid = true;
         public int renderType;
 
         public bool transparent = false;
@@ -43,13 +47,17 @@ namespace Specland {
         public int toughness = 255;
         public int wallBrightness = 127;
         public bool canBeWall = true;
+        public string displayName;
 
         private static int nextIndex=0;
+
+        private bool defaultSolid = true;
 
         public Tile(string name, int renderType, int textureX, int textureY) {
             index = getNewIndex();
             TileList[index] = this;
             this.name = name;
+            this.displayName = name;
             this.renderType = renderType;
             this.textureArea = new Point(textureX, textureY);
         }
@@ -75,7 +83,7 @@ namespace Specland {
         }
 
         private Tile notSolid() {
-            solid = false;
+            defaultSolid = false;
             return this;
         }
 
@@ -89,9 +97,14 @@ namespace Specland {
             return this;
         }
 
+        private Tile setDisplayName(string n) {
+            displayName = n;
+            return this;
+        }
+
 
         public virtual TextureInfo getTextureInfo(int x, int y, World world, bool isWall) {
-            if (renderType == RenderTypeTerrain || renderType == RenderTypeBuilding){
+            if (renderType == RenderTypeTerrain || renderType == RenderTypeBuilding || renderType == RenderTypeAttachToSelf) {
                 
                 bool left = false;
                 bool right = false;
@@ -102,6 +115,13 @@ namespace Specland {
                 right = (world.getTileObject(x + 1, y, isWall)).renderType == renderType;
                 down = (world.getTileObject(x, y + 1, isWall)).renderType == renderType;
                 up = (world.getTileObject(x, y - 1, isWall)).renderType == renderType;
+
+                if(renderType == RenderTypeAttachToSelf){
+                    left = (world.getTileObject(x - 1, y, isWall)).index == index;
+                    right = (world.getTileObject(x + 1, y, isWall)).index == index;
+                    down = (world.getTileObject(x, y + 1, isWall)).index == index;
+                    up = (world.getTileObject(x, y - 1, isWall)).index == index;
+                }
 
                 Rectangle r;
                 bool t = transparent;
@@ -183,10 +203,10 @@ namespace Specland {
                 }
                 return new TextureInfo(/*texture2D,*/ r, t);
             } else if (renderType == RenderTypePlaced) {
-                bool left = world.getTileObject(x - 1, y, isWall).solid;
-                bool right = world.getTileObject(x + 1, y, isWall).solid;
-                bool down = world.getTileObject(x, y + 1, isWall).solid;
-                bool up = world.getTileObject(x, y - 1, isWall).solid;
+                bool left = world.isTileSolid(x - 1, y, isWall);
+                bool right = world.isTileSolid(x + 1, y, isWall);
+                bool down = world.isTileSolid(x, y + 1, isWall);
+                bool up = world.isTileSolid(x, y - 1, isWall);
                 Rectangle r;
                 if (down) {
                     r = get8(0, 0);
@@ -208,6 +228,10 @@ namespace Specland {
             return new Rectangle((textureArea.X * 32) + (8 * x), (textureArea.Y * 32) + (8 * y), 8, 8);
         }
 
+        public Rectangle get8(int x, int y, int w, int h) {
+            return new Rectangle((textureArea.X * 32) + (8 * x), (textureArea.Y * 32) + (8 * y), 8*w, 8*h);
+        }
+
         public static Tile getTileObject(int index) {
             if(index>=0 && index<TileList.Length){
                 return TileList[index];
@@ -223,20 +247,40 @@ namespace Specland {
 
         }
 
-        public virtual ItemStack dropStack(ItemPick itemPick, Random rand) {
+        public virtual ItemStack dropStack(World world, ItemPick itemPick, Random rand, int x, int y, bool isWall) {
             return new ItemStack(Item.ItemTile, 1, index);
         }
 
-        public virtual void mine(World world, int x, int y, ItemPick pick, bool isWall) {
+        public virtual void mine(World world, int x, int y, int data, ItemPick pick, bool isWall) {
 
         }
 
         public virtual bool canBePlacedHere(World world, int x, int y, bool isWall) {
-            return (world.getTileObject(x - 1, y, isWall).solid || world.getTileObject(x + 1, y, isWall).solid || world.getTileObject(x, y - 1, isWall).solid || world.getTileObject(x, y + 1, isWall).solid || !world.getTileObject(x, y, !isWall).isAir()) && world.getTileObject(x, y, isWall).isAir();
+            return (world.isTileSolid(x - 1, y, isWall) || world.isTileSolid(x + 1, y, isWall) || world.isTileSolid(x, y - 1, isWall) || world.isTileSolid(x, y + 1, isWall) || !world.getTileObject(x, y, !isWall).isAir()) && world.getTileObject(x, y, isWall).isAir();
         }
 
-        private bool isAir() {
+        public bool isAir() {
             return (index == TileAir.index);
+        }
+
+        public virtual void justPlaced(World world, int x, int y, bool isWall) {
+
+        }
+
+        public virtual bool drawHover(Game game, int mouseTileX, int mouseTileY, ItemStack currentItem) {
+            return false;
+        }
+
+        public virtual ItemStack use(Game game, ItemStack currentItem, int mouseTileX, int mouseTileY, int mouseTileDistanceFromPlayer) {
+            return null;
+        }
+
+        public virtual bool isSolid(int x, int y) {
+            return defaultSolid;
+        }
+
+        internal bool isSolid() {
+            return defaultSolid;
         }
     }
 }

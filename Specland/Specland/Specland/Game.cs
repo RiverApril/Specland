@@ -150,7 +150,7 @@ namespace Specland {
 
         protected override void Draw(GameTime gameTime) {
             GraphicsDevice.Clear(currentWorld==null?Color.CornflowerBlue:currentWorld.getBgColor());
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullNone);
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone);
 
             GraphicsDevice.SamplerStates[0] = SamplerState.PointClamp;
 
@@ -178,8 +178,10 @@ namespace Specland {
                 string l = "Lighting Fps: " + currentWorld.lightingThreadFps.getFps() + " (ms/t:" + currentWorld.lightingThreadFps.getMpt() + ") ";
                 string p = "Rendering:\n  Gui: " + Profiler.get("draw gui") + "\n  Tile: " + Profiler.get("draw tiles") + "\n  Entity: " + Profiler.get("draw entities");
                 p += "\n\nLighting: " + Profiler.get("lighting");
+                string ti = "T: " + currentWorld.getTileIndex(inventory.mouseTileX, inventory.mouseTileY, false) + "`" + currentWorld.getTileData(inventory.mouseTileX, inventory.mouseTileY, false);
+                ti += "  W: " + currentWorld.getTileIndex(inventory.mouseTileX, inventory.mouseTileY, true) + "`" + currentWorld.getTileData(inventory.mouseTileX, inventory.mouseTileY, true);
 
-                spriteBatch.DrawString(fontNormal, d + "\n" + u + "\n" + l + "\n" + e + "\n" + t + "\n" + p + "\n" + drawMessage + "\n" + updateMessage, new Vector2(140, 10), Color.White);
+                spriteBatch.DrawString(fontNormal, d + "\n" + u + "\n" + l + "\n" + e + "\n" + t + "\n" + p + "\n" + ti + "\n" + drawMessage + "\n" + updateMessage, new Vector2(140, 10), Color.White);
             }
             drawMessage = "";
 

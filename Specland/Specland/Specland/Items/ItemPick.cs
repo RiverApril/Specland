@@ -19,16 +19,20 @@ namespace Specland {
         }
 
         public override ItemStack leftClick(Game game, ItemStack stack, int xTile, int yTile, int distance) {
-            stack = base.leftClick(game, stack, xTile, yTile, distance);
-            return mine(game, stack, xTile, yTile, distance, false);
+            if (game.currentWorld.player.swingTime <= 0 && mine(game, stack, xTile, yTile, distance, false)) {
+                game.currentWorld.player.swingTime = swingMaxTime;
+            }
+            return stack;
         }
 
         public override ItemStack rightClick(Game game, ItemStack stack, int xTile, int yTile, int distance) {
-            stack = base.rightClick(game, stack, xTile, yTile, distance);
-            return mine(game, stack, xTile, yTile, distance, true);
+            if (game.currentWorld.player.swingTime <= 0 && mine(game, stack, xTile, yTile, distance, true)) {
+                game.currentWorld.player.swingTime = swingMaxTime;
+            }
+            return stack;
         }
 
-        public ItemStack mine(Game game, ItemStack stack, int xTile, int yTile, int distance, bool isWall) {
+        public bool mine(Game game, ItemStack stack, int xTile, int yTile, int distance, bool isWall) {
             t++;
             if (t > delay && distance <= reach) {
                 t = 0;
@@ -51,13 +55,14 @@ namespace Specland {
                             game.currentWorld.setCrackNoCheck(xTile, yTile, 0);
                         }
                     }
+                    return true;
                 }
             }
-            return stack;
+            return false;
         }
 
         public override void drawHover(Game game, int mouseTileX, int mouseTileY, ItemStack currentItem) {
-            if (game.currentWorld!=null) {
+            if (game.currentWorld != null && (game.currentWorld.getTileIndex(mouseTileX, mouseTileY, false) != Tile.TileAir.index || game.currentWorld.getTileIndex(mouseTileX, mouseTileY, true) != Tile.TileAir.index)) {
                 game.spriteBatch.Draw(Game.dummyTexture, new Rectangle((mouseTileX * World.tileSizeInPixels) - game.currentWorld.viewOffset.X, (mouseTileY * World.tileSizeInPixels) - game.currentWorld.viewOffset.Y, World.tileSizeInPixels, World.tileSizeInPixels), new Color(.5f, .5f, .5f, .5f));
             }
         }

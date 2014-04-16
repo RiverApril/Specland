@@ -8,19 +8,11 @@ using System.Text;
 namespace Specland {
     public class ItemSwingable : Item {
 
-        private int swingMaxTime;
+        protected int swingMaxTime;
 
         public ItemSwingable(int index, string name, int renderType, Rectangle sourceRectangle, int swingMaxTime)
             : base(index, name, renderType, sourceRectangle) {
                 this.swingMaxTime = swingMaxTime;
-        }
-
-        public virtual void updateAfterClick(Game game, ItemStack stack, int xTile, int yTile, int distance) {
-            if (game.currentWorld.player.swingTime > 0) {
-
-            } else {
-
-            }
         }
 
         public override ItemStack leftClick(Game game, ItemStack stack, int xTile, int yTile, int distance) {

@@ -38,9 +38,9 @@ namespace Specland {
         private long tick = 0;
         private int craftingScroll = 0;
         private List<Recipe> valaidRecipes = new List<Recipe>();
-        private int mouseTileX;
-        private int mouseTileY;
-        private int mouseTileDistanceFromPlayer;
+        public int mouseTileX;
+        public int mouseTileY;
+        public int mouseTileDistanceFromPlayer;
 
         private int leftClickTimer = 0;
         private int rightClickTimer = 0;
@@ -55,7 +55,8 @@ namespace Specland {
             }
             pickUp(new ItemStack(Item.ItemSupick));
             pickUp(new ItemStack(Item.ItemCrapick));
-            //pickUp(new ItemStack(Item.ItemTile, Item.ItemTile.maxStack, Tile.TileSand.index));
+            pickUp(new ItemStack(Item.ItemTile, 999, Tile.TileWoodTable.index));
+            pickUp(new ItemStack(Item.ItemTile, 999, Tile.TileWoodChair.index));
             updateValaidRecipes();
         }
 
@@ -324,6 +325,17 @@ namespace Specland {
                 if (game.inputState.mouseState.RightButton == ButtonState.Pressed) {
                     setCurrentItem(currentItem.getItem().rightClick(game, currentItem, mouseTileX, mouseTileY, mouseTileDistanceFromPlayer), isCursor);
                 }
+                if(game.inputState.pressed(Keys.E)){
+                    ItemStack useItem = currentItem;
+                    Tile tileWall = game.currentWorld.getTileObject(mouseTileX, mouseTileY, true);
+                    Tile tileTile = game.currentWorld.getTileObject(mouseTileX, mouseTileY, false);
+                    if (tileWall.index != Tile.TileAir.index || tileTile.index != Tile.TileAir.index) {
+                        useItem = (tileTile.index == Tile.TileAir.index ? tileWall : tileTile).use(game, currentItem, mouseTileX, mouseTileY, mouseTileDistanceFromPlayer);
+                    }
+                    if(useItem!=null){
+                        setCurrentItem(useItem);
+                    }
+                }
 
             }
 
@@ -447,6 +459,12 @@ namespace Specland {
                 }
             }
 
+            if(game.inputState.pressed(Keys.R)){
+                game.currentWorld.EntityAddingList.Add(new EntityItem(game.currentWorld.player.position, new ItemStack(currentItem.getItem(), 1, currentItem.getData()), 60));
+                currentItem.setCount(currentItem.getCount()-1);
+                setCurrentItem(currentItem);
+            }
+
             tick++;
         }
 
@@ -480,7 +498,7 @@ namespace Specland {
 
         public void dropItem(Game game, ItemStack item) {
             if (item.getItem().index != Item.ItemEmpty.index) {
-                Entity e = new EntityItem(game.currentWorld.player.position, item);
+                Entity e = new EntityItem(game.currentWorld.player.position, item, 40);
                 game.currentWorld.EntityList.Add(e);
             }
         }

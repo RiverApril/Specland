@@ -12,6 +12,7 @@ namespace Specland {
         public static Recipe RecipeStoneBricks = new Recipe(new ItemStack[] { new ItemStack(Item.ItemTile, 2, Tile.TileStone.index) }, new ItemStack(Item.ItemTile, 1, Tile.TileStoneBricks.index));
         public static Recipe RecipeTorch = new Recipe(new ItemStack[] { new ItemStack(Item.ItemTile, 1, Tile.TileWood.index) }, new ItemStack(Item.ItemTile, 1, Tile.TileTorch.index));
         public static Recipe RecipeGlass = new Recipe(new ItemStack[] { new ItemStack(Item.ItemTile, 1, Tile.TileSand.index) }, new ItemStack(Item.ItemTile, 1, Tile.TileGlass.index));
+        public static Recipe RecipeWoodDoor = new Recipe(new ItemStack[] { new ItemStack(Item.ItemTile, 6, Tile.TileWood.index) }, new ItemStack(Item.ItemTile, 1, Tile.TileWoodDoor.index));
 
         public ItemStack[] ingredients = new ItemStack[0];
         public ItemStack result = null;

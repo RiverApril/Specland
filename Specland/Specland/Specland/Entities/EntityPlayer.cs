@@ -9,7 +9,7 @@ namespace Specland {
     public class EntityPlayer : Entity{
 
         private Rectangle drawBounds;
-        private bool facingRight = true;
+        public bool facingRight = true;
 
         Vector2 renderSize;
 
@@ -19,7 +19,7 @@ namespace Specland {
         public Vector2 displayPosition;
         public Vector2 displayPositionOff;
 
-        private float walkSpeed = 8;
+        private float walkSpeed = 5;
         private float walkAcc = .3f;
         private float jumpInAirAcc = .5f;
         private float initalJumpSpeed = 12;
@@ -135,6 +135,7 @@ namespace Specland {
             if(!collision(world, speed.X, 0)){
                 position.X += speed.X;
             } else {
+                bool moved = false;
                 if (!game.inputState.getKeyboardState().IsKeyDown(Keys.S)) {
                     if (collision(world, 0, 4) && !collision(world, (facingRight ? World.tileSizeInPixels : -World.tileSizeInPixels) + speed.X, -(int)(World.tileSizeInPixels * 1.2))) {
                         
@@ -144,11 +145,18 @@ namespace Specland {
                         walkUpPosition.X += speed.X;
                         walkUpPosition.Y -= World.tileSizeInPixels * 1.2f;
 
+                        moved = true;
+
                     } else if (collision(world, 0, 4) && !collision(world, (facingRight ? World.tileSizeInPixels : -World.tileSizeInPixels), -(int)(World.tileSizeInPixels * 1.2))) {
                         position.Y -= World.tileSizeInPixels * 1.2f;
 
                         walkUpPosition.Y -= World.tileSizeInPixels * 1.2f;
+
+                        moved = true;
                     }
+                }
+                if(!moved){
+                    speed.X = 0;
                 }
             }
 
@@ -162,13 +170,13 @@ namespace Specland {
             //displayPosition += (position - displayPosition)/4;
             displayPosition = position - (displayPositionOff + (walkUpPosition - displayPositionOff));
 
-            Game.updateMessage += "Player Position: "+position.X+", "+position.Y;
+            //Game.updateMessage += "Player Position: "+position.X+", "+position.Y;
 
         }
 
         public override void draw(Game game, World world) {
             byte a = (byte)MathHelper.Clamp(world.getLight((int)(position.X + (size.X / 2)) / World.tileSizeInPixels, (int)(position.Y + (size.Y / 2)) / World.tileSizeInPixels), 0, 255);
-            game.spriteBatch.Draw(Entity.Texture_Entity_Player, drawBounds, new Rectangle(0, 0, 16, 24), World.grayColors[a]);
+            game.spriteBatch.Draw(Entity.Texture_Entity_Player, drawBounds, new Rectangle(0, 0, 16, 24), World.grayColors[a], 0, Vector2.Zero, Microsoft.Xna.Framework.Graphics.SpriteEffects.None, World.RENDER_DEPTH_ENTITY);
 
             if (game.inventory.currentItem != null) {
                 game.inventory.currentItem.getItem().drawOverPlayer(game, game.inventory.currentItem, facingRight, new Vector2(displayPosition.X - xoff + (facingRight ? renderSize.X*1f : renderSize.X*.5f), displayPosition.Y), World.grayColors[a]);

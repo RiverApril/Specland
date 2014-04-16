@@ -97,5 +97,26 @@ namespace Specland {
         public bool sameItem(ItemStack i) {
             return i.data == data && i.getItem().index == getItem().index;
         }
+
+        public override bool Equals(System.Object obj) {
+            if (obj == null) {
+                return false;
+            }
+
+            ItemStack i = obj as ItemStack;
+            return Equals(i);
+        }
+
+        public bool Equals(ItemStack i) {
+            if ((object)i == null) {
+                return false;
+            }
+
+            return item.index == i.item.index && count == i.count && data == i.data;
+        }
+
+        public override int GetHashCode() {
+            return item.index ^ count ^ data;
+        }
     }
 }
