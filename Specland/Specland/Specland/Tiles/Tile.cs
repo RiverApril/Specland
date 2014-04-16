@@ -23,13 +23,13 @@ namespace Specland {
         public static Tile TileGrass = new TileGrass("Grass", RenderTypeTerrain, 0, 0);
         public static Tile TileDirt = new Tile("Dirt", RenderTypeTerrain, 1, 0);
         public static Tile TileStone = new Tile("Stone", RenderTypeTerrain, 2, 0);
-        public static Tile TileStoneBricks = new Tile("StoneBricks", RenderTypeBuilding, 0, 1).setDisplayName("Stone Bricks");
+        public static Tile TileStoneBricks = new Tile("StoneBricks", RenderTypeTerrain, 0, 1).setDisplayName("Stone Bricks");
         public static Tile TileGlass = new Tile("Glass", RenderTypeAttachToSelf, 1, 1).setTransparent().setWallBrightness(240);
         public static Tile TileCoalOre = new Tile("CoalOre", RenderTypeTerrain, 3, 0).setDisplayName("Coal Ore");
         public static Tile TileTorch = new Tile("Torch", RenderTypePlaced, 2, 1).setTransparent().setLight(300).notSolid().notWall();
         public static Tile TileTree = new TileTree("Tree", RenderTypeCustom, 3, 1).setTransparent().notSolid();
         public static Tile TileLeaf = new TileLeaf("Leaf", RenderTypeCustom, 4, 1, TileTree.index).setTransparent().notSolid();
-        public static Tile TileWood = new Tile("Wood", RenderTypeBuilding, 4, 0).setDisplayName("Wooden Plank");
+        public static Tile TileWood = new Tile("Wood", RenderTypeTerrain, 4, 0).setDisplayName("Wooden Plank");
         public static Tile TileSand = new TileFalling("Sand", RenderTypeTerrain, 5, 0);
         public static Tile TileSapling = new TileMustRestOn("Sapling", RenderTypeCustom, 5, 1, 3, 3, 0, 1, TileGrass).notSolid().notWall().setTransparent();
         public static Tile TileWoodDoor = new TileDoor("WoodDoor", RenderTypeCustom, 2, 2).notWall().setTransparent().setDisplayName("Wooden Door");

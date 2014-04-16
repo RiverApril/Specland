@@ -26,7 +26,12 @@ namespace Specland {
         bool inventoryFadingIn = false;
         int inventoryMove = 0;
 
-        static int gridSize = 22;
+        public static int scale = 2;
+
+        public static int gridSize = 11 * scale;
+        public static int squareSize = 10 * scale;
+        public static int itemSize = 8 * scale;
+        public static int squareBorderSize = (squareSize - itemSize) / 2;
 
         ItemStack[] items = new ItemStack[100];
 
@@ -55,8 +60,7 @@ namespace Specland {
             }
             pickUp(new ItemStack(Item.ItemSupick));
             pickUp(new ItemStack(Item.ItemCrapick));
-            pickUp(new ItemStack(Item.ItemTile, 999, Tile.TileWoodTable.index));
-            pickUp(new ItemStack(Item.ItemTile, 999, Tile.TileWoodChair.index));
+            //pickUp(new ItemStack(Item.ItemTile, 999, Tile.TileWoodTable.index));
             updateValaidRecipes();
         }
 
@@ -100,8 +104,8 @@ namespace Specland {
             for(int i=0; i < 10; i++){
                 xx = x + (selectedSlot == i ? (cursorItem.isEmpty() ? 4 : 2) : 0) + inventoryMove + 4;
                 yy = y + (i * gridSize);
-                r = new Rectangle(xx + 2, yy + 2, 16, 16);
-                game.spriteBatch.Draw(guiTexture, new Rectangle(xx, yy, 20, 20), new Rectangle(0, 0, 20, 20), hotBarColor);
+                r = new Rectangle(xx + squareBorderSize, yy + squareBorderSize, itemSize, itemSize);
+                game.spriteBatch.Draw(guiTexture, new Rectangle(xx, yy, squareSize, squareSize), new Rectangle(0, 0, 20, 20), hotBarColor);
                 items[itemIndex].draw(game, gameTime, r, hotBarColor);
 
                 itemIndex++;
@@ -112,8 +116,8 @@ namespace Specland {
                     for (int j = 0; j < 4; j++) {
                         xx = x + (j * gridSize) + inventoryMove - (gridSize * 4);
                         yy = y + (i * gridSize);
-                        r = new Rectangle(xx + 2, yy + 2, 16, 16);
-                        game.spriteBatch.Draw(guiTexture, new Rectangle(xx, yy, 20, 20), new Rectangle(0, 0, 20, 20), inventoryColor);
+                        r = new Rectangle(xx + squareBorderSize, yy + squareBorderSize, itemSize, itemSize);
+                        game.spriteBatch.Draw(guiTexture, new Rectangle(xx, yy, squareSize, squareSize), new Rectangle(0, 0, 20, 20), inventoryColor);
                         items[itemIndex].draw(game, gameTime, r, inventoryColor);
 
                         itemIndex++;
@@ -129,16 +133,16 @@ namespace Specland {
                     if (j >= 0 && j < valaidRecipes.Count()) {
                         xx = x + (i * gridSize) + inventoryMove - (gridSize * 2);
                         yy = y + craftingAreaY;
-                        r = new Rectangle(xx + 2, yy + 2, 16, 16);
+                        r = new Rectangle(xx + squareBorderSize, yy + squareBorderSize, itemSize, itemSize);
                         int abs = Math.Abs(i);
                         a = (inventoryFade * (abs == 3 ? .1f : (abs == 2 ? .2f : (abs == 1 ? .5f : 1)))) * (mouseInCrafting ? 1 : .1f);
                         color = new Color(a, a, a, a);
-                        game.spriteBatch.Draw(guiTexture, new Rectangle(xx, yy, 20, 20), new Rectangle(0, 0, 20, 20), color);
+                        game.spriteBatch.Draw(guiTexture, new Rectangle(xx, yy, squareSize, squareSize), new Rectangle(0, 0, 20, 20), color);
                         valaidRecipes[j].result.draw(game, gameTime, r, color);
                         for (int k = 0; k < valaidRecipes[j].ingredients.Length; k++) {
                             xx = x + (i * gridSize) + inventoryMove - (gridSize * 2);
                             yy = y + 4 + ((k + 1) * gridSize) + craftingAreaY;
-                            r = new Rectangle(xx + 2, yy + 2, 16, 16);
+                            r = new Rectangle(xx + squareBorderSize, yy + squareBorderSize, itemSize, itemSize);
                             valaidRecipes[j].ingredients[k].draw(game, gameTime, r, color);
                         }
                     }
@@ -150,7 +154,7 @@ namespace Specland {
 
             xx = mouseState.X + 10;
             yy = mouseState.Y + 10;
-            r = new Rectangle(xx + 2, yy + 2, 16, 16);
+            r = new Rectangle(xx + 2, yy + 2, itemSize, itemSize);
 
             if (inventoryFade > 0 && !cursorItem.isEmpty()) {
                 cursorItem.draw(game, gameTime, r, inventoryColor);
