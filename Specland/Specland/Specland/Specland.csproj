@@ -124,10 +124,10 @@
     <Compile Include="Commands\CommandGive.cs" />
     <Compile Include="Commands\Command.cs" />
     <Compile Include="Commands\CommandHelp.cs" />
-    <Compile Include="Commands\InvalidArgumentException.cs" />
-    <Compile Include="Commands\InvalidNumberOfArgumentsException.cs" />
-    <Compile Include="Commands\NoSuchTileException.cs" />
-    <Compile Include="Commands\FileAlreadyExistsException.cs" />
+    <Compile Include="Exceptions\InvalidArgumentException.cs" />
+    <Compile Include="Exceptions\InvalidNumberOfArgumentsException.cs" />
+    <Compile Include="Exceptions\NoSuchTileException.cs" />
+    <Compile Include="Exceptions\FileAlreadyExistsException.cs" />
     <Compile Include="Main\IStringPrinter.cs" />
     <Compile Include="Main\Console.cs" />
     <Compile Include="Entities\EntityItem.cs" />
@@ -138,9 +138,9 @@
     <Compile Include="Items\ItemSwingable.cs" />
     <Compile Include="Items\ItemTile.cs" />
     <Compile Include="Main\ItemStack.cs" />
-    <Compile Include="Commands\NoSuchCommandException.cs" />
-    <Compile Include="Commands\NoSuchItemException.cs" />
-    <Compile Include="Commands\NumberInvalidException.cs" />
+    <Compile Include="Exceptions\NoSuchCommandException.cs" />
+    <Compile Include="Exceptions\NoSuchItemException.cs" />
+    <Compile Include="Exceptions\NumberInvalidException.cs" />
     <Compile Include="Main\Profiler.cs" />
     <Compile Include="Main\Recipe.cs" />
     <Compile Include="Entities\EntityFallingTile.cs" />

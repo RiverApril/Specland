@@ -71,6 +71,8 @@ namespace Specland {
 
         public static Color[] grayColors = new Color[256];
 
+        public static Point defaultSize = new Point(1000, 1000);
+
         public World(Point size, string name) {
             this.sizeInTiles = size;
             TileMatrix = new int[size.X, size.Y, 2];

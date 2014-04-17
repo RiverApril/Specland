@@ -29,7 +29,6 @@ namespace Specland {
         public static void GenerateFlat(World world, Random rand) {
             for (int x = 0; x < world.sizeInTiles.X; x++) {
                 for (int y = 0; y < world.sizeInTiles.Y; y++) {
-                    world.LiquidNeedsUpdateMatrix[x, y + 1] = true;
                     if (y < 100) {
                         continue;
                     } else if (y == 100) {
@@ -42,6 +41,7 @@ namespace Specland {
                         world.TileMatrix[x, y, World.TILEDEPTH] = ((a) ? Tile.TileDirt : Tile.TileStone).index;
                         world.TileMatrix[x, y, World.WALLDEPTH] = ((a) ? Tile.TileDirt : Tile.TileStone).index;
                     }
+                    world.LiquidNeedsUpdateMatrix[x, y] = true;
                 }
             }
         }

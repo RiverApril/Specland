@@ -52,7 +52,7 @@ namespace Specland {
         public static float volume = .05f;
 
         public static string saveLocation;
-        public static string saveExtention = "world";
+        public static string saveExtention = "slw";
 
 
         public Game() {
@@ -79,7 +79,7 @@ namespace Specland {
         }
 
         protected override void Initialize() {
-            currentWorld = new World(new Point(1000, 1000), "World");
+            currentWorld = new World(World.defaultSize, "World");
             currentWorld.generate(WorldGenerator.TypeNatural);
             currentWorld.player = new EntityPlayer((currentWorld.sizeInTiles.X*World.tileSizeInPixels)/2, 10);
             currentWorld.EntityList.Add(currentWorld.player);
