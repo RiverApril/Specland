@@ -152,6 +152,7 @@
     <Compile Include="Tiles\TileFurniture.cs" />
     <Compile Include="Tiles\TileLeaf.cs" />
     <Compile Include="Tiles\TileMustRestOn.cs" />
+    <Compile Include="Tiles\TileTorch.cs" />
     <Compile Include="Tiles\TileTree.cs" />
     <Compile Include="Main\WorldGenerator.cs" />
     <Compile Include="Entities\Entity.cs" />

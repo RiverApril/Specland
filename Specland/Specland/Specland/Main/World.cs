@@ -27,9 +27,15 @@ namespace Specland {
         public static float RENDER_DEPTH_ENTITY = .4f;
         public static float RENDER_DEPTH_HOVER = .3f;
 
+        public static int nearSurfaceY = 40;
+        public static int undergroundY = 40;
+        public static int undergroundWaterY = 40;
+
         public static int previousUniqueID = 0;
 
         public Point sizeInTiles;
+
+        public int[] heightMap;
 
         public int[, ,] TileMatrix;
         public int[, ,] TileDataMatrix;
@@ -75,6 +81,8 @@ namespace Specland {
 
         public static Point defaultSize = new Point(1000, 1000);
 
+        private Color currentBgColor;
+
         public World(Point size, string name) {
             this.sizeInTiles = size;
             TileMatrix = new int[size.X, size.Y, 2];
@@ -87,6 +95,7 @@ namespace Specland {
             TileNeedsUpdateMatrix = new bool[size.X, size.Y, 2];
             LiquidNeedsUpdateMatrix = new bool[size.X, size.Y];
             skyY = new int[size.X];
+            heightMap = new int[size.X];
 
             lightingThreadFps = new FpsControl();
             liquidThreadFps = new FpsControl();
@@ -645,7 +654,7 @@ namespace Specland {
         private void lightUpdate2(int x, int y, bool firstY) {
             if (inWorld(x, y)) {
                 //if (firstY && y < skyY[x]) {
-                if (textureTileInfo[x, y].transparent && textureWallInfo[x, y].transparent) {
+                if (textureTileInfo[x, y].transparent && textureWallInfo[x, y].transparent && y<heightMap[x]+undergroundY) {
                     setLightFromSource(x, y, true, skyLightBrightness);
                 }
                 Tile tile = getTileObject(x, y, false);
@@ -706,8 +715,27 @@ namespace Specland {
         }*/
 
         public Color getBgColor() {
-            float a = (MathHelper.Clamp(skyLightBrightness, 0, 255))/255.0f;
-            return new Color((byte)(100*a), (byte)(149*a), (byte)(237*a));
+            Color realColor = getRealBgColor();
+            currentBgColor.R += (byte)((realColor.R - currentBgColor.R) / 16);
+            currentBgColor.G += (byte)((realColor.G - currentBgColor.G) / 16);
+            currentBgColor.B += (byte)((realColor.B - currentBgColor.B) / 16);
+            return currentBgColor;
+        }
+
+        private Color getRealBgColor() {
+            float a = 0;
+            if (player.position.Y < (getHeightMap((int)player.position.X / tileSizeInPixels) + undergroundY) * tileSizeInPixels) {
+                a = (MathHelper.Clamp(skyLightBrightness, 0, 255)) / 255.0f;
+            }
+            return new Color((byte)(100 * a), (byte)(149 * a), (byte)(237 * a));
+        }
+
+        private int getHeightMap(int x) {
+            if(x>=0 && x<sizeInTiles.X){
+                return heightMap[x];
+            } else {
+                return heightMap[0];
+            }
         }
 
         public void generate(int type) {

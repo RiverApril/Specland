@@ -24,6 +24,10 @@ namespace Specland {
                 case (TypeFlat): { GenerateFlat(world, rand); break; };
                 case (TypeNatural): { GenerateNatural(world, rand); break; };
             }
+
+            for (int i = 0; i < 100; i++) {
+                world.SimUpdate();
+            }
         }
 
         public static void GenerateFlat(World world, Random rand) {
@@ -170,14 +174,14 @@ namespace Specland {
             //Dirt:
             for (int i = 0; i < 1000; i++) {
                 int x = rand.Next(width);
-                int y = heightMap[x] + 20;
+                int y = heightMap[x] + World.nearSurfaceY;
                 CreateBlob(world, rand, 20, 50, x, y + rand.Next(height - y), FillDirt);
             }
 
             //Sand:
             for (int i = 0; i < 500; i++) {
                 int x = rand.Next(width);
-                int y = heightMap[x] + 20;
+                int y = heightMap[x] + World.nearSurfaceY;
                 CreateBlob(world, rand, 20, 50, x, y + rand.Next(height - y), FillSand);
             }
 
@@ -188,27 +192,18 @@ namespace Specland {
                 y += rand.Next(height-y);
                 CreateBlob(world, rand, 4, 10, x, y, FillOre, Tile.TileCoalOre);
             }*/
-            for (int i = 0; i < 1000; i++ ) {
-                int x = rand.Next(width);
-                int y = heightMap[x] + 40;
-                y += rand.Next(height - y);
-                if (world.inWorld(x, y) && Tile.TilePlantGlow.canBePlacedHere(world, x, y, false)) {
-                    world.TileMatrix[x, y, World.TILEDEPTH] = Tile.TilePlantGlow.index;
-                }
-                
-            }
 
             //Caves:
             for (int i = 0; i < 1000; i++) {
                 int x = rand.Next(width);
-                int y = heightMap[x] + 60;
+                int y = heightMap[x] + World.undergroundWaterY;
                 CreateBlob(world, rand, 20, 100, x, y + rand.Next(height - y), FillAir);
             }
 
             //Water:
             for (int i = 0; i < 300; i++) {
                 int x = rand.Next(width);
-                int y = heightMap[x] + 60;
+                int y = heightMap[x] + World.undergroundWaterY;
                 CreateBlob(world, rand, 20, 100, x, y + rand.Next(height - y), FillWater);
             }
 
@@ -220,9 +215,17 @@ namespace Specland {
                 }
             }
 
-            for (int i = 0; i < 1000;i++ ) {
-                world.SimUpdate();
+            for (int i = 0; i < 10000; i++) {
+                int x = rand.Next(width);
+                int y = heightMap[x] + World.undergroundY;
+                y += rand.Next(height - y);
+                if (world.inWorld(x, y) && Tile.TilePlantGlow.canBePlacedHere(world, x, y, false)) {
+                    world.TileMatrix[x, y, World.TILEDEPTH] = Tile.TilePlantGlow.index;
+                }
+
             }
+
+            world.heightMap = heightMap;
         }
 
         private static void CreateBlob(World world, Random rand, int circleSize, int blobSize, int x, int y, Action<World, int, int> action) {

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Specland.Tiles;
 
 namespace Specland {
     public class Tile {
@@ -25,8 +26,7 @@ namespace Specland {
         public static Tile TileStone = new Tile("Stone", RenderTypeTerrain, 2, 0);
         public static Tile TileStoneBricks = new Tile("StoneBricks", RenderTypeTerrain, 0, 1).setDisplayName("Stone Bricks");
         public static Tile TileGlass = new Tile("Glass", RenderTypeAttachToSelf, 1, 1).setTransparent().setWallBrightness(240);
-        //public static Tile TileCoalOre = new Tile("CoalOre", RenderTypeTerrain, 3, 0).setDisplayName("Coal Ore");
-        public static Tile TileTorch = new Tile("Torch", RenderTypePlaced, 2, 1).setTransparent().setLight(300).notSolid().notWall();
+        public static Tile TileTorch = new TileTorch("Torch", RenderTypePlaced, 2, 1).setTransparent().setLight(200).notSolid().notWall();
         public static Tile TileTree = new TileTree("Tree", RenderTypeCustom, 3, 1).setTransparent().notSolid();
         public static Tile TileLeaf = new TileLeaf("Leaf", RenderTypeCustom, 4, 1, TileTree.index).setTransparent().notSolid();
         public static Tile TileWood = new Tile("Wood", RenderTypeTerrain, 4, 0).setDisplayName("Wooden Plank");
@@ -35,7 +35,8 @@ namespace Specland {
         public static Tile TileWoodDoor = new TileDoor("WoodDoor", RenderTypeCustom, 2, 2).notWall().setTransparent().setDisplayName("Wooden Door");
         public static Tile TileWoodTable = new TileFurniture("WoodTable", RenderTypeCustom, 3, 2, 3, 2).notSolid().notWall().setTransparent().setDisplayName("Wooden Table");
         public static Tile TileWoodChair = new TileFurniture("WoodChair", RenderTypeCustom, 4, 2, 1, 2).notSolid().notWall().setTransparent().setDisplayName("Wooden Chair");
-        public static Tile TilePlantGlow = new TileMustRestOn("GlowLeaf", RenderTypeCustom, 5, 1, 2, 3, 0, 1, new Tile[]{TileDirt, TileStone}, true).notSolid().notWall().setTransparent().setLight(120).setDisplayName("Glow Leaf").setDisplayNamePlural("Glow Leaves");
+        public static Tile TilePlantGlow = new TileMustRestOn("GlowLeaf", RenderTypeCustom, 5, 1, 2, 3, 0, 1, new Tile[] { TileDirt, TileStone }, true).notSolid().notWall().setTransparent().setLight(120).setDisplayName("Glow Leaf").setDisplayNamePlural("Glow Leaves");
+        public static Tile TileLamp = new Tile("Lamp", RenderTypePlaced, 6, 1).setTransparent().setLight(300).notSolid().notWall();
 
         public int index;
         public string name;
