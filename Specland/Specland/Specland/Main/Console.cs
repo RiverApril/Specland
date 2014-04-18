@@ -13,8 +13,8 @@ namespace Specland {
         public string input = "";
         public int inputPosition = 0;
 
-        private int width = 300;
-        private int historyHeight = 17*5;
+        //private int width = 300;
+        //private int historyHeight = 17*5;
         private int historyYFromBottom = 28;
         private int tick = 0;
 

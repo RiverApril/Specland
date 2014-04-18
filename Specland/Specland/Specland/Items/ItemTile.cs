@@ -7,8 +7,8 @@ using Microsoft.Xna.Framework;
 namespace Specland {
     public class ItemTile : Item {
 
-        public ItemTile(int index, string name, int renderType, Rectangle sourceRectangle)
-            : base(index, name, renderType, sourceRectangle) {
+        public ItemTile(string name, int renderType, Rectangle sourceRectangle)
+            : base(name, renderType, sourceRectangle) {
                 maxStack = 99999;
         }
 
@@ -18,7 +18,7 @@ namespace Specland {
                 r.Y += r.Height / 4;
                 r.Width /= 2;
                 r.Height /= 2;
-                game.spriteBatch.Draw(Tile.TileSheet, r, Tile.getTileObject(data).get8(3, 3), color);
+                game.spriteBatch.Draw(Tile.TileSheet, r, Tile.getTileObject(data).getItemRect(), color);
             }
         }
 
@@ -54,9 +54,10 @@ namespace Specland {
             return stack;
         }
 
-        public override string getName(int count, int data) {
+        public override string getDisplayName(int count, int data) {
             if (maxStack > 1) {
-                return (Tile.getTileObject(data).displayName) + (count == 1 ? "" : ("s (" + formatNumber(count) + ")"));
+                Tile tile = Tile.getTileObject(data);
+                return (count == 1 ? tile.displayName : (tile.displayNamePlural+" (" + formatNumber(count) + ")"));
             } else {
                 return name;
             }
@@ -83,8 +84,9 @@ namespace Specland {
 
         public override void drawHover(Game game, int mouseTileX, int mouseTileY, ItemStack currentItem) {
             if (!Tile.getTileObject(currentItem.getData()).drawHover(game, mouseTileX, mouseTileY, currentItem)) {
-                bool tileGoesHere = Tile.getTileObject(currentItem.getData()).canBePlacedHere(game.currentWorld, mouseTileX, mouseTileY, true);
-                bool wallGoesHere = Tile.getTileObject(currentItem.getData()).canBePlacedHere(game.currentWorld, mouseTileX, mouseTileY, false);
+                Tile tile = Tile.getTileObject(currentItem.getData());
+                bool tileGoesHere = tile.canBePlacedHere(game.currentWorld, mouseTileX, mouseTileY, true);
+                bool wallGoesHere = tile.canBePlacedHere(game.currentWorld, mouseTileX, mouseTileY, false);
                 if (tileGoesHere || wallGoesHere) {
                     game.spriteBatch.Draw(Tile.TileSheet, new Rectangle((mouseTileX * World.tileSizeInPixels) - game.currentWorld.viewOffset.X, (mouseTileY * World.tileSizeInPixels) - game.currentWorld.viewOffset.Y, World.tileSizeInPixels, World.tileSizeInPixels), Tile.getTileObject(currentItem.getData()).getTextureInfo(mouseTileX, mouseTileY, game.currentWorld, false).rectangle, new Color(.5f, .5f, .5f, .5f));
                 }

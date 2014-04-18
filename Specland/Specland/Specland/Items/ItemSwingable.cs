@@ -10,8 +10,8 @@ namespace Specland {
 
         protected int swingMaxTime;
 
-        public ItemSwingable(int index, string name, int renderType, Rectangle sourceRectangle, int swingMaxTime)
-            : base(index, name, renderType, sourceRectangle) {
+        public ItemSwingable(string name, int renderType, Rectangle sourceRectangle, int swingMaxTime)
+            : base(name, renderType, sourceRectangle) {
                 this.swingMaxTime = swingMaxTime;
         }
 

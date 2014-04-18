@@ -8,8 +8,8 @@ using Microsoft.Xna.Framework.Input;
 namespace Specland {
     public class Inventory : Gui {
 
-        int x = 4;
-        int y = 8;
+        private static int x = 4;
+        private static int y = 24;
 
         int selectedSlot = 0;
 
@@ -35,7 +35,7 @@ namespace Specland {
 
         ItemStack[] items = new ItemStack[100];
 
-        ItemStack cursorItem = new ItemStack(Item.ItemEmpty);
+        ItemStack cursorItem = new ItemStack(Item.itemEmpty);
 
         private int mouseItemSlot = -1;
         private int mouseCraftSlot = -1;
@@ -50,16 +50,16 @@ namespace Specland {
         private int leftClickTimer = 0;
         private int rightClickTimer = 0;
 
-        private static int craftingAreaY = (int)(11 * gridSize);
+        private static int craftingAreaY = (int)y+(11 * gridSize)-8;
 
         public ItemStack currentItem;
 
         public Inventory(){
             for (int i = 0; i < items.Length; i++) {
-                items[i] = new ItemStack(Item.ItemEmpty);
+                items[i] = new ItemStack(Item.itemEmpty);
             }
-            pickUp(new ItemStack(Item.ItemSupick));
-            pickUp(new ItemStack(Item.ItemCrapick));
+            pickUp(new ItemStack(Item.itemSupick));
+            pickUp(new ItemStack(Item.itemCrapick));
             //pickUp(new ItemStack(Item.ItemTile, 999, Tile.TileWoodTable.index));
             updateValaidRecipes();
         }
@@ -101,12 +101,17 @@ namespace Specland {
 
             bool mouseInCrafting = mouseInCraftingArea(game);
 
+            if (currentItem!=null) {
+               game.spriteBatch.DrawString(Game.fontNormal, currentItem.getDisplayName(), new Vector2(8, 4), hotBarColor);
+           }
+
             for(int i=0; i < 10; i++){
                 xx = x + (selectedSlot == i ? (cursorItem.isEmpty() ? 4 : 2) : 0) + inventoryMove + 4;
                 yy = y + (i * gridSize);
                 r = new Rectangle(xx + squareBorderSize, yy + squareBorderSize, itemSize, itemSize);
                 game.spriteBatch.Draw(guiTexture, new Rectangle(xx, yy, squareSize, squareSize), new Rectangle(0, 0, 20, 20), hotBarColor);
                 items[itemIndex].draw(game, gameTime, r, hotBarColor);
+                game.spriteBatch.DrawString(Game.fontNormal, (i==9?0:i+1) + "", new Vector2(xx + 22, yy + 3), hotBarColor);
 
                 itemIndex++;
             }
@@ -176,8 +181,8 @@ namespace Specland {
 
         private bool mouseInCraftingArea(Game game) {
             int xx = x + (-2 * gridSize) + inventoryMove - (gridSize * 2);
-            int yy = y + craftingAreaY-1;
-            return new Rectangle(xx, yy, gridSize * 5, gridSize * 2).Contains(game.inputState.mouseState.X, game.inputState.mouseState.Y);
+            int yy = y + craftingAreaY-22;
+            return new Rectangle(xx, yy, gridSize * 5, gridSize * 4).Contains(game.inputState.mouseState.X, game.inputState.mouseState.Y);
         }
 
 
@@ -251,7 +256,7 @@ namespace Specland {
                     inventoryFade -= .05f;
                 } else {
                     dropItem(game, cursorItem);
-                    cursorItem = new ItemStack(Item.ItemEmpty);
+                    cursorItem = new ItemStack(Item.itemEmpty);
                 }
             }
 
@@ -269,6 +274,29 @@ namespace Specland {
             hotBarColor = new Color(f, f, f, f);
             inventoryColor = new Color(inventoryFade, inventoryFade, inventoryFade, inventoryFade);
             lastScrollValue = game.inputState.mouseState.ScrollWheelValue;
+
+            if(game.inputState.pressed(Keys.D1)){
+                selectedSlot = 0;
+            } else if (game.inputState.pressed(Keys.D2)) {
+                selectedSlot = 1;
+            } else if (game.inputState.pressed(Keys.D3)) {
+                selectedSlot = 2;
+            } else if (game.inputState.pressed(Keys.D4)) {
+                selectedSlot = 3;
+            } else if (game.inputState.pressed(Keys.D5)) {
+                selectedSlot = 4;
+            } else if (game.inputState.pressed(Keys.D6)) {
+                selectedSlot = 5;
+            } else if (game.inputState.pressed(Keys.D7)) {
+                selectedSlot = 6;
+            } else if (game.inputState.pressed(Keys.D8)) {
+                selectedSlot = 7;
+            } else if (game.inputState.pressed(Keys.D9)) {
+                selectedSlot = 8;
+            } else if (game.inputState.pressed(Keys.D0)) {
+                selectedSlot = 9;
+            }
+
 
             #endregion
 
@@ -303,7 +331,7 @@ namespace Specland {
                     int j = i + craftingScroll;
                     if (j >= 0 && j < valaidRecipes.Count()) {
                         xx = x + (i * gridSize) + inventoryMove - (gridSize * 2);
-                        yy = y + craftingAreaY;;
+                        yy = y + craftingAreaY;
                         if (new Rectangle(xx, yy, gridSize, gridSize).Contains(game.inputState.mouseState.X, game.inputState.mouseState.Y)) {
                             mouseCraftSlot = j;
                         }
@@ -501,7 +529,7 @@ namespace Specland {
         }
 
         public void dropItem(Game game, ItemStack item) {
-            if (item.getItem().index != Item.ItemEmpty.index) {
+            if (item.getItem().index != Item.itemEmpty.index) {
                 Entity e = new EntityItem(game.currentWorld.player.position, item, 40);
                 game.currentWorld.EntityList.Add(e);
             }
@@ -521,7 +549,7 @@ namespace Specland {
                 if(items[i].isEmpty()){
                     items[i] = stack;
                     updateValaidRecipes();
-                    return new ItemStack(Item.ItemEmpty);
+                    return new ItemStack(Item.itemEmpty);
                 }
             }
             return stack;

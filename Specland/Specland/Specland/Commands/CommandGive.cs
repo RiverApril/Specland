@@ -41,7 +41,7 @@ namespace Specland {
                     try {
                         data = toInt(options[2]);
                     } catch (NumberInvalidException e) {
-                        if (id == Item.ItemTile.index) {
+                        if (id == Item.itemTile.index) {
                             foreach (Tile tile in Tile.TileList) {
                                 if (tile != null) {
                                     if (equalsIgnoreCase(tile.name, e.s)) {
@@ -59,7 +59,7 @@ namespace Specland {
                     }
                 }
 
-                if(id != Item.ItemEmpty.index){
+                if(id != Item.itemEmpty.index){
                     ItemStack stack = new ItemStack(Item.Itemlist[id], count, data);
                     printer.println("Gave you "+stack.getDisplayName());
                     Game.instance.inventory.pickUp(stack);

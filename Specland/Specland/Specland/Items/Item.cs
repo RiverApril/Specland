@@ -4,36 +4,62 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Specland.Items;
 
 namespace Specland {
     public class Item {
 
         public static Texture2D ItemSheet;
 
+        public static int nextIndex = 0;
+
         public static int RenderTypeNone = 0;
         public static int RenderTypeNormal = 1;
 
         public static Item[] Itemlist = new Item[100];
 
-        public static Item ItemEmpty = new Item(0, "", RenderTypeNone, Rectangle.Empty);
-        public static ItemTile ItemTile = new ItemTile(1, "Tile", RenderTypeNormal, Rectangle.Empty);
-        public static ItemPick ItemCrapick = new ItemPick(2, "Crapick", RenderTypeNormal, new Rectangle(0, 0, 16, 16), 64, 20, 6 * World.tileSizeInPixels);
-        public static ItemPick ItemSupick = new ItemPick(3, "Supick", RenderTypeNormal, new Rectangle(16, 0, 16, 16), 255, 0, 10 * World.tileSizeInPixels);
+        public static Item itemEmpty = new Item("", RenderTypeNone, Rectangle.Empty);
+        public static ItemTile itemTile = new ItemTile("Tile", RenderTypeNormal, Rectangle.Empty);
+        public static ItemPick itemCrapick = new ItemPick("Crapick", RenderTypeNormal, new Rectangle(0, 0, 16, 16), 64, 20, 6 * World.tileSizeInPixels);
+        public static ItemPick itemSupick = new ItemPick("Supick", RenderTypeNormal, new Rectangle(16, 0, 16, 16), 255, 0, 10 * World.tileSizeInPixels);
+        public static Item itemBucket = new ItemBucket("Bucket", RenderTypeNormal, new Rectangle(16 * 2, 0, 16, 16));
+        public static Item itemBucketWater = new ItemBucketFilled("BucketWater", RenderTypeNormal, new Rectangle(16 * 3, 0, 16, 16)).setDisplayName("Bucket of Water");
 
         public int index;
         public string name;
         public int maxStack = 1;
         public int renderType;
 
+        public string displayName;
+        public string displayNamePlural;
+
         public TextureInfo textureInfo;
         public int reach = World.tileSizeInPixels * 6;
 
-        public Item(int index, string name, int renderType, Rectangle sourceRectangle) {
+        public Item(string name, int renderType, Rectangle sourceRectangle) {
+            index = getNewIndex();
             Itemlist[index] = this;
-            this.index = index;
             this.name = name;
+            this.displayName = name;
+            this.displayNamePlural = displayName + "s";
             this.renderType = renderType;
             this.textureInfo = new TextureInfo(sourceRectangle, true);
+        }
+
+        private Item setDisplayName(string n) {
+            displayName = n;
+            displayNamePlural = n + "s";
+            return this;
+        }
+
+        private Item setDisplayNamePlural(string n) {
+            displayNamePlural = n;
+            return this;
+        }
+
+        private static int getNewIndex() {
+            nextIndex++;
+            return nextIndex - 1;
         }
 
         public Item setMaxStack(int q) {
@@ -62,6 +88,10 @@ namespace Specland {
 
         public virtual string getName(int count, int data) {
             return name;
+        }
+
+        public virtual string getDisplayName(int count, int data) {
+            return count == 1 ? displayName : displayNamePlural;
         }
 
         public virtual void drawHover(Game game, int mouseTileX, int mouseTileY, ItemStack currentItem) {

@@ -136,8 +136,9 @@ namespace Specland {
                 position.X += speed.X;
             } else {
                 bool moved = false;
+                bool goingRight = speed.X > 0;
                 if (!game.inputState.getKeyboardState().IsKeyDown(Keys.S)) {
-                    if (collision(world, 0, 4) && !collision(world, (facingRight ? World.tileSizeInPixels : -World.tileSizeInPixels) + speed.X, -(int)(World.tileSizeInPixels * 1.2))) {
+                    if (collision(world, 0, 4) && !collision(world, (goingRight ? World.tileSizeInPixels : -World.tileSizeInPixels) + speed.X, -(int)(World.tileSizeInPixels * 1.2))) {
                         
                         position.X += speed.X;
                         position.Y -= World.tileSizeInPixels * 1.2f;
@@ -147,7 +148,7 @@ namespace Specland {
 
                         moved = true;
 
-                    } else if (collision(world, 0, 4) && !collision(world, (facingRight ? World.tileSizeInPixels : -World.tileSizeInPixels), -(int)(World.tileSizeInPixels * 1.2))) {
+                    } else if (collision(world, 0, 4) && !collision(world, (goingRight ? World.tileSizeInPixels : -World.tileSizeInPixels), -(int)(World.tileSizeInPixels * 1.2))) {
                         position.Y -= World.tileSizeInPixels * 1.2f;
 
                         walkUpPosition.Y -= World.tileSizeInPixels * 1.2f;

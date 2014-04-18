@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
+using System.Threading;
 
 namespace Specland {
     public class FpsControl {
@@ -23,7 +24,6 @@ namespace Specland {
             stopWatch.Start();
         }
 
-
         /*internal void update(GameTime gameTime) {
             frameCounter++;
             frameTime += gameTime.ElapsedGameTime.Milliseconds;
@@ -42,10 +42,12 @@ namespace Specland {
                 FramesPerSecond = TempFrames;
                 TicksperSecond = TempTicks;
                 MillisecondsPerTick = (float)TempMilliseconds / (float)FramesPerSecond;
+
                 TempFrames = 0;
                 TempTicks = 0;
                 TempMilliseconds = 0;
             }
+
             stopWatch.Restart();
         }
 

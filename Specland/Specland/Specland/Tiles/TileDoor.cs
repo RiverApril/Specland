@@ -106,11 +106,11 @@ namespace Specland {
 
         public override void updateNearChange(World world, int x, int y, bool isWall) {
             if (!(world.isTileSolid(x, y + 1, isWall) || world.getTileIndex(x, y + 1, isWall) == index)) {
-                world.mineTile(x, y, Item.ItemSupick, isWall);
+                world.mineTile(x, y, Item.itemSupick, isWall);
             }
         }
 
-        public override bool canBePlacedHere(World world, int x, int y, bool isWall) {
+        public override bool canBePlacedHereOverridable(World world, int x, int y, bool isWall) {
             return world.getTileIndex(x, y + 1, isWall) != index && world.isTileSolid(x, y + 1, isWall) && world.getTileObject(x, y, isWall).isAir() && world.getTileObject(x, y - 1, isWall).isAir() && world.getTileObject(x, y - 2, isWall).isAir();
         }
 
@@ -128,7 +128,7 @@ namespace Specland {
         }
 
         public override ItemStack dropStack(World world, ItemPick itemPick, Random rand, int x, int y, bool isWall) {
-            return new ItemStack(Item.ItemTile, 1, index);
+            return new ItemStack(Item.itemTile, 1, index);
         }
 
         public override bool drawHover(Game game, int mouseTileX, int mouseTileY, ItemStack currentItem) {

@@ -25,17 +25,17 @@ namespace Specland {
         public static Tile TileStone = new Tile("Stone", RenderTypeTerrain, 2, 0);
         public static Tile TileStoneBricks = new Tile("StoneBricks", RenderTypeTerrain, 0, 1).setDisplayName("Stone Bricks");
         public static Tile TileGlass = new Tile("Glass", RenderTypeAttachToSelf, 1, 1).setTransparent().setWallBrightness(240);
-        public static Tile TileCoalOre = new Tile("CoalOre", RenderTypeTerrain, 3, 0).setDisplayName("Coal Ore");
+        //public static Tile TileCoalOre = new Tile("CoalOre", RenderTypeTerrain, 3, 0).setDisplayName("Coal Ore");
         public static Tile TileTorch = new Tile("Torch", RenderTypePlaced, 2, 1).setTransparent().setLight(300).notSolid().notWall();
         public static Tile TileTree = new TileTree("Tree", RenderTypeCustom, 3, 1).setTransparent().notSolid();
         public static Tile TileLeaf = new TileLeaf("Leaf", RenderTypeCustom, 4, 1, TileTree.index).setTransparent().notSolid();
         public static Tile TileWood = new Tile("Wood", RenderTypeTerrain, 4, 0).setDisplayName("Wooden Plank");
         public static Tile TileSand = new TileFalling("Sand", RenderTypeTerrain, 5, 0);
-        public static Tile TileSapling = new TileMustRestOn("Sapling", RenderTypeCustom, 5, 1, 3, 3, 0, 1, TileGrass).notSolid().notWall().setTransparent();
+        public static Tile TileSapling = new TileMustRestOn("Sapling", RenderTypeCustom, 5, 1, 3, 3, 0, 1, TileGrass, true).notSolid().notWall().setTransparent();
         public static Tile TileWoodDoor = new TileDoor("WoodDoor", RenderTypeCustom, 2, 2).notWall().setTransparent().setDisplayName("Wooden Door");
         public static Tile TileWoodTable = new TileFurniture("WoodTable", RenderTypeCustom, 3, 2, 3, 2).notSolid().notWall().setTransparent().setDisplayName("Wooden Table");
         public static Tile TileWoodChair = new TileFurniture("WoodChair", RenderTypeCustom, 4, 2, 1, 2).notSolid().notWall().setTransparent().setDisplayName("Wooden Chair");
-
+        public static Tile TilePlantGlow = new TileMustRestOn("GlowLeaf", RenderTypeCustom, 5, 1, 2, 3, 0, 1, new Tile[]{TileDirt, TileStone}, true).notSolid().notWall().setTransparent().setLight(120).setDisplayName("Glow Leaf").setDisplayNamePlural("Glow Leaves");
 
         public int index;
         public string name;
@@ -48,6 +48,7 @@ namespace Specland {
         public int wallBrightness = 127;
         public bool canBeWall = true;
         public string displayName;
+        public string displayNamePlural;
 
         private static int nextIndex=0;
 
@@ -58,6 +59,7 @@ namespace Specland {
             TileList[index] = this;
             this.name = name;
             this.displayName = name;
+            this.displayNamePlural = displayName;
             this.renderType = renderType;
             this.textureArea = new Point(textureX, textureY);
         }
@@ -99,6 +101,12 @@ namespace Specland {
 
         private Tile setDisplayName(string n) {
             displayName = n;
+            displayNamePlural = n + "s";
+            return this;
+        }
+
+        private Tile setDisplayNamePlural(string n) {
+            displayNamePlural = n;
             return this;
         }
 
@@ -248,14 +256,21 @@ namespace Specland {
         }
 
         public virtual ItemStack dropStack(World world, ItemPick itemPick, Random rand, int x, int y, bool isWall) {
-            return new ItemStack(Item.ItemTile, 1, index);
+            return new ItemStack(Item.itemTile, 1, index);
         }
 
         public virtual void mine(World world, int x, int y, int data, ItemPick pick, bool isWall) {
 
         }
 
-        public virtual bool canBePlacedHere(World world, int x, int y, bool isWall) {
+        public bool canBePlacedHere(World world, int x, int y, bool isWall) {
+            if(isWall && !canBeWall){
+                return false;
+            }
+            return canBePlacedHereOverridable(world, x, y, isWall);
+        }
+
+        public virtual bool canBePlacedHereOverridable(World world, int x, int y, bool isWall) {
             return (world.isTileSolid(x - 1, y, isWall) || world.isTileSolid(x + 1, y, isWall) || world.isTileSolid(x, y - 1, isWall) || world.isTileSolid(x, y + 1, isWall) || !world.getTileObject(x, y, !isWall).isAir()) && world.getTileObject(x, y, isWall).isAir();
         }
 
@@ -279,8 +294,12 @@ namespace Specland {
             return defaultSolid;
         }
 
-        internal bool isSolid() {
+        public virtual bool isSolid() {
             return defaultSolid;
+        }
+
+        public virtual Rectangle getItemRect() {
+            return get8(3, 3);
         }
     }
 }

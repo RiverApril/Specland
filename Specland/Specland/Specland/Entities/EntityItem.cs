@@ -9,7 +9,7 @@ namespace Specland {
 
         public static bool playedSoundEffectRecently = false;
 
-        private ItemStack stack = new ItemStack(Item.ItemEmpty);
+        private ItemStack stack = new ItemStack(Item.itemEmpty);
 
         private int maxPickupDelay = 20;
         private int pickUpDelay = 20;

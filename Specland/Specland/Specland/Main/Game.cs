@@ -42,7 +42,9 @@ namespace Specland {
         public static Texture2D dummyTexture;
 
         public static Rectangle OnexOneRect = new Rectangle(0, 0, 1, 1);
+
         private Thread lightingThread;
+        private Thread liquidThread;
 
         public bool debugEnabled = false;
 
@@ -68,12 +70,23 @@ namespace Specland {
 
             lightingThread = new Thread(new ThreadStart(lightingThreadUpdate));
             lightingThread.Start();
+
+            liquidThread = new Thread(new ThreadStart(liquidThreadUpdate));
+            liquidThread.Start();
         }
 
         private void lightingThreadUpdate() {
             while(true){
                 if (currentWorld != null) {
                     currentWorld.lightingThreadUpdate();
+                }
+            }
+        }
+
+        private void liquidThreadUpdate() {
+            while (true) {
+                if (currentWorld != null) {
+                    currentWorld.liquidThreadUpdate();
                 }
             }
         }
@@ -113,6 +126,7 @@ namespace Specland {
 
         protected override void UnloadContent() {
             lightingThread.Abort();
+            liquidThread.Abort();
         }
 
         protected override void Update(GameTime gameTime) {
@@ -176,12 +190,14 @@ namespace Specland {
                 string d = "Draw Fps: " + drawFps.getFps() + " (ms/t:" + drawFps.getMpt() + ") " + percent(drawFps.getFps(), 60) + "%";
                 string u = "Update Fps: " + updateFps.getFps() + " (ms/t:" + updateFps.getMpt() + ") " + percent(updateFps.getFps(), 60) + "%";
                 string l = "Lighting Fps: " + currentWorld.lightingThreadFps.getFps() + " (ms/t:" + currentWorld.lightingThreadFps.getMpt() + ") ";
+                string lq = "Liquid Fps:   " + currentWorld.liquidThreadFps.getFps() + " (ms/t:" + currentWorld.liquidThreadFps.getMpt() + ") ";
                 string p = "Rendering:\n  Gui: " + Profiler.get("draw gui") + "\n  Tile: " + Profiler.get("draw tiles") + "\n  Entity: " + Profiler.get("draw entities");
                 p += "\n\nLighting: " + Profiler.get("lighting");
                 string ti = "T: " + currentWorld.getTileIndex(inventory.mouseTileX, inventory.mouseTileY, false) + "`" + currentWorld.getTileData(inventory.mouseTileX, inventory.mouseTileY, false);
                 ti += "  W: " + currentWorld.getTileIndex(inventory.mouseTileX, inventory.mouseTileY, true) + "`" + currentWorld.getTileData(inventory.mouseTileX, inventory.mouseTileY, true);
+                string pp = "Position: " + currentWorld.player.position.X + ", " + currentWorld.player.position.Y;
 
-                spriteBatch.DrawString(fontNormal, d + "\n" + u + "\n" + l + "\n" + e + "\n" + t + "\n" + p + "\n" + ti + "\n" + drawMessage + "\n" + updateMessage, new Vector2(140, 10), Color.White);
+                spriteBatch.DrawString(fontNormal, d + "\n" + u + "\n" + l + "\n" + lq + "\n" + e + "\n" + t + "\n" + p + "\n" + ti + "\n" + pp + "\n" + drawMessage + "\n" + updateMessage, new Vector2(140, 10), Color.White);
             }
             drawMessage = "";
 

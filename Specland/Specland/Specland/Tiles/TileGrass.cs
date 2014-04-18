@@ -59,7 +59,7 @@ namespace Specland {
         }
 
         public override ItemStack dropStack(World world, ItemPick itemPick, Random rand, int x, int y, bool isWall) {
-            return new ItemStack(Item.ItemTile, 1, Tile.TileDirt.index);
+            return new ItemStack(Item.itemTile, 1, Tile.TileDirt.index);
         }
     }
 }

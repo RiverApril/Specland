@@ -15,7 +15,7 @@ namespace Specland {
         public EntityFallingTile(int x, int y, int index, bool isWall) : base(x, y) {
             this.index = index;
             this.isWall = isWall;
-            stack = new ItemStack(Item.ItemTile, 1, index);
+            stack = new ItemStack(Item.itemTile, 1, index);
         }
 
         public override void init(){
@@ -56,7 +56,7 @@ namespace Specland {
                 if(world.getTileIndex(x, y, isWall) == Tile.TileAir.index){
                     world.setTile(x, y, index, isWall);
                 } else {
-                    world.EntityAddingList.Add(new EntityItem(position, new ItemStack(Item.ItemTile, 1, index)));
+                    world.EntityAddingList.Add(new EntityItem(position, new ItemStack(Item.itemTile, 1, index)));
                 }
             }
             if(speed.Y < terminalVelocity){

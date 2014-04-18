@@ -7,12 +7,16 @@ using Microsoft.Xna.Framework;
 namespace Specland {
     public class ItemStack {
 
-        private Item item = Item.ItemEmpty;
+        private Item item = Item.itemEmpty;
         private int count = 1;
         private int data = 0;
 
 
         public ItemStack(Item item) : this(item, 1, 0){
+
+        }
+
+        public ItemStack(Tile tile, int count) : this(Item.itemTile, count, tile.index) {
 
         }
 
@@ -49,7 +53,7 @@ namespace Specland {
         }
 
         public bool isEmpty() {
-            return getItem().index == Item.ItemEmpty.index;
+            return getItem().index == Item.itemEmpty.index;
         }
 
         public int getCount() {
@@ -63,7 +67,7 @@ namespace Specland {
 
         public int verify() {
 
-            if (item.index == Item.ItemTile.index) {
+            if (item.index == Item.itemTile.index) {
                 if (data == Tile.TileAir.index) {
                     count = 0;
                 }
@@ -78,7 +82,7 @@ namespace Specland {
             if (count <= 0) {
                 int a = count;
                 count = 1;
-                item = Item.ItemEmpty;
+                item = Item.itemEmpty;
                 data = 0;
                 return a;
             }
@@ -87,7 +91,7 @@ namespace Specland {
         }
 
         public string getDisplayName() {
-            return item.getName(count, data);
+            return item.getDisplayName(count, data);
         }
 
         public bool isMax() {

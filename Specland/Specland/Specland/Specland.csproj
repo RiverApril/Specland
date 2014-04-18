@@ -128,6 +128,8 @@
     <Compile Include="Exceptions\InvalidNumberOfArgumentsException.cs" />
     <Compile Include="Exceptions\NoSuchTileException.cs" />
     <Compile Include="Exceptions\FileAlreadyExistsException.cs" />
+    <Compile Include="Items\ItemBucket.cs" />
+    <Compile Include="Items\ItemBucketFilled.cs" />
     <Compile Include="Main\IStringPrinter.cs" />
     <Compile Include="Main\Console.cs" />
     <Compile Include="Entities\EntityItem.cs" />

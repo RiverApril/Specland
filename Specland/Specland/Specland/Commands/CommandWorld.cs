@@ -32,14 +32,14 @@ namespace Specland {
 
                     if(options[0].Equals("save") || options[0].Equals("s")){
                         if (World.save(Game.instance.currentWorld, options[1], forceOverride)) {
-                            printer.println((forceOverride ? "World overwritten: " : "World saved as: ") + options[1]);
+                            printer.println((forceOverride ? "World overwritten: " : "World saved as: ") + options[1] + "." + Game.saveExtention);
                         } else {
                             printer.println("Save already exists: \"" + options[1] + "\" please use: /world save " + options[1] + " overwrite");
                         }
                     } else if (options[0].Equals("load") || options[0].Equals("l")) {
                         Game.instance.currentWorld = null;
                         Game.instance.currentWorld = World.load(options[1]);
-                        printer.println("World loaded: " + options[1]);
+                        printer.println("World loaded: " + options[1] + "." + Game.saveExtention);
                     }
                 } else if (options[0].Equals("new") || options[0].Equals("n")) {
                     int type = toInt(options[1]);

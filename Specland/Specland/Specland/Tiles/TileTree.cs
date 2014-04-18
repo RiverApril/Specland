@@ -73,12 +73,12 @@ namespace Specland {
             if (world.getTileIndex(x, y - 1, isWall) == index && world.getTileIndex(x, y + 1, isWall) != Tile.TileAir.index) {
 
             } else {
-                world.mineTileNoNearUpdate(x, y, Item.ItemSupick, isWall);
+                world.mineTileNoNearUpdate(x, y, Item.itemSupick, isWall);
             }
         }
 
         public override ItemStack dropStack(World world, ItemPick itemPick, Random rand, int x, int y, bool isWall) {
-            return rand.Next(2)==0?new ItemStack(Item.ItemTile, 1, Tile.TileWood.index):new ItemStack(Item.ItemEmpty);
+            return rand.Next(2)==0?new ItemStack(Item.itemTile, 1, Tile.TileWood.index):new ItemStack(Item.itemEmpty);
         }
 
     }

@@ -137,13 +137,13 @@ namespace Specland {
                 }
             }
             if(!a){
-                world.mineTileNoNearUpdate(x, y, Item.ItemSupick, isWall);
+                world.mineTileNoNearUpdate(x, y, Item.itemSupick, isWall);
             }
 
         }
 
         public override ItemStack dropStack(World world, ItemPick itemPick, Random rand, int x, int y, bool isWall) {
-            return rand.Next(8) == 0 ? new ItemStack(Item.ItemTile, 1, Tile.TileSapling.index) : new ItemStack(Item.ItemEmpty);
+            return rand.Next(8) == 0 ? new ItemStack(Item.itemTile, 1, Tile.TileSapling.index) : new ItemStack(Item.itemEmpty);
         }
 
     }

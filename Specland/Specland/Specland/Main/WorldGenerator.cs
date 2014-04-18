@@ -182,10 +182,20 @@ namespace Specland {
             }
 
             //Coal Ore:
-            for (int i = 0; i < 1000;i++ ) {
+            /*for (int i = 0; i < 1000;i++ ) {
                 int x = rand.Next(width);
                 int y = heightMap[x] + 40;
-                CreateBlob(world, rand, 4, 10, x, y+rand.Next(height-y), FillCoalOre);
+                y += rand.Next(height-y);
+                CreateBlob(world, rand, 4, 10, x, y, FillOre, Tile.TileCoalOre);
+            }*/
+            for (int i = 0; i < 1000; i++ ) {
+                int x = rand.Next(width);
+                int y = heightMap[x] + 40;
+                y += rand.Next(height - y);
+                if (world.inWorld(x, y) && Tile.TilePlantGlow.canBePlacedHere(world, x, y, false)) {
+                    world.TileMatrix[x, y, World.TILEDEPTH] = Tile.TilePlantGlow.index;
+                }
+                
             }
 
             //Caves:
@@ -262,8 +272,8 @@ namespace Specland {
             world.TileMatrix[x, y, World.WALLDEPTH] = Tile.TileSand.index;
         }
 
-        private static void FillCoalOre(World world, int x, int y) {
-            world.TileMatrix[x, y, World.TILEDEPTH] = Tile.TileCoalOre.index;
+        private static void FillOre(World world, int x, int y, int index) {
+            world.TileMatrix[x, y, World.TILEDEPTH] = index;
         }
 
         private static void FillLeaf(World world, int x, int y) {

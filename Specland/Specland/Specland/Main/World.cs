@@ -65,7 +65,9 @@ namespace Specland {
         public EntityPlayer player;
 
         public bool lightingNeedsUpdate = false;
+
         public FpsControl lightingThreadFps;
+        public FpsControl liquidThreadFps;
 
         Rectangle dr = new Rectangle(0, 0, tileSizeInPixels, tileSizeInPixels);
 
@@ -87,6 +89,7 @@ namespace Specland {
             skyY = new int[size.X];
 
             lightingThreadFps = new FpsControl();
+            liquidThreadFps = new FpsControl();
 
             for(int i=0;i<256;i++){
                 grayColors[i] = new Color((byte)i, (byte)i, (byte)i);
@@ -578,6 +581,27 @@ namespace Specland {
 
         private Rectangle divideRectangle(Rectangle rectangle, int number) {
             return new Rectangle(rectangle.X / number, rectangle.Y / number, rectangle.Width / number, rectangle.Height / number);
+        }
+
+        internal void liquidThreadUpdate() {
+            Profiler.start("liquid");
+
+            int border = 16;
+
+            for (int x = viewPortInTiles.X - border; x < viewPortInTiles.X + viewPortInTiles.Width + 1 + border; x++) {
+                for (int y = viewPortInTiles.Y + viewPortInTiles.Height + 1 + border; y > viewPortInTiles.Y - border; y--) {
+                    if (inWorld(x, y)) {
+                        if (LiquidNeedsUpdateMatrix[x, y]) {
+                            updateLiquid(x, y);
+                            LiquidNeedsUpdateMatrix[x, y] = false;
+                        }
+                    }
+                }
+            }
+
+            Profiler.end("liquid");
+
+            liquidThreadFps.update();
         }
 
         internal void lightingThreadUpdate() {

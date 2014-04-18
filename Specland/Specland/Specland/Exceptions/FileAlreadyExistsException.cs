@@ -5,6 +5,6 @@ using System.Text;
 
 namespace Specland {
     class FileAlreadyExistsException : Exception {
-        public string s;
+        public string s = "";
     }
 }
