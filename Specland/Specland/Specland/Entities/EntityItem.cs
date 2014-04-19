@@ -37,7 +37,7 @@ namespace Specland {
 
         public override void draw(Game game, World world) {
             byte a = (byte)MathHelper.Clamp(world.getLight((int)(position.X + (size.X / 2)) / World.tileSizeInPixels, (int)(position.Y + (size.Y / 2)) / World.tileSizeInPixels), 0, 255);
-            stack.drawNoCount(game, null, new Rectangle((int)position.X - world.viewOffset.X - (World.tileSizeInPixels/2), (int)position.Y - world.viewOffset.Y - (World.tileSizeInPixels / 2), World.tileSizeInPixels * 2, World.tileSizeInPixels * 2), new Color(a, a, a));
+            stack.drawNoCount(game, new Rectangle((int)position.X - world.viewOffset.X - (World.tileSizeInPixels/2), (int)position.Y - world.viewOffset.Y - (World.tileSizeInPixels / 2), World.tileSizeInPixels * 2, World.tileSizeInPixels * 2), new Color(a, a, a), Game.RENDER_DEPTH_ENTITY);
         }
 
         public override void update(Game game, World world) {

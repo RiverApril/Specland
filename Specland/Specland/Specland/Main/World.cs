@@ -21,12 +21,6 @@ namespace Specland {
         public static int WALLDEPTH = 1;
         public static int TILEDEPTH = 0;
 
-        public static float RENDER_DEPTH_WALL = .53f;
-        public static float RENDER_DEPTH_LIQUID = .52f;
-        public static float RENDER_DEPTH_TILE = .51f;
-        public static float RENDER_DEPTH_ENTITY = .4f;
-        public static float RENDER_DEPTH_HOVER = .3f;
-
         public static int nearSurfaceY = 40;
         public static int undergroundY = 40;
         public static int undergroundWaterY = 40;
@@ -545,7 +539,7 @@ namespace Specland {
                             dr.Y += textureWallInfo[x, y].offset.Y;
                             dr.Width = textureWallInfo[x, y].rectangle.Width * tileScale;
                             dr.Height = textureWallInfo[x, y].rectangle.Height * tileScale;
-                            drawRect(game, Tile.TileSheet, dr, textureWallInfo[x, y].rectangle, grayColors[b], RENDER_DEPTH_WALL, textureWallInfo[x, y].flipH, textureWallInfo[x, y].flipV);
+                            drawRect(game, Tile.TileSheet, dr, textureWallInfo[x, y].rectangle, grayColors[b], wall.getDepth(x, y, true), textureWallInfo[x, y].flipH, textureWallInfo[x, y].flipV);
                         }
                         byte a = (byte)MathHelper.Clamp(LightMatrix[x, y], 0, 255);
                         if (textureTileInfo[x, y].transparent) {
@@ -554,7 +548,7 @@ namespace Specland {
                                 dr.Y += textureLiquidInfo[x, y].offset.Y;
                                 dr.Width = textureLiquidInfo[x, y].rectangle.Width * tileScale;
                                 dr.Height = textureLiquidInfo[x, y].rectangle.Height * tileScale;
-                                drawRect(game, Tile.TileSheet, dr, textureLiquidInfo[x, y].rectangle, grayColors[a], RENDER_DEPTH_LIQUID, textureLiquidInfo[x, y].flipH, textureLiquidInfo[x, y].flipV);
+                                drawRect(game, Tile.TileSheet, dr, textureLiquidInfo[x, y].rectangle, grayColors[a], Game.RENDER_DEPTH_LIQUID, textureLiquidInfo[x, y].flipH, textureLiquidInfo[x, y].flipV);
                             }
                         }
                         if(tile.index != Tile.TileAir.index){
@@ -563,7 +557,7 @@ namespace Specland {
                                 dr.Y += textureTileInfo[x, y].offset.Y;
                                 dr.Width = textureTileInfo[x, y].rectangle.Width * tileScale;
                                 dr.Height = textureTileInfo[x, y].rectangle.Height * tileScale;
-                                drawRect(game, Tile.TileSheet, dr, textureTileInfo[x, y].rectangle, grayColors[a], RENDER_DEPTH_TILE, textureTileInfo[x, y].flipH, textureTileInfo[x, y].flipV);
+                                drawRect(game, Tile.TileSheet, dr, textureTileInfo[x, y].rectangle, grayColors[a], tile.getDepth(x, y, false), textureTileInfo[x, y].flipH, textureTileInfo[x, y].flipV);
                             }
                          
                         }
@@ -659,8 +653,8 @@ namespace Specland {
                 }
                 Tile tile = getTileObject(x, y, false);
                 Tile wall = getTileObject(x, y, true);
-                if (tile.light > 0 || wall.light > 0) {
-                    setLightFromSource(x, y, false, Math.Max(tile.light, wall.light));
+                if (tile.getLight(x, y, false) > 0 || wall.getLight(x, y, true) > 0) {
+                    setLightFromSource(x, y, false, Math.Max(tile.getLight(x, y, false), wall.getLight(x, y, true)));
                 }
             }
         }
@@ -719,6 +713,7 @@ namespace Specland {
             currentBgColor.R += (byte)((realColor.R - currentBgColor.R) / 16);
             currentBgColor.G += (byte)((realColor.G - currentBgColor.G) / 16);
             currentBgColor.B += (byte)((realColor.B - currentBgColor.B) / 16);
+            currentBgColor.A = 1;
             return currentBgColor;
         }
 

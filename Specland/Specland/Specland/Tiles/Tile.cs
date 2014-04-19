@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Specland.Tiles;
 
 namespace Specland {
     public class Tile {
@@ -36,14 +35,14 @@ namespace Specland {
         public static Tile TileWoodTable = new TileFurniture("WoodTable", RenderTypeCustom, 3, 2, 3, 2).notSolid().notWall().setTransparent().setDisplayName("Wooden Table");
         public static Tile TileWoodChair = new TileFurniture("WoodChair", RenderTypeCustom, 4, 2, 1, 2).notSolid().notWall().setTransparent().setDisplayName("Wooden Chair");
         public static Tile TilePlantGlow = new TileMustRestOn("GlowLeaf", RenderTypeCustom, 5, 1, 2, 3, 0, 1, new Tile[] { TileDirt, TileStone }, true).notSolid().notWall().setTransparent().setLight(120).setDisplayName("Glow Leaf").setDisplayNamePlural("Glow Leaves");
-        public static Tile TileLamp = new Tile("Lamp", RenderTypePlaced, 6, 1).setTransparent().setLight(300).notSolid().notWall();
+        public static Tile TileLamp = new TileLightToggle("Lamp", RenderTypePlaced, 6, 1).setTransparent().setLight(300).notSolid().notWall();
 
         public int index;
         public string name;
         public int renderType;
 
         public bool transparent = false;
-        public int light = 0;
+        private int light = 0;
         public Point textureArea;
         public int toughness = 255;
         public int wallBrightness = 127;
@@ -287,7 +286,7 @@ namespace Specland {
             return false;
         }
 
-        public virtual ItemStack use(Game game, ItemStack currentItem, int mouseTileX, int mouseTileY, int mouseTileDistanceFromPlayer) {
+        public virtual ItemStack use(Game game, ItemStack currentItem, int mouseTileX, int mouseTileY, int mouseTileDistanceFromPlayer, bool isWall) {
             return null;
         }
 
@@ -301,6 +300,14 @@ namespace Specland {
 
         public virtual Rectangle getItemRect() {
             return get8(3, 3);
+        }
+
+        public virtual int getLight(int x, int y, bool isWall) {
+            return light;
+        }
+
+        public virtual float getDepth(int x, int y, bool isWall) {
+            return isWall?Game.RENDER_DEPTH_WALL:Game.RENDER_DEPTH_TILE;
         }
     }
 }

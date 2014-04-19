@@ -36,7 +36,7 @@ namespace Specland {
                 rotation = facingRight ? -rotation : rotation;
                 rotation = MathHelper.ToRadians(rotation);
                 Vector2 origin = new Vector2(facingRight ? 0 : textureInfo.rectangle.Width, textureInfo.rectangle.Height);
-                game.spriteBatch.Draw(ItemSheet, new Rectangle((int)(position.X - (rect.Width / 2) - game.currentWorld.viewOffset.X), (int)(position.Y - game.currentWorld.viewOffset.Y + (rect.Width/2)), rect.Width * 2, rect.Height * 2), rect, color, rotation, origin, facingRight ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0);
+                game.spriteBatch.Draw(ItemSheet, new Rectangle((int)(position.X - (rect.Width / 2) - game.currentWorld.viewOffset.X), (int)(position.Y - game.currentWorld.viewOffset.Y + (rect.Width/2)), rect.Width * 2, rect.Height * 2), rect, color, rotation, origin, facingRight ? SpriteEffects.None : SpriteEffects.FlipHorizontally, Game.RENDER_DEPTH_OVER_PLAYER);
             }
         }
     }

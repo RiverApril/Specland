@@ -68,9 +68,9 @@ namespace Specland {
         }
 
 
-        public virtual void drawAsItem(Game game, GameTime gameTime, Rectangle r, int count, int data, Color color) {
+        public virtual void drawAsItem(Game game, Rectangle r, int count, int data, Color color, float depth) {
             if(renderType == RenderTypeNormal){
-                game.spriteBatch.Draw(ItemSheet, r, textureInfo.rectangle, color);
+                Game.drawRectangle(ItemSheet, r, textureInfo.rectangle, color, depth);
             }
         }
 

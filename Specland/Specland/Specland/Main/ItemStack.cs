@@ -27,16 +27,16 @@ namespace Specland {
             verify();
         }
 
-        public void drawNoCount(Game game, GameTime gameTime, Rectangle r, Color color) {
-            item.drawAsItem(game, gameTime, r, count, data, color);
+        public void drawNoCount(Game game, Rectangle r, Color color, float depth) {
+            item.drawAsItem(game, r, count, data, color, depth);
         }
 
-        public void draw(Game game, GameTime gameTime, Rectangle r, Color color) {
-            drawNoCount(game, gameTime, r, color);
+        public void draw(Game game, Rectangle r, Color color, float depthI, float depthT) {
+            drawNoCount(game, r, color, depthI);
             if(count>1){
                 bool a = count > 999;
                 int c = a?(count/1000):count;
-                game.spriteBatch.DrawString(Game.fontNormal, c+(a?"k":""), new Vector2(r.X - 2, r.Y + 8), color);
+                Game.drawString(c+(a?"k":""), new Vector2(r.X - 2, r.Y + 8), color, depthT);
             }
         }
 

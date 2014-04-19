@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Specland {
     public class Inventory : Gui {
@@ -102,17 +103,17 @@ namespace Specland {
             bool mouseInCrafting = mouseInCraftingArea(game);
 
             if (currentItem!=null) {
-               game.spriteBatch.DrawString(Game.fontNormal, currentItem.getDisplayName(), new Vector2(8, 4), hotBarColor);
+               Game.drawString(currentItem.getDisplayName(), new Vector2(8, 4), hotBarColor, Game.RENDER_DEPTH_GUI_TEXT);
            }
 
             for(int i=0; i < 10; i++){
                 xx = x + (selectedSlot == i ? (cursorItem.isEmpty() ? 4 : 2) : 0) + inventoryMove + 4;
                 yy = y + (i * gridSize);
                 r = new Rectangle(xx + squareBorderSize, yy + squareBorderSize, itemSize, itemSize);
-                game.spriteBatch.Draw(guiTexture, new Rectangle(xx, yy, squareSize, squareSize), new Rectangle(0, 0, 20, 20), hotBarColor);
-                items[itemIndex].draw(game, gameTime, r, hotBarColor);
-                game.spriteBatch.DrawString(Game.fontNormal, (i==9?0:i+1) + "", new Vector2(xx + 22, yy + 3), hotBarColor);
-
+                Game.drawRectangle(guiTexture, new Rectangle(xx, yy, squareSize, squareSize), new Rectangle(0, 0, 20, 20), hotBarColor, Game.RENDER_DEPTH_GUI_IMAGE_BG);
+                items[itemIndex].draw(game, r, hotBarColor, Game.RENDER_DEPTH_GUI_IMAGE_FG, Game.RENDER_DEPTH_GUI_TEXT);
+                Game.drawString((i == 9 ? 0 : i + 1) + "", new Vector2(xx + 22, yy + 3), hotBarColor, Game.RENDER_DEPTH_GUI_TEXT);
+                
                 itemIndex++;
             }
 
@@ -122,8 +123,8 @@ namespace Specland {
                         xx = x + (j * gridSize) + inventoryMove - (gridSize * 4);
                         yy = y + (i * gridSize);
                         r = new Rectangle(xx + squareBorderSize, yy + squareBorderSize, itemSize, itemSize);
-                        game.spriteBatch.Draw(guiTexture, new Rectangle(xx, yy, squareSize, squareSize), new Rectangle(0, 0, 20, 20), inventoryColor);
-                        items[itemIndex].draw(game, gameTime, r, inventoryColor);
+                        Game.drawRectangle(guiTexture, new Rectangle(xx, yy, squareSize, squareSize), new Rectangle(0, 0, 20, 20), inventoryColor, Game.RENDER_DEPTH_GUI_IMAGE_BG);
+                        items[itemIndex].draw(game, r, inventoryColor, Game.RENDER_DEPTH_GUI_IMAGE_FG, Game.RENDER_DEPTH_GUI_TEXT);
 
                         itemIndex++;
                     }
@@ -131,7 +132,7 @@ namespace Specland {
                 
                 float a = inventoryFade * (mouseInCrafting ? 1 : .5f);
                 Color color = new Color(a, a, a, a);
-                game.spriteBatch.DrawString(Game.fontNormal, " Crafting", new Vector2(inventoryMove - (gridSize * 4), craftingAreaY - gridSize*.5f), color);
+                Game.drawString(" Crafting", new Vector2(inventoryMove - (gridSize * 4), craftingAreaY - gridSize*.5f), color, Game.RENDER_DEPTH_GUI_TEXT);
 
                 for (int i = -2; i <= 2; i++) {
                     int j = i + craftingScroll;
@@ -142,13 +143,13 @@ namespace Specland {
                         int abs = Math.Abs(i);
                         a = (inventoryFade * (abs == 3 ? .1f : (abs == 2 ? .2f : (abs == 1 ? .5f : 1)))) * (mouseInCrafting ? 1 : .1f);
                         color = new Color(a, a, a, a);
-                        game.spriteBatch.Draw(guiTexture, new Rectangle(xx, yy, squareSize, squareSize), new Rectangle(0, 0, 20, 20), color);
-                        valaidRecipes[j].result.draw(game, gameTime, r, color);
+                        Game.drawRectangle(guiTexture, new Rectangle(xx, yy, squareSize, squareSize), new Rectangle(0, 0, 20, 20), color, Game.RENDER_DEPTH_GUI_IMAGE_BG);
+                        valaidRecipes[j].result.draw(game, r, color, Game.RENDER_DEPTH_GUI_IMAGE_FG, Game.RENDER_DEPTH_GUI_TEXT);
                         for (int k = 0; k < valaidRecipes[j].ingredients.Length; k++) {
                             xx = x + (i * gridSize) + inventoryMove - (gridSize * 2);
                             yy = y + 4 + ((k + 1) * gridSize) + craftingAreaY;
                             r = new Rectangle(xx + squareBorderSize, yy + squareBorderSize, itemSize, itemSize);
-                            valaidRecipes[j].ingredients[k].draw(game, gameTime, r, color);
+                            valaidRecipes[j].ingredients[k].draw(game, r, color, Game.RENDER_DEPTH_GUI_IMAGE_FG, Game.RENDER_DEPTH_GUI_TEXT);
                         }
                     }
                 }
@@ -162,12 +163,12 @@ namespace Specland {
             r = new Rectangle(xx + 2, yy + 2, itemSize, itemSize);
 
             if (inventoryFade > 0 && !cursorItem.isEmpty()) {
-                cursorItem.draw(game, gameTime, r, inventoryColor);
-                game.spriteBatch.DrawString(Game.fontNormal, cursorItem.getDisplayName(), new Vector2(r.X + 24, r.Y), inventoryColor);
+                cursorItem.draw(game, r, inventoryColor, Game.RENDER_DEPTH_GUI_CURSOR_IMAGE_FG, Game.RENDER_DEPTH_GUI_CURSOR_TEXT);
+                Game.drawString(cursorItem.getDisplayName(), new Vector2(r.X + 24, r.Y), inventoryColor, Game.RENDER_DEPTH_GUI_CURSOR_TEXT);
             } else if (inventoryFade > 0 && mouseItemSlot != -1 && !items[mouseItemSlot].isEmpty()) {
-                game.spriteBatch.DrawString(Game.fontNormal, items[mouseItemSlot].getDisplayName(), new Vector2(xx + 2, yy + 2), inventoryColor);
+                Game.drawString(items[mouseItemSlot].getDisplayName(), new Vector2(xx + 2, yy + 2), inventoryColor, Game.RENDER_DEPTH_GUI_CURSOR_TEXT);
             } else if (!items[selectedSlot].isEmpty()) {
-                items[selectedSlot].draw(game, gameTime, r, (mouseTileDistanceFromPlayer <= items[selectedSlot].getItem().reach) ? Color.White : new Color(.1f, .1f, .1f, .1f));
+                items[selectedSlot].draw(game, r, (mouseTileDistanceFromPlayer <= items[selectedSlot].getItem().reach) ? Color.White : new Color(.1f, .1f, .1f, .1f), Game.RENDER_DEPTH_GUI_CURSOR_IMAGE_FG, Game.RENDER_DEPTH_GUI_TEXT);
             }
 
             currentItem = cursorItem.isEmpty() ? items[selectedSlot] : cursorItem;
@@ -176,7 +177,7 @@ namespace Specland {
                 currentItem.getItem().drawHover(game, mouseTileX, mouseTileY, currentItem);
             }
 
-            game.spriteBatch.Draw(guiTexture, new Rectangle(mouseState.X, mouseState.Y, 16, 16), new Rectangle(0, 20, 16, 16), Game.cursorColor);
+            Game.drawRectangle(guiTexture, new Rectangle(mouseState.X, mouseState.Y, 16, 16), new Rectangle(0, 20, 16, 16), Game.cursorColor, Game.RENDER_DEPTH_GUI_CURSOR_IMAGE_BG);
         }
 
         private bool mouseInCraftingArea(Game game) {
@@ -362,7 +363,7 @@ namespace Specland {
                     Tile tileWall = game.currentWorld.getTileObject(mouseTileX, mouseTileY, true);
                     Tile tileTile = game.currentWorld.getTileObject(mouseTileX, mouseTileY, false);
                     if (tileWall.index != Tile.TileAir.index || tileTile.index != Tile.TileAir.index) {
-                        useItem = (tileTile.index == Tile.TileAir.index ? tileWall : tileTile).use(game, currentItem, mouseTileX, mouseTileY, mouseTileDistanceFromPlayer);
+                        useItem = (tileTile.index == Tile.TileAir.index ? tileWall : tileTile).use(game, currentItem, mouseTileX, mouseTileY, mouseTileDistanceFromPlayer, tileTile.index == Tile.TileAir.index);
                     }
                     if(useItem!=null){
                         setCurrentItem(useItem);

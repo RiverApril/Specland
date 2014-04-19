@@ -12,13 +12,13 @@ namespace Specland {
                 maxStack = 99999;
         }
 
-        public override void drawAsItem(Game game, GameTime gameTime, Rectangle r, int count, int data, Color color) {
+        public override void drawAsItem(Game game, Rectangle r, int count, int data, Color color, float depth) {
             if (renderType == RenderTypeNormal) {
                 r.X += r.Width / 4;
                 r.Y += r.Height / 4;
                 r.Width /= 2;
                 r.Height /= 2;
-                game.spriteBatch.Draw(Tile.TileSheet, r, Tile.getTileObject(data).getItemRect(), color);
+                Game.drawRectangle(Tile.TileSheet, r, Tile.getTileObject(data).getItemRect(), color, depth);
             }
         }
 
@@ -88,7 +88,7 @@ namespace Specland {
                 bool tileGoesHere = tile.canBePlacedHere(game.currentWorld, mouseTileX, mouseTileY, true);
                 bool wallGoesHere = tile.canBePlacedHere(game.currentWorld, mouseTileX, mouseTileY, false);
                 if (tileGoesHere || wallGoesHere) {
-                    game.spriteBatch.Draw(Tile.TileSheet, new Rectangle((mouseTileX * World.tileSizeInPixels) - game.currentWorld.viewOffset.X, (mouseTileY * World.tileSizeInPixels) - game.currentWorld.viewOffset.Y, World.tileSizeInPixels, World.tileSizeInPixels), Tile.getTileObject(currentItem.getData()).getTextureInfo(mouseTileX, mouseTileY, game.currentWorld, false).rectangle, new Color(.5f, .5f, .5f, .5f));
+                    Game.drawRectangle(Tile.TileSheet, new Rectangle((mouseTileX * World.tileSizeInPixels) - game.currentWorld.viewOffset.X, (mouseTileY * World.tileSizeInPixels) - game.currentWorld.viewOffset.Y, World.tileSizeInPixels, World.tileSizeInPixels), Tile.getTileObject(currentItem.getData()).getTextureInfo(mouseTileX, mouseTileY, game.currentWorld, false).rectangle, new Color(.5f, .5f, .5f, .5f), Game.RENDER_DEPTH_HOVER);
                 }
             }
 

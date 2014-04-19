@@ -124,7 +124,7 @@ namespace Specland {
                 Rectangle rect = get8(0, 0);
                 rect.Width = 8 * size.X;
                 rect.Height = 8 * size.Y;
-                game.spriteBatch.Draw(Tile.TileSheet, new Rectangle(((mouseTileX) * World.tileSizeInPixels) - game.currentWorld.viewOffset.X, ((mouseTileY - (size.Y - 1)) * World.tileSizeInPixels) - game.currentWorld.viewOffset.Y, World.tileSizeInPixels * size.X, World.tileSizeInPixels * size.Y), rect, new Color(.5f, .5f, .5f, .5f), 0, Vector2.Zero, game.currentWorld.player.facingRight ? SpriteEffects.None : SpriteEffects.FlipHorizontally, World.RENDER_DEPTH_HOVER);
+                game.spriteBatch.Draw(Tile.TileSheet, new Rectangle(((mouseTileX) * World.tileSizeInPixels) - game.currentWorld.viewOffset.X, ((mouseTileY - (size.Y - 1)) * World.tileSizeInPixels) - game.currentWorld.viewOffset.Y, World.tileSizeInPixels * size.X, World.tileSizeInPixels * size.Y), rect, new Color(.5f, .5f, .5f, .5f), 0, Vector2.Zero, game.currentWorld.player.facingRight ? SpriteEffects.None : SpriteEffects.FlipHorizontally, Game.RENDER_DEPTH_HOVER);
             }
             return true;
         }

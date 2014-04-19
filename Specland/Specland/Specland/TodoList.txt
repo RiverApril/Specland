@@ -1,0 +1,13 @@
+﻿
+
+Short Term Todos:
+-Make lamps toggleable
+
+Long Term Todos:
+-NPCs
+--Enemies
+--Ai
+--Animations
+--Combat Machanics
+-Figure out an ore system
+-Make a circuitry system

@@ -63,7 +63,8 @@ namespace Specland {
 
         public override void drawHover(Game game, int mouseTileX, int mouseTileY, ItemStack currentItem) {
             if (game.currentWorld != null && (game.currentWorld.getTileIndex(mouseTileX, mouseTileY, false) != Tile.TileAir.index || game.currentWorld.getTileIndex(mouseTileX, mouseTileY, true) != Tile.TileAir.index)) {
-                game.spriteBatch.Draw(Game.dummyTexture, new Rectangle((mouseTileX * World.tileSizeInPixels) - game.currentWorld.viewOffset.X, (mouseTileY * World.tileSizeInPixels) - game.currentWorld.viewOffset.Y, World.tileSizeInPixels, World.tileSizeInPixels), new Color(.5f, .5f, .5f, .5f));
+                Rectangle r = new Rectangle((mouseTileX * World.tileSizeInPixels) - game.currentWorld.viewOffset.X, (mouseTileY * World.tileSizeInPixels) - game.currentWorld.viewOffset.Y, World.tileSizeInPixels, World.tileSizeInPixels);
+                Game.drawRectangle(Game.dummyTexture, r, r, new Color(.5f, .5f, .5f, .5f), Game.RENDER_DEPTH_HOVER);
             }
         }
 

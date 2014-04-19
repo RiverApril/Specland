@@ -15,6 +15,31 @@ namespace Specland {
 
     public class Game : Microsoft.Xna.Framework.Game {
 
+        public static float RENDER_DEPTH_WALL = .54f;
+        public static float RENDER_DEPTH_LIQUID = .53f;
+        public static float RENDER_DEPTH_TILE = .52f;
+        public static float RENDER_DEPTH_TILE_DOOR = .51f;
+
+        public static float RENDER_DEPTH_ENTITY = .44f;
+        public static float RENDER_DEPTH_OVER_ENTITY = .43f;
+        public static float RENDER_DEPTH_PLAYER = .42f;
+        public static float RENDER_DEPTH_ENTITY_FALLING_SAND = .415f;
+        public static float RENDER_DEPTH_OVER_PLAYER = .41f;
+
+        public static float RENDER_DEPTH_HOVER = .3f;
+
+        public static float RENDER_DEPTH_GUI_IMAGE_BG = .22f;
+        public static float RENDER_DEPTH_GUI_IMAGE_FG = .21f;
+        public static float RENDER_DEPTH_GUI_TEXT = .2f;
+
+        public static float RENDER_DEPTH_CONSOLE = .1f;
+
+        public static float RENDER_DEPTH_GUI_CURSOR_IMAGE_BG = .02f;
+        public static float RENDER_DEPTH_GUI_CURSOR_IMAGE_FG = .01f;
+        public static float RENDER_DEPTH_GUI_CURSOR_TEXT = .00f;
+
+        private BlendState normalBlendState = new BlendState();
+
         public GraphicsDeviceManager graphicsDeviceManager;
         public SpriteBatch spriteBatch;
 
@@ -73,6 +98,8 @@ namespace Specland {
 
             liquidThread = new Thread(new ThreadStart(liquidThreadUpdate));
             liquidThread.Start();
+
+            normalBlendState = BlendState.AlphaBlend;
         }
 
         private void lightingThreadUpdate() {
@@ -164,8 +191,8 @@ namespace Specland {
 
         protected override void Draw(GameTime gameTime) {
             GraphicsDevice.Clear(currentWorld==null?Color.CornflowerBlue:currentWorld.getBgColor());
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone);
-
+            spriteBatch.Begin(SpriteSortMode.BackToFront, normalBlendState, SamplerState.PointClamp, DepthStencilState.DepthRead, RasterizerState.CullNone);
+            
             GraphicsDevice.SamplerStates[0] = SamplerState.PointClamp;
 
             string e = "";
@@ -214,6 +241,14 @@ namespace Specland {
 
         private int percent(int value, int total) {
             return (int)(((100.0 / total) * value));
+        }
+
+        public static void drawRectangle(Texture2D guiTexture, Rectangle dst, Rectangle src, Color color, float depth) {
+            instance.spriteBatch.Draw(guiTexture, dst, src, color, 0, Vector2.Zero, SpriteEffects.None, depth);
+        }
+
+        public static void drawString(string text, Vector2 position, Color color, float depth) {
+            instance.spriteBatch.DrawString(fontNormal, text, position, color, 0, Vector2.Zero, 1, SpriteEffects.None, depth);
         }
     }
 }

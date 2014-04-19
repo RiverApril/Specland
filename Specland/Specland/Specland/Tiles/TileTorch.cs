@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Specland.Tiles {
+namespace Specland {
     public class TileTorch : Tile{
 
         public TileTorch(string name, int renderType, int textureX, int textureY) : base(name, renderType, textureX, textureY) { }

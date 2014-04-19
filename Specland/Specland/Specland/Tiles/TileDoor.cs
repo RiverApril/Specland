@@ -135,12 +135,12 @@ namespace Specland {
             if (canBePlacedHere(game.currentWorld, mouseTileX, mouseTileY, false)) {
                 Rectangle rect = get8(0, 0);
                 rect.Height = 24;
-                game.spriteBatch.Draw(Tile.TileSheet, new Rectangle((mouseTileX * World.tileSizeInPixels) - game.currentWorld.viewOffset.X, ((mouseTileY-2) * World.tileSizeInPixels) - game.currentWorld.viewOffset.Y, World.tileSizeInPixels, World.tileSizeInPixels*3), rect, new Color(.5f, .5f, .5f, .5f));
+                Game.drawRectangle(Tile.TileSheet, new Rectangle((mouseTileX * World.tileSizeInPixels) - game.currentWorld.viewOffset.X, ((mouseTileY-2) * World.tileSizeInPixels) - game.currentWorld.viewOffset.Y, World.tileSizeInPixels, World.tileSizeInPixels*3), rect, new Color(.5f, .5f, .5f, .5f), Game.RENDER_DEPTH_HOVER);
             }
             return true;
         }
 
-        public override ItemStack use(Game game, ItemStack currentItem, int mouseTileX, int mouseTileY, int mouseTileDistanceFromPlayer) {
+        public override ItemStack use(Game game, ItemStack currentItem, int mouseTileX, int mouseTileY, int mouseTileDistanceFromPlayer, bool isWall) {
 
             int oldState = game.currentWorld.getTileDataNoCheck(mouseTileX, mouseTileY, false);
             int newState = oldState == stateClosed ? (game.currentWorld.player.facingRight ? stateOpenRight : stateOpenLeft) : stateClosed;
@@ -160,7 +160,7 @@ namespace Specland {
             }
 
 
-            return base.use(game, currentItem, mouseTileX, mouseTileY, mouseTileDistanceFromPlayer);
+            return base.use(game, currentItem, mouseTileX, mouseTileY, mouseTileDistanceFromPlayer, isWall);
         }
 
         private void updateDoor(Game game, int newState, int x, int y) {
@@ -195,6 +195,10 @@ namespace Specland {
                 return true;
             }
             return base.isSolid(x, y) && Game.instance.currentWorld.getTileDataNoCheck(x, y, false)==stateClosed;
+        }
+
+        public override float getDepth(int x, int y, bool isWall) {
+            return Game.RENDER_DEPTH_TILE_DOOR;
         }
     }
 }

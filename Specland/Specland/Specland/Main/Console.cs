@@ -125,11 +125,11 @@ namespace Specland {
                 color = Color.White;
                 //a = 0;
 
-                //game.spriteBatch.Draw(Gui.guiTexture, new Rectangle(4, game.Window.ClientBounds.Height - 24, 4, 20), new Rectangle(0, 0, 4, 20), Color.White);
-                //game.spriteBatch.Draw(Gui.guiTexture, new Rectangle(8, game.Window.ClientBounds.Height - 24, width, 20), new Rectangle(4, 0, 12, 20), Color.White);
-                //game.spriteBatch.Draw(Gui.guiTexture, new Rectangle(8 + width, game.Window.ClientBounds.Height - 24, 4, 20), new Rectangle(16, 0, 4, 20), Color.White);
+                //Game.drawRectangle(Gui.guiTexture, new Rectangle(4, game.Window.ClientBounds.Height - 24, 4, 20), new Rectangle(0, 0, 4, 20), Color.White);
+                //Game.drawRectangle(Gui.guiTexture, new Rectangle(8, game.Window.ClientBounds.Height - 24, width, 20), new Rectangle(4, 0, 12, 20), Color.White);
+                //Game.drawRectangle(Gui.guiTexture, new Rectangle(8 + width, game.Window.ClientBounds.Height - 24, 4, 20), new Rectangle(16, 0, 4, 20), Color.White);
                 string text = (inputPosition == input.Length ? (input+(tick%60<30?"_":"")) : input);
-                game.spriteBatch.DrawString(Game.fontNormal, text, new Vector2(12, game.Window.ClientBounds.Height - 22), Color.White);
+                Game.drawString(text, new Vector2(12, game.Window.ClientBounds.Height - 22), Color.White, Game.RENDER_DEPTH_CONSOLE);
                 if(inputPosition < 0){
                     inputPosition = 0;
                 }
@@ -137,27 +137,27 @@ namespace Specland {
                     inputPosition = input.Length;
                 }
                 if (inputPosition != input.Length && tick % 60 < 30) {
-                    game.spriteBatch.DrawString(Game.fontNormal, "|", new Vector2(8 + Game.fontNormal.MeasureString(input.Substring(0, inputPosition)).X, game.Window.ClientBounds.Height - 22), Color.White);
+                    Game.drawString("|", new Vector2(8 + Game.fontNormal.MeasureString(input.Substring(0, inputPosition)).X, game.Window.ClientBounds.Height - 22), Color.White, Game.RENDER_DEPTH_CONSOLE);
                 }
             }
 
             /*
-            game.spriteBatch.Draw(Gui.guiTexture, new Rectangle(4, game.Window.ClientBounds.Height - historyHeight - historyYFromBottom + a, 4, 4), new Rectangle(0, 0, 4, 4), color);
-            game.spriteBatch.Draw(Gui.guiTexture, new Rectangle(4, game.Window.ClientBounds.Height - historyHeight - (historyYFromBottom - 4) + a, 4, historyHeight - 8), new Rectangle(0, 4, 4, 12), color);
-            game.spriteBatch.Draw(Gui.guiTexture, new Rectangle(4, game.Window.ClientBounds.Height - (historyYFromBottom + 4) + a, 4, 4), new Rectangle(0, 16, 4, 4), color);
+            Game.drawRectangle(Gui.guiTexture, new Rectangle(4, game.Window.ClientBounds.Height - historyHeight - historyYFromBottom + a, 4, 4), new Rectangle(0, 0, 4, 4), color);
+            Game.drawRectangle(Gui.guiTexture, new Rectangle(4, game.Window.ClientBounds.Height - historyHeight - (historyYFromBottom - 4) + a, 4, historyHeight - 8), new Rectangle(0, 4, 4, 12), color);
+            Game.drawRectangle(Gui.guiTexture, new Rectangle(4, game.Window.ClientBounds.Height - (historyYFromBottom + 4) + a, 4, 4), new Rectangle(0, 16, 4, 4), color);
 
-            game.spriteBatch.Draw(Gui.guiTexture, new Rectangle(8, game.Window.ClientBounds.Height - historyHeight - historyYFromBottom + a, width, 4), new Rectangle(4, 0, 12, 4), color);
-            game.spriteBatch.Draw(Gui.guiTexture, new Rectangle(8, game.Window.ClientBounds.Height - historyHeight - (historyYFromBottom - 4) + a, width, historyHeight - 8), new Rectangle(4, 4, 12, 12), color);
-            game.spriteBatch.Draw(Gui.guiTexture, new Rectangle(8, game.Window.ClientBounds.Height - (historyYFromBottom + 4) + a, width, 4), new Rectangle(4, 16, 12, 4), color);
+            Game.drawRectangle(Gui.guiTexture, new Rectangle(8, game.Window.ClientBounds.Height - historyHeight - historyYFromBottom + a, width, 4), new Rectangle(4, 0, 12, 4), color);
+            Game.drawRectangle(Gui.guiTexture, new Rectangle(8, game.Window.ClientBounds.Height - historyHeight - (historyYFromBottom - 4) + a, width, historyHeight - 8), new Rectangle(4, 4, 12, 12), color);
+            Game.drawRectangle(Gui.guiTexture, new Rectangle(8, game.Window.ClientBounds.Height - (historyYFromBottom + 4) + a, width, 4), new Rectangle(4, 16, 12, 4), color);
 
-            game.spriteBatch.Draw(Gui.guiTexture, new Rectangle(8 + width, game.Window.ClientBounds.Height - historyHeight - historyYFromBottom + a, 4, 4), new Rectangle(16, 0, 4, 4), color);
-            game.spriteBatch.Draw(Gui.guiTexture, new Rectangle(8 + width, game.Window.ClientBounds.Height - historyHeight - (historyYFromBottom - 4) + a, 4, historyHeight - 8), new Rectangle(16, 4, 4, 12), color);
-            game.spriteBatch.Draw(Gui.guiTexture, new Rectangle(8 + width, game.Window.ClientBounds.Height - (historyYFromBottom + 4) + a, 4, 4), new Rectangle(16, 16, 4, 4), color);
+            Game.drawRectangle(Gui.guiTexture, new Rectangle(8 + width, game.Window.ClientBounds.Height - historyHeight - historyYFromBottom + a, 4, 4), new Rectangle(16, 0, 4, 4), color);
+            Game.drawRectangle(Gui.guiTexture, new Rectangle(8 + width, game.Window.ClientBounds.Height - historyHeight - (historyYFromBottom - 4) + a, 4, historyHeight - 8), new Rectangle(16, 4, 4, 12), color);
+            Game.drawRectangle(Gui.guiTexture, new Rectangle(8 + width, game.Window.ClientBounds.Height - (historyYFromBottom + 4) + a, 4, 4), new Rectangle(16, 16, 4, 4), color);
 
             */
             for (int i = 0; i < Math.Min(lines.Count(), 10);i++ ) {
                 string text = lines[lines.Count() - (i+1)];
-                game.spriteBatch.DrawString(Game.fontNormal, text, new Vector2(12, game.Window.ClientBounds.Height - historyYFromBottom - a - 18 - (i * 16)), color);
+                Game.drawString(text, new Vector2(12, game.Window.ClientBounds.Height - historyYFromBottom - a - 18 - (i * 16)), color, Game.RENDER_DEPTH_CONSOLE);
             }
 
             tick++;

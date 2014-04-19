@@ -177,7 +177,7 @@ namespace Specland {
 
         public override void draw(Game game, World world) {
             byte a = (byte)MathHelper.Clamp(world.getLight((int)(position.X + (size.X / 2)) / World.tileSizeInPixels, (int)(position.Y + (size.Y / 2)) / World.tileSizeInPixels), 0, 255);
-            game.spriteBatch.Draw(Entity.Texture_Entity_Player, drawBounds, new Rectangle(0, 0, 16, 24), World.grayColors[a], 0, Vector2.Zero, Microsoft.Xna.Framework.Graphics.SpriteEffects.None, World.RENDER_DEPTH_ENTITY);
+            Game.drawRectangle(Entity.Texture_Entity_Player, drawBounds, new Rectangle(0, 0, 16, 24), World.grayColors[a], Game.RENDER_DEPTH_PLAYER);
 
             if (game.inventory.currentItem != null) {
                 game.inventory.currentItem.getItem().drawOverPlayer(game, game.inventory.currentItem, facingRight, new Vector2(displayPosition.X - xoff + (facingRight ? renderSize.X*1f : renderSize.X*.5f), displayPosition.Y), World.grayColors[a]);

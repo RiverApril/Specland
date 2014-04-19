@@ -37,7 +37,7 @@ namespace Specland {
                 Tile t = Tile.getTileObject(stack.getItem().index);
                 a = (byte)Clamp(a - (255 - t.wallBrightness), 0, t.wallBrightness);
             }
-            stack.draw(game, null, new Rectangle((int)position.X - world.viewOffset.X - (World.tileSizeInPixels / 2), (int)position.Y - world.viewOffset.Y - (World.tileSizeInPixels / 2), World.tileSizeInPixels * 2, World.tileSizeInPixels * 2), new Color(a, a, a));
+            stack.drawNoCount(game, new Rectangle((int)position.X - world.viewOffset.X - (World.tileSizeInPixels / 2), (int)position.Y - world.viewOffset.Y - (World.tileSizeInPixels / 2), World.tileSizeInPixels * 2, World.tileSizeInPixels * 2), new Color(a, a, a), Game.RENDER_DEPTH_ENTITY_FALLING_SAND);
         }
 
         public static int Clamp(int value, int min, int max) {
