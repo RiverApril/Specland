@@ -555,5 +555,18 @@ namespace Specland {
             }
             return stack;
         }
+
+        internal void saveTo(List<byte> bytes) {
+            for (int i = 0; i < items.Length; i++) {
+                items[i].saveTo(bytes);
+            }
+        }
+
+        internal int loadFrom(byte[] bytes, int index) {
+            for (int i = 0; i < items.Length;i++ ) {
+                index = items[i].loadFrom(bytes, index);
+            }
+            return index;
+        }
     }
 }

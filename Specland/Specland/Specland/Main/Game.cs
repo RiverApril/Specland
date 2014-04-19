@@ -250,5 +250,9 @@ namespace Specland {
         public static void drawString(string text, Vector2 position, Color color, float depth) {
             instance.spriteBatch.DrawString(fontNormal, text, position, color, 0, Vector2.Zero, 1, SpriteEffects.None, depth);
         }
+
+        public static void drawString(SpriteFont font, string text, Vector2 position, Color color, float depth) {
+            instance.spriteBatch.DrawString(font, text, position, color, 0, Vector2.Zero, 1, SpriteEffects.None, depth);
+        }
     }
 }

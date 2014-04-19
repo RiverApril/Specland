@@ -271,7 +271,7 @@ namespace Specland {
         }
 
         public virtual bool canBePlacedHereOverridable(World world, int x, int y, bool isWall) {
-            return (world.isTileSolid(x - 1, y, isWall) || world.isTileSolid(x + 1, y, isWall) || world.isTileSolid(x, y - 1, isWall) || world.isTileSolid(x, y + 1, isWall) || !world.getTileObject(x, y, !isWall).isAir()) && world.getTileObject(x, y, isWall).isAir();
+            return (!world.getTileObject(x - 1, y, isWall).isAir() || !world.getTileObject(x + 1, y, isWall).isAir() || !world.getTileObject(x, y - 1, isWall).isAir() || !world.getTileObject(x, y + 1, isWall).isAir() || !world.getTileObject(x, y, !isWall).isAir()) && world.getTileObject(x, y, isWall).isAir();
         }
 
         public bool isAir() {

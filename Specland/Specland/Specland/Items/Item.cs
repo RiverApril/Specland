@@ -16,7 +16,7 @@ namespace Specland {
         public static int RenderTypeNone = 0;
         public static int RenderTypeNormal = 1;
 
-        public static Item[] Itemlist = new Item[100];
+        public static Item[] ItemList = new Item[100];
 
         public static Item itemEmpty = new Item("", RenderTypeNone, Rectangle.Empty);
         public static ItemTile itemTile = new ItemTile("Tile", RenderTypeNormal, Rectangle.Empty);
@@ -38,7 +38,7 @@ namespace Specland {
 
         public Item(string name, int renderType, Rectangle sourceRectangle) {
             index = getNewIndex();
-            Itemlist[index] = this;
+            ItemList[index] = this;
             this.name = name;
             this.displayName = name;
             this.displayNamePlural = displayName + "s";
@@ -100,6 +100,13 @@ namespace Specland {
 
         public virtual void drawOverPlayer(Game game, ItemStack currentItem, bool facingRight, Vector2 position, Color color) {
             
+        }
+
+        public static Item getItemObject(int index) {
+            if (index >= 0 && index < ItemList.Length) {
+                return ItemList[index];
+            }
+            return null;
         }
     }
 }

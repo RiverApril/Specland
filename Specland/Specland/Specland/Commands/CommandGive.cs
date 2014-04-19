@@ -20,7 +20,7 @@ namespace Specland {
                 try {
                     id = toInt(options[0]);
                 } catch (NumberInvalidException e) {
-                    foreach(Item item in Item.Itemlist){
+                    foreach(Item item in Item.ItemList){
                         if(item != null){
                             if (equalsIgnoreCase(item.name, e.s)) {
                                 id = item.index;
@@ -60,7 +60,7 @@ namespace Specland {
                 }
 
                 if(id != Item.itemEmpty.index){
-                    ItemStack stack = new ItemStack(Item.Itemlist[id], count, data);
+                    ItemStack stack = new ItemStack(Item.ItemList[id], count, data);
                     printer.println("Gave you "+stack.getDisplayName());
                     Game.instance.inventory.pickUp(stack);
                 }

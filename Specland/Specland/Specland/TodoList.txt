@@ -1,7 +1,7 @@
 ﻿
 
 Short Term Todos:
--Make lamps toggleable
+-Allow tile data to be stored that is negtive
 
 Long Term Todos:
 -NPCs

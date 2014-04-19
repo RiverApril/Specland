@@ -122,5 +122,18 @@ namespace Specland {
         public override int GetHashCode() {
             return item.index ^ count ^ data;
         }
+
+        internal void saveTo(List<byte> bytes) {
+            bytes.AddRange(World.intToBytes(item.index));
+            bytes.AddRange(World.intToBytes(count));
+            bytes.AddRange(World.intToBytes(data));
+        }
+
+        internal int loadFrom(byte[] bytes, int index) {
+            item = Item.getItemObject(World.bytesToInt(bytes, index)); index += 4;
+            count = World.bytesToInt(bytes, index); index += 4;
+            data = World.bytesToInt(bytes, index); index += 4;
+            return index;
+        }
     }
 }

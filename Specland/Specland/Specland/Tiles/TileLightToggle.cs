@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,8 +14,36 @@ namespace Specland {
             return base.use(game, currentItem, mouseTileX, mouseTileY, mouseTileDistanceFromPlayer, isWall);
         }
 
+        
         public override int getLight(int x, int y, bool isWall) {
+            if(Game.instance.currentWorld==null){
+                return 0;
+            }
             return Game.instance.currentWorld.getTileData(x, y, isWall)==0?base.getLight(x, y, isWall):0;
+        }
+        public override TextureInfo getTextureInfo(int x, int y, World world, bool isWall) {
+            
+            if (renderType == RenderTypePlaced) {
+                bool left = world.isTileSolid(x - 1, y, isWall);
+                bool right = world.isTileSolid(x + 1, y, isWall);
+                bool down = world.isTileSolid(x, y + 1, isWall);
+                bool up = world.isTileSolid(x, y - 1, isWall);
+                bool data = world.getTileData(x, y, isWall)!=0;
+                Rectangle r;
+                if (down) {
+                    r = get8(data?2:0, 0);
+                } else if (left) {
+                    r = get8(data ? 3 : 1, 0);
+                } else if (right) {
+                    r = get8(data ? 3 : 1, 1);
+                } else if (up) {
+                    r = get8(data ? 2 : 0, 1);
+                } else {
+                    r = get8(data ? 2 : 0, 0);
+                }
+                return new TextureInfo(r, true);
+            }
+            return new TextureInfo(Game.OnexOneRect, true);
         }
     }
 }

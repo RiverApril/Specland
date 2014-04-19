@@ -776,18 +776,29 @@ namespace Specland {
                     bytes.Add((byte)world.TileMatrix[x, y, 0]);
                     bytes.Add((byte)world.TileMatrix[x, y, 1]);
                     bytes.Add((byte)world.LiquidMatrix[x, y]);
-                    bytes.Add((byte)world.TileDataMatrix[x, y, 0]);
-                    bytes.Add((byte)world.TileDataMatrix[x, y, 1]);
+                    bytes.Add((byte)(world.TileDataMatrix[x, y, 0] < 0 ? 0 : world.TileDataMatrix[x, y, 0]));
+                    bytes.Add((byte)(world.TileDataMatrix[x, y, 0] < 0 ? -world.TileDataMatrix[x, y, 0] : 0));
+                    bytes.Add((byte)(world.TileDataMatrix[x, y, 1] < 0 ? 0 : world.TileDataMatrix[x, y, 1]));
+                    bytes.Add((byte)(world.TileDataMatrix[x, y, 1] < 0 ? -world.TileDataMatrix[x, y, 1] : 0));
                 }
+                bytes.AddRange(intToBytes(world.heightMap[x]));
             }
+
+            Game.instance.inventory.saveTo(bytes);
+
             world.player.saveTo(bytes);
+
             byte[] byteArray = bytes.ToArray<byte>();
+            //Game.instance.console.println("Save Bytes: " + byteArray.Length);
             System.IO.File.WriteAllBytes(file, byteArray);
             return true;
         }
 
         public static World load(string name) {
             byte[] bytes = System.IO.File.ReadAllBytes(Game.saveLocation + @"\" + name + "." + Game.saveExtention);
+
+            //Game.instance.console.println("Load Bytes: "+bytes.Length);
+            //return null;
 
             World world = new World(new Point(bytesToInt(bytes, 0), bytesToInt(bytes, 4)), name);
             world.time = bytesToInt(bytes, 8);
@@ -801,12 +812,19 @@ namespace Specland {
                     index++;
                     world.LiquidMatrix[x, y] = bytes[index];
                     index++;
-                    world.TileDataMatrix[x, y, 0] = bytes[index];
-                    index++;
-                    world.TileDataMatrix[x, y, 1] = bytes[index];
-                    index++;
+                    world.TileDataMatrix[x, y, 0] = bytes[index] + (-bytes[index+1]);
+                    index+=2;
+                    world.TileDataMatrix[x, y, 1] = bytes[index] + (-bytes[index+1]);
+                    index+=2;
                 }
+                world.heightMap[x] = bytesToInt(bytes, index);
+                index += 4;
             }
+
+            Game.instance.inventory = new Inventory();
+
+            index = Game.instance.inventory.loadFrom(bytes, index);
+
             world.player = new EntityPlayer(0, 0);
             world.player.loadFrom(bytes, index);
             world.EntityList.Add(world.player);
