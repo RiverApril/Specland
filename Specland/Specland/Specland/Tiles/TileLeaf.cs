@@ -9,7 +9,7 @@ namespace Specland {
 
         private int tree = 0;
 
-        public TileLeaf(string name, int renderType, int textureX, int textureY, int tree) : base(name, renderType, textureX, textureY) {
+        public TileLeaf(string name, int renderType, int material, int textureX, int textureY, int tree) : base(name, renderType, material, textureX, textureY) {
             this.tree = tree;
         }
 

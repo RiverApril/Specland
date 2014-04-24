@@ -70,25 +70,25 @@ namespace Specland {
         public void update(Game game){
             updateKeys(game);
             if(consoleOpen){
-                if (game.inputState.pressedIgnore(Keys.Up)) {
+                if (game.inputState.pressedIgnore(Game.KEY_CONSOLE_UP)) {
                     if (historyLookBackIndex>0) {
                         historyLookBackIndex--;
                     }
                 }
-                if (game.inputState.pressedIgnore(Keys.Down)) {
+                if (game.inputState.pressedIgnore(Game.KEY_CONSOLE_DOWN)) {
                     if (historyLookBackIndex < previousInputs.Count()-1) {
                         historyLookBackIndex++;
                     }
                 }
-                if (game.inputState.pressedIgnore(Keys.Up) || game.inputState.pressedIgnore(Keys.Down)) {
-                    if (historyLookBackIndex > 0 && historyLookBackIndex < previousInputs.Count()) {
+                if (game.inputState.pressedIgnore(Game.KEY_CONSOLE_UP) || game.inputState.pressedIgnore(Game.KEY_CONSOLE_DOWN)) {
+                    if (historyLookBackIndex >= 0 && historyLookBackIndex < previousInputs.Count()) {
                         input = previousInputs[historyLookBackIndex];
                         inputPosition = input.Length;
                         consoleOpen = true;
                         game.inputState.keysOn = false;
                     }
                 }
-                if (game.inputState.pressedIgnore(Keys.Enter)) {
+                if (game.inputState.pressedIgnore(Game.KEY_CONSOLE_ENTER)) {
                     previousInputs.Add(input);
                     historyLookBackIndex = previousInputs.Count();
                     consoleOpen = false;
@@ -98,13 +98,13 @@ namespace Specland {
                     inputPosition = 0;
                 }
             } else {
-                if (game.inputState.pressed(Keys.T) || game.inputState.pressedIgnore(Keys.Enter)) {
+                if (game.inputState.pressed(Game.KEY_CONSOLE_OPEN) || game.inputState.pressedIgnore(Game.KEY_CONSOLE_ENTER)) {
                     input = "";
                     inputPosition = 0;
                     consoleOpen = true;
                     game.inputState.keysOn = false;
                 }
-                if (game.inputState.pressed(Keys.OemQuestion)) {
+                if (game.inputState.pressed(Game.KEY_CONSOLE_OPEN_COMMAND)) {
                     input = "/";
                     inputPosition = 1;
                     consoleOpen = true;

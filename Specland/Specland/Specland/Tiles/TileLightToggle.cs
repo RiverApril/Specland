@@ -7,7 +7,7 @@ using System.Text;
 namespace Specland {
     class TileLightToggle : Tile{
 
-        public TileLightToggle(string name, int renderType, int textureX, int textureY) : base(name, renderType, textureX, textureY) { }
+        public TileLightToggle(string name, int renderType, int material, int textureX, int textureY) : base(name, renderType, material, textureX, textureY) { }
 
         public override ItemStack use(Game game, ItemStack currentItem, int mouseTileX, int mouseTileY, int mouseTileDistanceFromPlayer, bool isWall) {
             game.currentWorld.setTileWithDataWithUpdate(mouseTileX, mouseTileY, index, game.currentWorld.getTileData(mouseTileX, mouseTileY, isWall)==0?1:0, isWall);
@@ -23,7 +23,7 @@ namespace Specland {
         }
         public override TextureInfo getTextureInfo(int x, int y, World world, bool isWall) {
             
-            if (renderType == RenderTypePlaced) {
+            if (renderType == RENDER_TYPE_PLACED) {
                 bool left = world.isTileSolid(x - 1, y, isWall);
                 bool right = world.isTileSolid(x + 1, y, isWall);
                 bool down = world.isTileSolid(x, y + 1, isWall);

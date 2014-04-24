@@ -60,7 +60,8 @@ namespace Specland {
                 items[i] = new ItemStack(Item.itemEmpty);
             }
             pickUp(new ItemStack(Item.itemSupick));
-            pickUp(new ItemStack(Item.itemCrapick));
+            pickUp(new ItemStack(Item.itemWoodPick));
+            pickUp(new ItemStack(Item.itemStonePick));
             //pickUp(new ItemStack(Item.ItemTile, 999, Tile.TileWoodTable.index));
             updateValaidRecipes();
         }
@@ -103,7 +104,7 @@ namespace Specland {
             bool mouseInCrafting = mouseInCraftingArea(game);
 
             if (currentItem!=null) {
-               Game.drawString(currentItem.getDisplayName(), new Vector2(8, 4), hotBarColor, Game.RENDER_DEPTH_GUI_TEXT);
+               Game.drawString(currentItem.getDisplayName(false), new Vector2(8, 4), hotBarColor, Game.RENDER_DEPTH_GUI_TEXT);
            }
 
             for(int i=0; i < 10; i++){
@@ -164,9 +165,9 @@ namespace Specland {
 
             if (inventoryFade > 0 && !cursorItem.isEmpty()) {
                 cursorItem.draw(game, r, inventoryColor, Game.RENDER_DEPTH_GUI_CURSOR_IMAGE_FG, Game.RENDER_DEPTH_GUI_CURSOR_TEXT);
-                Game.drawString(cursorItem.getDisplayName(), new Vector2(r.X + 24, r.Y), inventoryColor, Game.RENDER_DEPTH_GUI_CURSOR_TEXT);
+                Game.drawString(cursorItem.getDisplayName(true), new Vector2(r.X + 24, r.Y), inventoryColor, Game.RENDER_DEPTH_GUI_CURSOR_TEXT);
             } else if (inventoryFade > 0 && mouseItemSlot != -1 && !items[mouseItemSlot].isEmpty()) {
-                Game.drawString(items[mouseItemSlot].getDisplayName(), new Vector2(xx + 2, yy + 2), inventoryColor, Game.RENDER_DEPTH_GUI_CURSOR_TEXT);
+                Game.drawString(items[mouseItemSlot].getDisplayName(true), new Vector2(xx + 2, yy + 2), inventoryColor, Game.RENDER_DEPTH_GUI_CURSOR_TEXT);
             } else if (!items[selectedSlot].isEmpty()) {
                 items[selectedSlot].draw(game, r, (mouseTileDistanceFromPlayer <= items[selectedSlot].getItem().reach) ? Color.White : new Color(.1f, .1f, .1f, .1f), Game.RENDER_DEPTH_GUI_CURSOR_IMAGE_FG, Game.RENDER_DEPTH_GUI_TEXT);
             }
@@ -245,7 +246,7 @@ namespace Specland {
                 }
             }
 
-            if(game.inputState.pressed(Keys.Q)){
+            if(game.inputState.pressed(Game.KEY_INV)){
                 inventoryFadingIn = !inventoryFadingIn;
             }
             if (inventoryFadingIn) {
@@ -276,25 +277,25 @@ namespace Specland {
             inventoryColor = new Color(inventoryFade, inventoryFade, inventoryFade, inventoryFade);
             lastScrollValue = game.inputState.mouseState.ScrollWheelValue;
 
-            if(game.inputState.pressed(Keys.D1)){
+            if(game.inputState.pressed(Game.KEY_D1)){
                 selectedSlot = 0;
-            } else if (game.inputState.pressed(Keys.D2)) {
+            } else if (game.inputState.pressed(Game.KEY_D2)) {
                 selectedSlot = 1;
-            } else if (game.inputState.pressed(Keys.D3)) {
+            } else if (game.inputState.pressed(Game.KEY_D3)) {
                 selectedSlot = 2;
-            } else if (game.inputState.pressed(Keys.D4)) {
+            } else if (game.inputState.pressed(Game.KEY_D4)) {
                 selectedSlot = 3;
-            } else if (game.inputState.pressed(Keys.D5)) {
+            } else if (game.inputState.pressed(Game.KEY_D5)) {
                 selectedSlot = 4;
-            } else if (game.inputState.pressed(Keys.D6)) {
+            } else if (game.inputState.pressed(Game.KEY_D6)) {
                 selectedSlot = 5;
-            } else if (game.inputState.pressed(Keys.D7)) {
+            } else if (game.inputState.pressed(Game.KEY_D7)) {
                 selectedSlot = 6;
-            } else if (game.inputState.pressed(Keys.D8)) {
+            } else if (game.inputState.pressed(Game.KEY_D8)) {
                 selectedSlot = 7;
-            } else if (game.inputState.pressed(Keys.D9)) {
+            } else if (game.inputState.pressed(Game.KEY_D9)) {
                 selectedSlot = 8;
-            } else if (game.inputState.pressed(Keys.D0)) {
+            } else if (game.inputState.pressed(Game.KEY_D0)) {
                 selectedSlot = 9;
             }
 
@@ -358,7 +359,7 @@ namespace Specland {
                 if (game.inputState.mouseState.RightButton == ButtonState.Pressed) {
                     setCurrentItem(currentItem.getItem().rightClick(game, currentItem, mouseTileX, mouseTileY, mouseTileDistanceFromPlayer), isCursor);
                 }
-                if(game.inputState.pressed(Keys.E)){
+                if(game.inputState.pressed(Game.KEY_USE)){
                     ItemStack useItem = currentItem;
                     Tile tileWall = game.currentWorld.getTileObject(mouseTileX, mouseTileY, true);
                     Tile tileTile = game.currentWorld.getTileObject(mouseTileX, mouseTileY, false);
@@ -377,17 +378,21 @@ namespace Specland {
             bool leftClick = false;
             bool rightClick = false;
 
+            int speed1Time = 40;
+            int speed2Time = 200;
+            int speed3Time = 400;
+
             if (game.inputState.mouseState.LeftButton == ButtonState.Pressed) {
                 if (leftClickTimer == 0) {
                     leftClick = true;
-                } else if (leftClickTimer > 60) {
-                    if (leftClickTimer > 480) {
+                } else if (leftClickTimer > speed1Time) {
+                    if (leftClickTimer > speed3Time) {
                         leftClick = true;
-                    } else if (leftClickTimer > 240) {
+                    } else if (leftClickTimer > speed2Time) {
                         if (leftClickTimer % 2 == 0) {
                             leftClick = true;
                         }
-                    } else  if (leftClickTimer % 10 == 0) {
+                    } else if (leftClickTimer % 10 == 0) {
                         leftClick = true;
                     }
                 }
@@ -399,10 +404,10 @@ namespace Specland {
             if (game.inputState.mouseState.RightButton == ButtonState.Pressed) {
                 if (rightClickTimer == 0) {
                     rightClick = true;
-                } else if (rightClickTimer > 60) {
-                    if (rightClickTimer > 480) {
+                } else if (rightClickTimer > speed1Time) {
+                    if (rightClickTimer > speed3Time) {
                         rightClick = true;
-                    } else if (rightClickTimer > 240) {
+                    } else if (rightClickTimer > speed2Time) {
                         if (rightClickTimer % 2 == 0) {
                             rightClick = true;
                         }
@@ -426,14 +431,19 @@ namespace Specland {
             }else if (!(mouseItemSlot == -1 && mouseCraftSlot == -1)) {
                 if (mouseItemSlot == -1 && mouseCraftSlot == craftingScroll) {
                     if (leftClick) {
-                        if (cursorItem.sameItem(valaidRecipes[mouseCraftSlot].result)) {
-                            if (cursorItem.getCount() + valaidRecipes[mouseCraftSlot].result.getCount() <= cursorItem.getItem().maxStack) {
-                                cursorItem.setCount(cursorItem.getCount() + valaidRecipes[mouseCraftSlot].result.getCount());
+                        if (game.inputState.getKeyboardState().IsKeyDown(Game.KEY_INV_MOVE_ITEM_TO_OTHER)) {
+                            removeItemStacks(0, 49, valaidRecipes[mouseCraftSlot].ingredients);
+                            pickUp(valaidRecipes[mouseCraftSlot].result.clone());
+                        } else {
+                            if (cursorItem.sameItem(valaidRecipes[mouseCraftSlot].result)) {
+                                if (cursorItem.getCount() + valaidRecipes[mouseCraftSlot].result.getCount() <= cursorItem.getItem().maxStack) {
+                                    cursorItem.setCount(cursorItem.getCount() + valaidRecipes[mouseCraftSlot].result.getCount());
+                                    removeItemStacks(0, 49, valaidRecipes[mouseCraftSlot].ingredients);
+                                }
+                            } else if (cursorItem.isEmpty()) {
+                                cursorItem = valaidRecipes[mouseCraftSlot].result.clone();
                                 removeItemStacks(0, 49, valaidRecipes[mouseCraftSlot].ingredients);
                             }
-                        } else if (cursorItem.isEmpty()) {
-                            cursorItem = valaidRecipes[mouseCraftSlot].result.clone();
-                            removeItemStacks(0, 49, valaidRecipes[mouseCraftSlot].ingredients);
                         }
                         updateValaidRecipes();
                     }
@@ -492,7 +502,7 @@ namespace Specland {
                 }
             }
 
-            if(game.inputState.pressed(Keys.R)){
+            if(game.inputState.pressed(Game.KEY_DROP)){
                 game.currentWorld.EntityAddingList.Add(new EntityItem(game.currentWorld.player.position, new ItemStack(currentItem.getItem(), 1, currentItem.getData()), 60));
                 currentItem.setCount(currentItem.getCount()-1);
                 setCurrentItem(currentItem);

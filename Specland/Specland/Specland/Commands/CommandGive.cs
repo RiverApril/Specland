@@ -61,7 +61,7 @@ namespace Specland {
 
                 if(id != Item.itemEmpty.index){
                     ItemStack stack = new ItemStack(Item.ItemList[id], count, data);
-                    printer.println("Gave you "+stack.getDisplayName());
+                    printer.println("Gave you "+stack.getDisplayName(false));
                     Game.instance.inventory.pickUp(stack);
                 }
 

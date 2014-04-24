@@ -19,6 +19,7 @@ namespace Specland {
         public static float RENDER_DEPTH_LIQUID = .53f;
         public static float RENDER_DEPTH_TILE = .52f;
         public static float RENDER_DEPTH_TILE_DOOR = .51f;
+        public static float RENDER_DEPTH_TILE_CRACK = .50f;
 
         public static float RENDER_DEPTH_ENTITY = .44f;
         public static float RENDER_DEPTH_OVER_ENTITY = .43f;
@@ -37,6 +38,38 @@ namespace Specland {
         public static float RENDER_DEPTH_GUI_CURSOR_IMAGE_BG = .02f;
         public static float RENDER_DEPTH_GUI_CURSOR_IMAGE_FG = .01f;
         public static float RENDER_DEPTH_GUI_CURSOR_TEXT = .00f;
+
+        public static Keys KEY_INV_MOVE_ITEM_TO_OTHER = Keys.LeftShift;
+
+        public static Keys KEY_DROP = Keys.R;
+
+        public static Keys KEY_INV = Keys.Q;
+        public static Keys KEY_D1 = Keys.D1;
+        public static Keys KEY_D2 = Keys.D2;
+        public static Keys KEY_D3 = Keys.D3;
+        public static Keys KEY_D4 = Keys.D4;
+        public static Keys KEY_D5 = Keys.D5;
+        public static Keys KEY_D6 = Keys.D6;
+        public static Keys KEY_D7 = Keys.D7;
+        public static Keys KEY_D8 = Keys.D8;
+        public static Keys KEY_D9 = Keys.D9;
+        public static Keys KEY_D0 = Keys.D0;
+
+        public static Keys KEY_ESCAPE = Keys.Escape;
+        public static Keys KEY_DEBUG_MENU = Keys.F3;
+        public static Keys KEY_FAST_FORWARD_CLOCK = Keys.F4;
+
+        public static Keys KEY_MOVE_LEFT = Keys.A;
+        public static Keys KEY_MOVE_RIGHT = Keys.D;
+        public static Keys KEY_MOVE_DOWN = Keys.S;
+        public static Keys KEY_MOVE_JUMP = Keys.Space;
+        public static Keys KEY_USE = Keys.E;
+
+        public static Keys KEY_CONSOLE_OPEN_COMMAND = Keys.OemQuestion;
+        public static Keys KEY_CONSOLE_OPEN = Keys.T;
+        public static Keys KEY_CONSOLE_ENTER = Keys.Enter;
+        public static Keys KEY_CONSOLE_UP = Keys.Up;
+        public static Keys KEY_CONSOLE_DOWN = Keys.Down;
 
         private BlendState normalBlendState = new BlendState();
 
@@ -81,6 +114,8 @@ namespace Specland {
         public static string saveLocation;
         public static string saveExtention = "slw";
 
+
+        public static long tick = 0;
 
         public Game() {
             instance = this;
@@ -157,21 +192,22 @@ namespace Specland {
         }
 
         protected override void Update(GameTime gameTime) {
+            tick++;
             updateMessage = "";
             inputState.set(Keyboard.GetState(), Mouse.GetState());
 
-            if (inputState.pressed(Keys.Escape)) {
+            if (inputState.pressed(Game.KEY_ESCAPE)) {
                 this.Exit();
             }
-            if(inputState.pressed(Keys.F3)){
+            if(inputState.pressed(Game.KEY_DEBUG_MENU)){
                 debugEnabled = !debugEnabled;
             }
 
             SoundEffectPlayer.update();
             
             if (currentWorld != null) {
-                currentWorld.Update(this);
-                if (inputState.getKeyboardState().IsKeyDown(Keys.F4)) {
+                currentWorld.Update(this, tick);
+                if (inputState.getKeyboardState().IsKeyDown(Game.KEY_FAST_FORWARD_CLOCK)) {
                     currentWorld.time += 10;
                 }
             }

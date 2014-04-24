@@ -13,13 +13,13 @@ namespace Specland {
         private Tile[] restOns;
         private bool drop;
 
-        public TileMustRestOn(string name, int renderType, int textureX, int textureY, int x8th, int y8th, int restOnX, int restOnY, Tile restOn, bool drop)
-            : this(name, renderType, textureX, textureY, x8th, y8th, restOnX, restOnY, new Tile[] { restOn }, drop) {
+        public TileMustRestOn(string name, int renderType, int material, int textureX, int textureY, int x8th, int y8th, int restOnX, int restOnY, Tile restOn, bool drop)
+            : this(name, renderType, material, textureX, textureY, x8th, y8th, restOnX, restOnY, new Tile[] { restOn }, drop) {
             
         }
 
-        public TileMustRestOn(string name, int renderType, int textureX, int textureY, int x8th, int y8th, int restOnX, int restOnY, Tile[] restOns, bool drop)
-            : base(name, renderType, textureX, textureY) {
+        public TileMustRestOn(string name, int renderType, int material, int textureX, int textureY, int x8th, int y8th, int restOnX, int restOnY, Tile[] restOns, bool drop)
+            : base(name, renderType, material, textureX, textureY) {
             this.x8th = x8th;
             this.y8th = y8th;
             this.restOnX = restOnX;
@@ -29,7 +29,7 @@ namespace Specland {
         }
 
         public override TextureInfo getTextureInfo(int x, int y, World world, bool isWall) {
-            if(renderType == RenderTypeCustom){
+            if(renderType == RENDER_TYPE_CUSTOM){
                 return new TextureInfo(get8(x8th, y8th), true);
             } else {
                 return base.getTextureInfo(x, y, world, isWall);

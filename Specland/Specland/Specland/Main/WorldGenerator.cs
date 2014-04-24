@@ -26,7 +26,7 @@ namespace Specland {
             }
 
             for (int i = 0; i < 100; i++) {
-                world.SimUpdate();
+                world.SimUpdate(0);
             }
         }
 

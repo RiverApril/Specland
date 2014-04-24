@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 namespace Specland {
     class TileGrass : Tile {
 
-        public TileGrass(string name, int renderType, int textureX, int textureY) : base(name, renderType, textureX, textureY) { }
+        public TileGrass(string name, int renderType, int material, int textureX, int textureY) : base(name, renderType, material, textureX, textureY) { }
 
 
         public override void updateRandom(World world, int x, int y, bool isWall) {

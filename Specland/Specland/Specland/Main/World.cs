@@ -339,7 +339,7 @@ namespace Specland {
         }
 
 
-        public void Update(Game game) {
+        public void Update(Game game, long tick) {
 
             foreach (Entity entity in EntityList) {
                 entity.update(game, this);
@@ -372,7 +372,7 @@ namespace Specland {
 
             //TempLiquidMatrix = (int[,])LiquidMatrix.Clone();
 
-            TileUpdates();
+            TileUpdates(tick);
 
             while (EntityRemovalList.Count()>0) {
                 EntityList.Remove(EntityRemovalList[0]);
@@ -404,15 +404,15 @@ namespace Specland {
             lightingNeedsUpdate = true;
         }
 
-        private void TileUpdates() {
+        private void TileUpdates(long tick) {
 
             int border = 16;
 
             for (int x = viewPortInTiles.X - border; x < viewPortInTiles.X + viewPortInTiles.Width + 1 + border; x++) {
                 for (int y = viewPortInTiles.Y + viewPortInTiles.Height + 1 + border; y > viewPortInTiles.Y - border; y--) {
                     if (inWorld(x, y)) {
-                        if (getCrackNoCheck(x, y) > 0) {
-                            CrackMatrix[x, y]--;
+                        if (getCrackNoCheck(x, y) > 0 && tick % 10 == 0) {
+                            CrackMatrix[x, y] --;
                         }
                         if (LiquidNeedsUpdateMatrix[x, y]) {
                             updateLiquid(x, y);
@@ -458,7 +458,10 @@ namespace Specland {
             int l = LiquidMatrix[x, y];
             int b = LiquidMatrix[x, y+1];
 
-            if(l>0){
+            if (l > 0) {
+                if (getTileObjectNoCheck(x, y, false).washedAwayByWater) {
+                    mineTile(x, y, Item.itemSupick, false);
+                }
                 if (!isTileSolid(x, y + 1, false)) {
                     while(l>0 && b<100){
                         l--;
@@ -533,7 +536,7 @@ namespace Specland {
                         dr.X = (tileSizeInPixels * x) - viewOffset.X;
                         dr.Y = (tileSizeInPixels * y) - viewOffset.Y;
                         
-                        if (textureTileInfo[x, y].transparent && wall.renderType != Tile.RenderTypeNone) {
+                        if (textureTileInfo[x, y].transparent && wall.renderType != Tile.RENDER_TYPE_NONE) {
                             byte b = (byte)MathHelper.Clamp(LightMatrix[x, y] - (255 - wall.wallBrightness), 0, wall.wallBrightness);
                             dr.X += textureWallInfo[x, y].offset.X;
                             dr.Y += textureWallInfo[x, y].offset.Y;
@@ -560,6 +563,9 @@ namespace Specland {
                                 drawRect(game, Tile.TileSheet, dr, textureTileInfo[x, y].rectangle, grayColors[a], tile.getDepth(x, y, false), textureTileInfo[x, y].flipH, textureTileInfo[x, y].flipV);
                             }
                          
+                        }
+                        if(getCrackNoCheck(x, y)>0){
+                            Game.drawString(((int)(getCrackNoCheck(x, y)/2.56))+"", new Vector2(dr.X, dr.Y), Color.White, Game.RENDER_DEPTH_TILE_CRACK);
                         }
                     }
                 }
@@ -849,8 +855,8 @@ namespace Specland {
                 value[3 + index] << 24);
         }
 
-        public void SimUpdate() {
-            TileUpdates();
+        public void SimUpdate(long tick) {
+            TileUpdates(tick);
         }
 
         public bool isTileSolid(int x, int y, bool isWall) {

@@ -8,10 +8,10 @@ using System.Text;
 namespace Specland {
     public class TileFurniture : Tile {
 
-        private Point size = new Point(0, 0);
+        public Point size = new Point(0, 0);
 
         public TileFurniture(string name, int renderType, int textureX, int textureY, int width, int height)
-            : base(name, renderType, textureX, textureY) {
+            : base(name, renderType, MATERIAL_FURNITURE, textureX, textureY) {
             size = new Point(width, height);
         }
 

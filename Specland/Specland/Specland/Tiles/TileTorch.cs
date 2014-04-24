@@ -6,7 +6,7 @@ using System.Text;
 namespace Specland {
     public class TileTorch : Tile{
 
-        public TileTorch(string name, int renderType, int textureX, int textureY) : base(name, renderType, textureX, textureY) { }
+        public TileTorch(string name, int renderType, int material, int textureX, int textureY) : base(name, renderType, material, textureX, textureY) { }
 
         public override void updateRandom(World world, int x, int y, bool isWall) {
             if (Game.rand.Next(10)==0) {
