@@ -14,30 +14,42 @@ using Microsoft.Xna.Framework.Media;
 namespace Specland {
 
     public class Game : Microsoft.Xna.Framework.Game {
+        
 
-        public static float RENDER_DEPTH_WALL = .54f;
-        public static float RENDER_DEPTH_LIQUID = .53f;
-        public static float RENDER_DEPTH_TILE = .52f;
-        public static float RENDER_DEPTH_TILE_DOOR = .51f;
-        public static float RENDER_DEPTH_TILE_CRACK = .50f;
+        private static float nextRenderDepthFloat = 1;
 
-        public static float RENDER_DEPTH_ENTITY = .44f;
-        public static float RENDER_DEPTH_OVER_ENTITY = .43f;
-        public static float RENDER_DEPTH_PLAYER = .42f;
-        public static float RENDER_DEPTH_ENTITY_FALLING_SAND = .415f;
-        public static float RENDER_DEPTH_OVER_PLAYER = .41f;
+        public static float nextRenderDepth(){
+            nextRenderDepthFloat -= .01f;
+            return nextRenderDepthFloat;
+        }
 
-        public static float RENDER_DEPTH_HOVER = .3f;
 
-        public static float RENDER_DEPTH_GUI_IMAGE_BG = .22f;
-        public static float RENDER_DEPTH_GUI_IMAGE_FG = .21f;
-        public static float RENDER_DEPTH_GUI_TEXT = .2f;
+        public static float RENDER_DEPTH_BG = nextRenderDepth();
 
-        public static float RENDER_DEPTH_CONSOLE = .1f;
+        public static float RENDER_DEPTH_WALL = nextRenderDepth();
+        public static float RENDER_DEPTH_LIQUID = nextRenderDepth();
+        public static float RENDER_DEPTH_TILE = nextRenderDepth();
+        public static float RENDER_DEPTH_TILE_DOOR = nextRenderDepth();
+        public static float RENDER_DEPTH_TILE_CRACK_DEBUG_TEXT = nextRenderDepth();
 
-        public static float RENDER_DEPTH_GUI_CURSOR_IMAGE_BG = .02f;
-        public static float RENDER_DEPTH_GUI_CURSOR_IMAGE_FG = .01f;
-        public static float RENDER_DEPTH_GUI_CURSOR_TEXT = .00f;
+        public static float RENDER_DEPTH_ENTITY = nextRenderDepth();
+        public static float RENDER_DEPTH_OVER_ENTITY = nextRenderDepth();
+        public static float RENDER_DEPTH_PLAYER = nextRenderDepth();
+        public static float RENDER_DEPTH_ENTITY_FALLING_SAND = nextRenderDepth();
+        public static float RENDER_DEPTH_OVER_PLAYER = nextRenderDepth();
+
+        public static float RENDER_DEPTH_HOVER = nextRenderDepth();
+
+        public static float RENDER_DEPTH_GUI_IMAGE_BG = nextRenderDepth();
+        public static float RENDER_DEPTH_GUI_IMAGE_FG = nextRenderDepth();
+        public static float RENDER_DEPTH_GUI_TEXT = nextRenderDepth();
+
+        public static float RENDER_DEPTH_CONSOLE = nextRenderDepth();
+
+        public static float RENDER_DEPTH_GUI_CURSOR_IMAGE_BG = nextRenderDepth();
+        public static float RENDER_DEPTH_GUI_CURSOR_IMAGE_FG = nextRenderDepth();
+        public static float RENDER_DEPTH_GUI_CURSOR_TEXT = nextRenderDepth();
+
 
         public static Keys KEY_INV_MOVE_ITEM_TO_OTHER = Keys.LeftShift;
 
@@ -70,6 +82,7 @@ namespace Specland {
         public static Keys KEY_CONSOLE_ENTER = Keys.Enter;
         public static Keys KEY_CONSOLE_UP = Keys.Up;
         public static Keys KEY_CONSOLE_DOWN = Keys.Down;
+
 
         private BlendState normalBlendState = new BlendState();
 
@@ -104,7 +117,7 @@ namespace Specland {
         private Thread lightingThread;
         private Thread liquidThread;
 
-        public bool debugEnabled = false;
+        public static bool debugEnabled = false;
 
         public static Color cursorColor = Color.LightGray;
 

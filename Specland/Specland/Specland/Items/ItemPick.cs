@@ -26,6 +26,24 @@ namespace Specland {
         }
 
         public override ItemStack leftClick(Game game, ItemStack stack, int xTile, int yTile, int distance) {
+            
+            int power = 0;
+            int mat = game.currentWorld.getTileObjectNoCheck(xTile, yTile, false).material;
+            if (mat == Tile.MATERIAL_STONE) {
+                power = stonePower;
+            } else if (mat == Tile.MATERIAL_DIRT) {
+                power = dirtPower;
+            } else if (mat == Tile.MATERIAL_WOOD) {
+                power = woodPower;
+            } else if (mat == Tile.MATERIAL_FURNITURE) {
+                power = furniturePower;
+            } else {
+                power = furniturePower;
+            }
+            if (power <= 0) {
+                return stack;
+            }
+
             if (game.currentWorld.player.swingTime <= 0 && mine(game, stack, xTile, yTile, distance, false)) {
                 game.currentWorld.player.swingTime = swingMaxTime;
             }
@@ -33,6 +51,24 @@ namespace Specland {
         }
 
         public override ItemStack rightClick(Game game, ItemStack stack, int xTile, int yTile, int distance) {
+
+            int power = 0;
+            int mat = game.currentWorld.getTileObjectNoCheck(xTile, yTile, true).material;
+            if (mat == Tile.MATERIAL_STONE) {
+                power = stonePower;
+            } else if (mat == Tile.MATERIAL_DIRT) {
+                power = dirtPower;
+            } else if (mat == Tile.MATERIAL_WOOD) {
+                power = woodPower;
+            } else if (mat == Tile.MATERIAL_FURNITURE) {
+                power = furniturePower;
+            } else {
+                power = furniturePower;
+            }
+            if (power <= 0) {
+                return stack;
+            }
+
             if (game.currentWorld.player.swingTime <= 0 && mine(game, stack, xTile, yTile, distance, true)) {
                 game.currentWorld.player.swingTime = swingMaxTime;
             }
@@ -55,6 +91,9 @@ namespace Specland {
             } else {
                 power = furniturePower;
                 del = 20;
+            }
+            if(power<=0){
+                return false;
             }
             t++;
             if (t > del && distance <= reach) {

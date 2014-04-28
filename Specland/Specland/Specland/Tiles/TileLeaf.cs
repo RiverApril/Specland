@@ -112,19 +112,11 @@ namespace Specland {
         }
 
         public override void mine(World world, int x, int y, int data, ItemPick pick, bool isWall) {
-            if (world.getTileIndex(x, y - 1, isWall) == index) {
-                world.mineTile(x, y - 1, pick, isWall);
-            }
-            if (world.getTileIndex(x + 1, y, isWall) == index) {
-                world.mineTile(x + 1, y, pick, isWall);
-            }
-            if (world.getTileIndex(x - 1, y, isWall) == index) {
-                world.mineTile(x - 1, y, pick, isWall);
-            }
+
         }
 
         public override void updateNearChange(World world, int x, int y, bool isWall) {
-            int range = 4;
+            int range = 6;
 
             bool a = false;
 
@@ -137,7 +129,7 @@ namespace Specland {
                 }
             }
             if(!a){
-                world.mineTileNoNearUpdate(x, y, Item.itemSupick, isWall);
+                world.mineTile(x, y, Item.itemSupick, isWall);
             }
 
         }

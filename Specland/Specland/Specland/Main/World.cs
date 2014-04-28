@@ -564,8 +564,10 @@ namespace Specland {
                             }
                          
                         }
-                        if(getCrackNoCheck(x, y)>0){
-                            Game.drawString(((int)(getCrackNoCheck(x, y)/2.56))+"", new Vector2(dr.X, dr.Y), Color.White, Game.RENDER_DEPTH_TILE_CRACK);
+                        if(Game.debugEnabled){
+                            if(getCrackNoCheck(x, y)>0){
+                                Game.drawString(((int)(getCrackNoCheck(x, y)/2.56))+"", new Vector2(dr.X, dr.Y), Color.White, Game.RENDER_DEPTH_TILE_CRACK_DEBUG_TEXT);
+                            }
                         }
                     }
                 }

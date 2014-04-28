@@ -20,9 +20,12 @@ namespace Specland {
 
         public static Item itemEmpty = new Item("", RenderTypeNone, Rectangle.Empty);
         public static ItemTile itemTile = new ItemTile("Tile", RenderTypeNormal, Rectangle.Empty);
-        public static ItemPick itemWoodPick = (ItemPick)new ItemPick("WoodPick", RenderTypeNormal, new Rectangle(0, 0, 16, 16), 64, 128, 32, 20, 6 * World.tileSizeInPixels).setDisplayName("Wooden Pickaxe");
-        public static ItemPick itemStonePick = (ItemPick)new ItemPick("StonePick", RenderTypeNormal, new Rectangle(0, 16, 16, 16), 96, 192, 32, 20, 6 * World.tileSizeInPixels).setDisplayName("Stone Pickaxe");
+
+        public static ItemPick itemWoodPick = (ItemPick)new ItemPick("WoodPick", RenderTypeNormal, new Rectangle(0, 0, 16, 16), 64, 32, 0, 20, 6 * World.tileSizeInPixels).setDisplayName("Wooden Pickaxe");
+        public static ItemPick itemStonePick = (ItemPick)new ItemPick("StonePick", RenderTypeNormal, new Rectangle(0, 16, 16, 16), 96, 48, 0, 20, 6 * World.tileSizeInPixels).setDisplayName("Stone Pickaxe");
+        
         public static ItemPick itemSupick = new ItemPick("Supick", RenderTypeNormal, new Rectangle(16, 0, 16, 16), 256, 256, 256, 0, 10 * World.tileSizeInPixels);
+        
         public static Item itemBucket = new ItemBucket("Bucket", RenderTypeNormal, new Rectangle(16 * 2, 0, 16, 16));
         public static Item itemBucketWater = new ItemBucketFilled("BucketWater", RenderTypeNormal, new Rectangle(16 * 3, 0, 16, 16)).setDisplayName("Bucket of Water");
 

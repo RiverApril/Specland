@@ -93,6 +93,7 @@ namespace Specland {
         public string getDisplayName(bool extended) {
             string s = item.getDisplayName(count, data);
             if(extended){
+                s += "\n  Reach: "+(item.reach/World.tileSizeInPixels);
                 if(item is ItemTile){
                     s += "\n  Placeable";
                     Tile tile = Tile.getTileObject(data);
@@ -104,8 +105,8 @@ namespace Specland {
                     }
                 }else if(item is ItemPick){
                     ItemPick pick = (ItemPick)item;
-                    if (pick.stonePower>0) s += "\n  Stone Power: " + Math.Ceiling(((pick.stonePower / 256.0) * 100)) + "%";
-                    if (pick.dirtPower > 0) s += "\n  Dirt Power: " + Math.Ceiling(((pick.dirtPower / 256.0) * 100)) + "%";
+                    if (pick.stonePower>0) s += "\n  Rock Power: " + Math.Ceiling(((pick.stonePower / 256.0) * 100)) + "%";
+                    if (pick.dirtPower > 0) s += "\n  Soil Power: " + Math.Ceiling(((pick.dirtPower / 256.0) * 100)) + "%";
                     if (pick.woodPower > 0) s += "\n  Wood Power: " + Math.Ceiling(((pick.woodPower / 256.0) * 100)) + "%";
                     s += "\n  Speed: " + Math.Max((20 - pick.delay) * 5, 1) + "%";
                 }
