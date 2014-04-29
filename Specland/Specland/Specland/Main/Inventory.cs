@@ -55,6 +55,8 @@ namespace Specland {
 
         public ItemStack currentItem;
 
+        public int t = 0;
+
         public Inventory(){
             for (int i = 0; i < items.Length; i++) {
                 items[i] = new ItemStack(Item.itemEmpty);
@@ -168,7 +170,7 @@ namespace Specland {
                 Game.drawString(cursorItem.getDisplayName(true), new Vector2(r.X + 24, r.Y), inventoryColor, Game.RENDER_DEPTH_GUI_CURSOR_TEXT);
             } else if (inventoryFade > 0 && mouseItemSlot != -1 && !items[mouseItemSlot].isEmpty()) {
                 Game.drawString(items[mouseItemSlot].getDisplayName(true), new Vector2(xx + 2, yy + 2), inventoryColor, Game.RENDER_DEPTH_GUI_CURSOR_TEXT);
-            } else if (!items[selectedSlot].isEmpty()) {
+            } else if (inventoryFade > 0 && !items[selectedSlot].isEmpty()) {
                 items[selectedSlot].draw(game, r, (mouseTileDistanceFromPlayer <= items[selectedSlot].getItem().reach) ? Color.White : new Color(.1f, .1f, .1f, .1f), Game.RENDER_DEPTH_GUI_CURSOR_IMAGE_FG, Game.RENDER_DEPTH_GUI_TEXT);
             }
 
@@ -577,6 +579,14 @@ namespace Specland {
                 index = items[i].loadFrom(bytes, index);
             }
             return index;
+        }
+
+        internal int applyMiningPowerModifier(int power) {
+            return power;
+        }
+
+        internal int applyMiningDelayModifier(int delay) {
+            return delay;
         }
     }
 }

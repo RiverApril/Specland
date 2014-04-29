@@ -69,9 +69,7 @@ namespace Specland {
         }
 
         public override void updateNearChange(World world, int x, int y, bool isWall) {
-            if (world.getTileIndex(x, y - 1, isWall) == index && world.getTileIndex(x, y + 1, isWall) != Tile.TileAir.index) {
-
-            } else {
+            if (world.getTileIndex(x, y + 1, isWall) == Tile.TileAir.index) {
                 world.mineTile(x, y, Item.itemSupick, isWall);
             }
         }
