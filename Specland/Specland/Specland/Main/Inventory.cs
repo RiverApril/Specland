@@ -56,6 +56,7 @@ namespace Specland {
         public ItemStack currentItem;
 
         public int t = 0;
+        private bool mouseInCrafting;
 
         public Inventory(){
             for (int i = 0; i < items.Length; i++) {
@@ -108,7 +109,6 @@ namespace Specland {
             int itemIndex = 0;
             Rectangle r;
 
-            bool mouseInCrafting = mouseInCraftingArea(game);
 
             if (currentItem!=null) {
                Game.drawString(currentItem.getDisplayName(false), new Vector2(8, 4), hotBarColor, Game.RENDER_DEPTH_GUI_TEXT);
@@ -188,17 +188,19 @@ namespace Specland {
             Game.drawRectangle(guiTexture, new Rectangle(mouseState.X, mouseState.Y, 16, 16), new Rectangle(0, 20, 16, 16), Game.cursorColor, Game.RENDER_DEPTH_GUI_CURSOR_IMAGE_BG);
         }
 
-        private bool mouseInCraftingArea(Game game) {
+        private bool mouseInCraftingArea(InputState inputState) {
             int xx = x + (-2 * gridSize) + inventoryMove - (gridSize * 2);
             int yy = y + craftingAreaY-22;
-            return new Rectangle(xx, yy, gridSize * 5, gridSize * 4).Contains(game.inputState.mouseState.X, game.inputState.mouseState.Y);
+            return new Rectangle(xx, yy, gridSize * 5, gridSize * 4).Contains(inputState.mouseX(), inputState.mouseY());
         }
 
 
-        public void update(Game game, GameTime gameTime) {
+        public override InputState update(Game game, InputState inputState) {
+
+            mouseInCrafting = mouseInCraftingArea(inputState);
 
             if(game.currentWorld.player==null){
-                return;
+                return inputState;
             }
 
             #region Scrolling and Fading
@@ -206,11 +208,9 @@ namespace Specland {
             int xx = 0;
             int yy = 0;
 
-            int scrollDif = game.inputState.mouseState.ScrollWheelValue - lastScrollValue;
+            int scrollDif = inputState.getScrollWheelValue() - lastScrollValue;
 
             if (scrollDif != 0) {
-
-                bool mouseInCrafting = mouseInCraftingArea(game);
 
                 if (mouseInCrafting && inventoryFadingIn) {
                     if (scrollDif > 0) {
@@ -258,7 +258,7 @@ namespace Specland {
                 }
             }
 
-            if(game.inputState.pressed(Game.KEY_INV)){
+            if(inputState.pressed(Game.KEY_INV)){
                 inventoryFadingIn = !inventoryFadingIn;
             }
             if (inventoryFadingIn) {
@@ -287,27 +287,27 @@ namespace Specland {
             float f = Math.Max(hotBarFade, inventoryFade);
             hotBarColor = new Color(f, f, f, f);
             inventoryColor = new Color(inventoryFade, inventoryFade, inventoryFade, inventoryFade);
-            lastScrollValue = game.inputState.mouseState.ScrollWheelValue;
+            lastScrollValue = inputState.getScrollWheelValue();
 
-            if(game.inputState.pressed(Game.KEY_D1)){
+            if(inputState.pressed(Game.KEY_D1)){
                 selectedSlot = 0;
-            } else if (game.inputState.pressed(Game.KEY_D2)) {
+            } else if (inputState.pressed(Game.KEY_D2)) {
                 selectedSlot = 1;
-            } else if (game.inputState.pressed(Game.KEY_D3)) {
+            } else if (inputState.pressed(Game.KEY_D3)) {
                 selectedSlot = 2;
-            } else if (game.inputState.pressed(Game.KEY_D4)) {
+            } else if (inputState.pressed(Game.KEY_D4)) {
                 selectedSlot = 3;
-            } else if (game.inputState.pressed(Game.KEY_D5)) {
+            } else if (inputState.pressed(Game.KEY_D5)) {
                 selectedSlot = 4;
-            } else if (game.inputState.pressed(Game.KEY_D6)) {
+            } else if (inputState.pressed(Game.KEY_D6)) {
                 selectedSlot = 5;
-            } else if (game.inputState.pressed(Game.KEY_D7)) {
+            } else if (inputState.pressed(Game.KEY_D7)) {
                 selectedSlot = 6;
-            } else if (game.inputState.pressed(Game.KEY_D8)) {
+            } else if (inputState.pressed(Game.KEY_D8)) {
                 selectedSlot = 7;
-            } else if (game.inputState.pressed(Game.KEY_D9)) {
+            } else if (inputState.pressed(Game.KEY_D9)) {
                 selectedSlot = 8;
-            } else if (game.inputState.pressed(Game.KEY_D0)) {
+            } else if (inputState.pressed(Game.KEY_D0)) {
                 selectedSlot = 9;
             }
 
@@ -322,7 +322,7 @@ namespace Specland {
             for (int i = 0; i < 10; i++) {
                 xx = x + (selectedSlot == i ? 4 : 0) + inventoryMove + 4;
                 yy = y + (i * gridSize);
-                if (new Rectangle(xx, yy, gridSize, gridSize).Contains(game.inputState.mouseState.X, game.inputState.mouseState.Y)) {
+                if (new Rectangle(xx, yy, gridSize, gridSize).Contains(inputState.mouseX(), inputState.mouseY())) {
                     mouseItemSlot = itemIndex;
                 }
                 itemIndex++;
@@ -334,7 +334,7 @@ namespace Specland {
                     for (int j = 0; j < 4; j++) {
                         xx = x + (j * gridSize) + inventoryMove - (gridSize * 4);
                         yy = y + (i * gridSize);
-                        if (new Rectangle(xx, yy, gridSize, gridSize).Contains(game.inputState.mouseState.X, game.inputState.mouseState.Y)) {
+                        if (new Rectangle(xx, yy, gridSize, gridSize).Contains(inputState.mouseX(), inputState.mouseY())) {
                             mouseItemSlot = itemIndex;
                         }
                         itemIndex++;
@@ -346,7 +346,7 @@ namespace Specland {
                     if (j >= 0 && j < valaidRecipes.Count()) {
                         xx = x + (i * gridSize) + inventoryMove - (gridSize * 2);
                         yy = y + craftingAreaY;
-                        if (new Rectangle(xx, yy, gridSize, gridSize).Contains(game.inputState.mouseState.X, game.inputState.mouseState.Y)) {
+                        if (new Rectangle(xx, yy, gridSize, gridSize).Contains(inputState.mouseX(), inputState.mouseY())) {
                             mouseCraftSlot = j;
                         }
                     }
@@ -356,8 +356,8 @@ namespace Specland {
             bool isCursor = !cursorItem.isEmpty();
             ItemStack currentItem = isCursor ? cursorItem : items[selectedSlot];
             if (game.currentWorld != null) {
-                mouseTileX = (game.inputState.mouseState.X + game.currentWorld.viewOffset.X) / World.tileSizeInPixels;
-                mouseTileY = (game.inputState.mouseState.Y + game.currentWorld.viewOffset.Y) / World.tileSizeInPixels;
+                mouseTileX = (inputState.mouseX() + game.currentWorld.viewOffset.X) / World.tileSizeInPixels;
+                mouseTileY = (inputState.mouseY() + game.currentWorld.viewOffset.Y) / World.tileSizeInPixels;
                 mouseTileDistanceFromPlayer = (int)Vector2.Distance(new Vector2(mouseTileX * World.tileSizeInPixels, mouseTileY * World.tileSizeInPixels), game.currentWorld.player.position + (game.currentWorld.player.size / 2));
             }
             
@@ -365,13 +365,13 @@ namespace Specland {
 
             if (mouseItemSlot == -1 && mouseCraftSlot == -1) {
 
-                if (game.inputState.mouseState.LeftButton == ButtonState.Pressed) {
+                if (inputState.downMouse(InputState.Left)) {
                     setCurrentItem(currentItem.getItem().leftClick(game, currentItem, mouseTileX, mouseTileY, mouseTileDistanceFromPlayer), isCursor);
                 }
-                if (game.inputState.mouseState.RightButton == ButtonState.Pressed) {
+                if (inputState.downMouse(InputState.Right)) {
                     setCurrentItem(currentItem.getItem().rightClick(game, currentItem, mouseTileX, mouseTileY, mouseTileDistanceFromPlayer), isCursor);
                 }
-                if(game.inputState.pressed(Game.KEY_USE)){
+                if(inputState.pressed(Game.KEY_USE)){
                     ItemStack useItem = currentItem;
                     Tile tileWall = game.currentWorld.getTileObject(mouseTileX, mouseTileY, true);
                     Tile tileTile = game.currentWorld.getTileObject(mouseTileX, mouseTileY, false);
@@ -394,7 +394,7 @@ namespace Specland {
             int speed2Time = 200;
             int speed3Time = 400;
 
-            if (game.inputState.mouseState.LeftButton == ButtonState.Pressed) {
+            if (inputState.downMouse(InputState.Left)) {
                 if (leftClickTimer == 0) {
                     leftClick = true;
                 } else if (leftClickTimer > speed1Time) {
@@ -413,7 +413,7 @@ namespace Specland {
                 leftClickTimer = 0;
             }
 
-            if (game.inputState.mouseState.RightButton == ButtonState.Pressed) {
+            if (inputState.downMouse(InputState.Right)) {
                 if (rightClickTimer == 0) {
                     rightClick = true;
                 } else if (rightClickTimer > speed1Time) {
@@ -443,7 +443,7 @@ namespace Specland {
             }else if (!(mouseItemSlot == -1 && mouseCraftSlot == -1)) {
                 if (mouseItemSlot == -1 && mouseCraftSlot == craftingScroll) {
                     if (leftClick) {
-                        if (game.inputState.getKeyboardState().IsKeyDown(Game.KEY_INV_MOVE_ITEM_TO_OTHER)) {
+                        if (inputState.getKeyboardState().IsKeyDown(Game.KEY_INV_MOVE_ITEM_TO_OTHER)) {
                             removeItemStacks(0, 49, valaidRecipes[mouseCraftSlot].ingredients);
                             pickUp(valaidRecipes[mouseCraftSlot].result.clone());
                         } else {
@@ -514,13 +514,28 @@ namespace Specland {
                 }
             }
 
-            if(game.inputState.pressed(Game.KEY_DROP)){
+            if(inputState.pressed(Game.KEY_DROP)){
                 game.currentWorld.EntityAddingList.Add(new EntityItem(game.currentWorld.player.position, new ItemStack(currentItem.getItem(), 1, currentItem.getData()), 60));
                 currentItem.setCount(currentItem.getCount()-1);
                 setCurrentItem(currentItem);
             }
 
             tick++;
+            inputState.eatMouse();
+            inputState.eatKey(Game.KEY_INV);
+            inputState.eatKey(Game.KEY_INV_MOVE_ITEM_TO_OTHER);
+            inputState.eatKey(Game.KEY_DROP);
+            inputState.eatKey(Game.KEY_D0);
+            inputState.eatKey(Game.KEY_D1);
+            inputState.eatKey(Game.KEY_D2);
+            inputState.eatKey(Game.KEY_D3);
+            inputState.eatKey(Game.KEY_D4);
+            inputState.eatKey(Game.KEY_D5);
+            inputState.eatKey(Game.KEY_D6);
+            inputState.eatKey(Game.KEY_D7);
+            inputState.eatKey(Game.KEY_D8);
+            inputState.eatKey(Game.KEY_D9);
+            return inputState;
         }
 
         private void removeItemStacks(int minSlot, int maxSlot, ItemStack[] stacks) {

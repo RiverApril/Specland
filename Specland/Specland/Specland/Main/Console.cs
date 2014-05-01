@@ -67,51 +67,56 @@ namespace Specland {
             }
         }
 
-        public void update(Game game){
-            updateKeys(game);
+        public override InputState update(Game game, InputState inputState){
+            updateKeys(inputState);
             if(consoleOpen){
-                if (game.inputState.pressedIgnore(Game.KEY_CONSOLE_UP)) {
+                if (inputState.pressed(Game.KEY_CONSOLE_UP)) {
                     if (historyLookBackIndex>0) {
                         historyLookBackIndex--;
                     }
                 }
-                if (game.inputState.pressedIgnore(Game.KEY_CONSOLE_DOWN)) {
+                if (inputState.pressed(Game.KEY_CONSOLE_DOWN)) {
                     if (historyLookBackIndex < previousInputs.Count()-1) {
                         historyLookBackIndex++;
                     }
                 }
-                if (game.inputState.pressedIgnore(Game.KEY_CONSOLE_UP) || game.inputState.pressedIgnore(Game.KEY_CONSOLE_DOWN)) {
+                if (inputState.pressed(Game.KEY_CONSOLE_UP) || inputState.pressed(Game.KEY_CONSOLE_DOWN)) {
                     if (historyLookBackIndex >= 0 && historyLookBackIndex < previousInputs.Count()) {
                         input = previousInputs[historyLookBackIndex];
                         inputPosition = input.Length;
                         consoleOpen = true;
-                        game.inputState.keysOn = false;
+                        inputState.eatKeyboard();
+                        //inputState.keysOn = false;
                     }
                 }
-                if (game.inputState.pressedIgnore(Game.KEY_CONSOLE_ENTER)) {
+                if (inputState.pressed(Game.KEY_CONSOLE_ENTER)) {
                     previousInputs.Add(input);
                     historyLookBackIndex = previousInputs.Count();
                     consoleOpen = false;
                     proccessInput(input);
-                    game.inputState.keysOn = true;
+                    //inputState.keysOn = true;
                     input = "";
                     inputPosition = 0;
                 }
             } else {
-                if (game.inputState.pressed(Game.KEY_CONSOLE_OPEN) || game.inputState.pressedIgnore(Game.KEY_CONSOLE_ENTER)) {
+                if (inputState.pressed(Game.KEY_CONSOLE_OPEN) || inputState.pressed(Game.KEY_CONSOLE_ENTER)) {
                     input = "";
                     inputPosition = 0;
                     consoleOpen = true;
-                    game.inputState.keysOn = false;
+                    //inputState.keysOn = false;
                 }
-                if (game.inputState.pressed(Game.KEY_CONSOLE_OPEN_COMMAND)) {
+                if (inputState.pressed(Game.KEY_CONSOLE_OPEN_COMMAND)) {
                     input = "/";
                     inputPosition = 1;
                     consoleOpen = true;
-                    game.inputState.keysOn = false;
+                    //inputState.keysOn = false;
                 }
                 textFade -= .01f;
             }
+            if(consoleOpen){
+                inputState.eatKeyboard();
+            }
+            return inputState;
         }
 
         public override void draw(Game game, GameTime gameTime) {
@@ -165,25 +170,25 @@ namespace Specland {
 
 
 
-        public void updateKeys(Game game) {
-            Keys[] pressedKeys = game.inputState.getKeyboardStateIgnore().GetPressedKeys();
+        public void updateKeys(InputState inputState) {
+            Keys[] pressedKeys = inputState.getKeyboardState().GetPressedKeys();
 
             foreach (Keys key in lastPressedKeys) {
                 if (!pressedKeys.Contains(key))
-                    OnKeyUp(game, key);
+                    OnKeyUp(key);
             }
 
             foreach (Keys key in pressedKeys) {
                 if (!lastPressedKeys.Contains(key))
-                    OnKeyDown(game, key);
+                    OnKeyDown(inputState, key);
             }
 
             lastPressedKeys = pressedKeys;
         }
 
-        private void OnKeyDown(Game game, Keys key) {
+        private void OnKeyDown(InputState inputState, Keys key) {
             if (consoleOpen) {
-                String s = keyToString(game, key);
+                String s = keyToString(inputState, key);
                 if(s.Length!=0){
                     if (inputPosition == input.Length) {
                         input += s;
@@ -195,13 +200,13 @@ namespace Specland {
             }
         }
 
-        private void OnKeyUp(Game game, Keys key) {
+        private void OnKeyUp(Keys key) {
 
         }
 
-        private string keyToString(Game game, Keys key) {
+        private string keyToString(InputState inputState, Keys key) {
             bool shift = false;
-            if(game.inputState.getKeyboardStateIgnore().IsKeyDown(Keys.LeftShift) || game.inputState.getKeyboardStateIgnore().IsKeyDown(Keys.RightShift)){
+            if(inputState.down(Keys.LeftShift) || inputState.down(Keys.RightShift)){
                 shift = !shift;
             }
             switch (key) {

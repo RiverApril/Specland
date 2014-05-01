@@ -5,8 +5,9 @@ using System.Text;
 
 namespace Specland {
     class TileFalling : Tile {
-        
-        public TileFalling(string name, int renderType, int material, int textureX, int textureY) : base(name, renderType, material, textureX, textureY){
+
+        public TileFalling(string name, RenderType renderType, Material material, int textureX, int textureY)
+            : base(name, renderType, material, textureX, textureY) {
 
         }
 

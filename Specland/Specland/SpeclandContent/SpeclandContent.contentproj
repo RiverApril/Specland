@@ -71,14 +71,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Fonts\fontSmall.spritefont">
-      <SubType>Designer</SubType>
-      <Name>fontSmall</Name>
-      <Importer>FontDescriptionImporter</Importer>
-      <Processor>FontDescriptionProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Images\Gui.png">
       <Name>Gui</Name>
       <Importer>TextureImporter</Importer>

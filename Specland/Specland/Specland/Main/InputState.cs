@@ -10,13 +10,18 @@ namespace Specland {
         private KeyboardState keyboardState;
         private KeyboardState lastKeyboardState;
 
-        public MouseState mouseState;
-        public MouseState lastMouseState;
+        private MouseState mouseState;
+        private MouseState lastMouseState;
 
-        public bool keysOn = true;
+        private bool keysOn = true;
+        private bool mouseButtonsOn = true;
+
+        private bool[] eatenKeys = new bool[1024];
 
         private KeyboardState emptyKeyboardState = new KeyboardState();
-        private KeyboardState emptyLastKeyboardState = new KeyboardState();
+
+        public static int Left = 0;
+        public static int Right = 1;
 
         public void set(KeyboardState k, MouseState m) {
             keyboardState = k;
@@ -28,28 +33,65 @@ namespace Specland {
             lastMouseState = m;
         }
 
+
         public bool pressed(Keys key) {
-            return keysOn ? (keyboardState.IsKeyDown(key) && !lastKeyboardState.IsKeyDown(key)) : false;
+            return eatenKeys[(int)key] ? false : keysOn ? (keyboardState.IsKeyDown(key) && !lastKeyboardState.IsKeyDown(key)) : false;
         }
 
         public bool released(Keys key) {
-            return keysOn ? (keyboardState.IsKeyUp(key) && !lastKeyboardState.IsKeyUp(key)) : false;
+            return eatenKeys[(int)key] ? false : keysOn ? (keyboardState.IsKeyUp(key) && !lastKeyboardState.IsKeyUp(key)) : false;
         }
 
-        public KeyboardState getKeyboardState() {
-            return keysOn ? keyboardState : emptyKeyboardState;
+        public bool down(Keys key) {
+            return eatenKeys[(int)key] ? false : keysOn ? keyboardState.IsKeyDown(key) : false;
         }
 
-        public KeyboardState getLastKeyboardState() {
-            return keysOn ? lastKeyboardState : emptyLastKeyboardState;
+
+        public bool pressedMouse(int button) {
+            return mouseButtonsOn ? (button==Left?mouseState.LeftButton:mouseState.RightButton)==(ButtonState.Pressed) && ((button==Left?lastMouseState.LeftButton:lastMouseState.RightButton)==(ButtonState.Released)) : false;
         }
 
-        public bool pressedIgnore(Keys key) {
-            return keyboardState.IsKeyDown(key) && !lastKeyboardState.IsKeyDown(key);
+        public bool releasedMouse(int button) {
+            return mouseButtonsOn ? (button==Left?mouseState.LeftButton:mouseState.RightButton)==(ButtonState.Released) && ((button==Left?lastMouseState.LeftButton:lastMouseState.RightButton)==(ButtonState.Pressed)) : false;
         }
 
-        public KeyboardState getKeyboardStateIgnore() {
-            return keyboardState;
+        public bool downMouse(int button) {
+            return mouseButtonsOn ? (button==Left?mouseState.LeftButton:mouseState.RightButton)==(ButtonState.Pressed) : false;
+        }
+
+
+        internal void eatKeyboard() {
+            keysOn = false;
+        }
+
+        internal void eatMouse() {
+            mouseButtonsOn = false;
+        }
+
+        internal void regergitateKeyboardAndMouse() {
+            keysOn = true;
+            mouseButtonsOn = true;
+            Array.Clear(eatenKeys, 0, eatenKeys.Length);
+        }
+
+        internal KeyboardState getKeyboardState() {
+            return keysOn?keyboardState:emptyKeyboardState;
+        }
+
+        internal int mouseX() {
+            return mouseState.X;
+        }
+
+        internal int mouseY() {
+            return mouseState.Y;
+        }
+
+        internal int getScrollWheelValue() {
+            return mouseState.ScrollWheelValue;
+        }
+
+        internal void eatKey(Keys key) {
+            eatenKeys[(int)key] = true;
         }
     }
 }

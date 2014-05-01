@@ -45,6 +45,8 @@ namespace Specland {
 
         public byte[,] CrackMatrix;
 
+        public byte[,] wireMatrix;
+
         public int[] skyY;
 
 
@@ -88,6 +90,7 @@ namespace Specland {
             CrackMatrix = new byte[size.X, size.Y];
             TileNeedsUpdateMatrix = new bool[size.X, size.Y, 2];
             LiquidNeedsUpdateMatrix = new bool[size.X, size.Y];
+            wireMatrix = new byte[size.X, size.Y];
             skyY = new int[size.X];
             heightMap = new int[size.X];
 
@@ -316,6 +319,24 @@ namespace Specland {
             }
         }
 
+        public void setWireNoCheck(int x, int y, byte value) {
+            wireMatrix[x, y] = value;
+        }
+
+        public void setWire(int x, int y, byte value) {
+            if (inWorld(x, y)) {
+                wireMatrix[x, y] = value;
+            }
+        }
+
+        public byte getWire(int x, int y) {
+            if (inWorld(x, y)) {
+                return wireMatrix[x, y];
+            } else {
+                return 0;
+            }
+        }
+
         private void setSkyTile(int x) {
             int i;
             for (i = 0; i < sizeInTiles.Y;i++ ) {
@@ -538,7 +559,7 @@ namespace Specland {
                         dr.X = (tileSizeInPixels * x) - viewOffset.X;
                         dr.Y = (tileSizeInPixels * y) - viewOffset.Y;
                         
-                        if (textureTileInfo[x, y].transparent && wall.renderType != Tile.RENDER_TYPE_NONE) {
+                        if (textureTileInfo[x, y].transparent && wall.renderType != Tile.RenderType.none) {
                             byte b = (byte)MathHelper.Clamp(LightMatrix[x, y] - (255 - wall.wallBrightness), 0, wall.wallBrightness);
                             dr.X += textureWallInfo[x, y].offset.X;
                             dr.Y += textureWallInfo[x, y].offset.Y;

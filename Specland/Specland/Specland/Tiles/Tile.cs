@@ -6,47 +6,43 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Specland {
+
     public class Tile {
+
+        public enum RenderType {
+            none, terrain, placed, building, alone, custom
+        }
+
+        public enum Material {
+            none, dirt, stone, wood, furniture, SIZE
+        }
 
         public static Texture2D TileSheet;
 
-        public static int RENDER_TYPE_NONE = 0;
-        public static int RENDER_TYPE_TERRAIN = 1;
-        public static int RENDER_TYPE_PLACED = 2;
-        public static int RENDER_TYPE_BUILDING = 3;
-        public static int RENDER_TYPE_ATTACH_TO_SELF;
-        public static int RENDER_TYPE_CUSTOM = 5;
-
-        public static int MATERIAL_NONE = 0;
-        public static int MATERIAL_DIRT = 1;
-        public static int MATERIAL_STONE = 2;
-        public static int MATERIAL_WOOD = 3;
-        public static int MATERIAL_FURNITURE = 4;
-
         public static Tile[] TileList = new Tile[100];
 
-        public static Tile TileAir = new Tile("Air", RENDER_TYPE_NONE, MATERIAL_NONE, 0, 0).setTransparent().notSolid();
-        public static Tile TileGrass = new TileGrass("Grass", RENDER_TYPE_TERRAIN, MATERIAL_DIRT, 0, 0);
-        public static Tile TileDirt = new Tile("Dirt", RENDER_TYPE_TERRAIN, MATERIAL_DIRT, 1, 0);
-        public static Tile TileStone = new Tile("Stone", RENDER_TYPE_TERRAIN, MATERIAL_STONE, 2, 0);
-        public static Tile TileStoneBricks = new Tile("StoneBricks", RENDER_TYPE_TERRAIN, MATERIAL_STONE, 0, 1).setDisplayName("Stone Bricks");
-        public static Tile TileGlass = new Tile("Glass", RENDER_TYPE_ATTACH_TO_SELF, MATERIAL_STONE, 1, 1).setTransparent().setWallBrightness(240);
-        public static Tile TileTorch = new TileTorch("Torch", RENDER_TYPE_PLACED, MATERIAL_FURNITURE, 2, 1).setTransparent().setLight(200).notSolid().notWall().setWashedAwayByWater();
-        public static Tile TileTree = new TileTree("Tree", RENDER_TYPE_CUSTOM, MATERIAL_WOOD, 3, 1).setTransparent().notSolid();
-        public static Tile TileLeaf = new TileLeaf("Leaf", RENDER_TYPE_CUSTOM, MATERIAL_WOOD, 4, 1, TileTree.index).setTransparent().notSolid();
-        public static Tile TileWood = new Tile("Wood", RENDER_TYPE_TERRAIN, MATERIAL_WOOD, 4, 0).setDisplayName("Wooden Plank");
-        public static Tile TileSand = new TileFalling("Sand", RENDER_TYPE_TERRAIN, MATERIAL_DIRT, 5, 0);
-        public static Tile TileSapling = new TileMustRestOn("Sapling", RENDER_TYPE_CUSTOM, MATERIAL_FURNITURE, 5, 1, 3, 3, 0, 1, TileGrass, true).notSolid().notWall().setTransparent().setWashedAwayByWater();
-        public static Tile TileWoodDoor = new TileDoor("WoodDoor", RENDER_TYPE_CUSTOM, 2, 2).notWall().setTransparent().setDisplayName("Wooden Door");
-        public static Tile TileWoodTable = new TileFurniture("WoodTable", RENDER_TYPE_CUSTOM, 3, 2, 3, 2).notSolid().notWall().setTransparent().setDisplayName("Wooden Table");
-        public static Tile TileWoodChair = new TileFurniture("WoodChair", RENDER_TYPE_CUSTOM, 4, 2, 1, 2).notSolid().notWall().setTransparent().setDisplayName("Wooden Chair");
-        public static Tile TilePlantGlow = new TileMustRestOn("GlowLeaf", RENDER_TYPE_CUSTOM, MATERIAL_FURNITURE, 5, 1, 2, 3, 0, 1, new Tile[] { TileDirt, TileStone }, true).notSolid().notWall().setTransparent().setLight(120).setWashedAwayByWater().setDisplayName("Glow Leaf").setDisplayNamePlural("Glow Leaves");
-        public static Tile TileLamp = new TileLightToggle("Lamp", RENDER_TYPE_PLACED, MATERIAL_FURNITURE, 6, 1).setTransparent().setLight(300).notSolid().notWall().setWashedAwayByWater();
+        public static Tile TileAir = new Tile("Air", RenderType.none, Material.none, 0, 0).setTransparent().notSolid();
+        public static Tile TileGrass = new TileGrass("Grass", RenderType.terrain, Material.dirt, 0, 0);
+        public static Tile TileDirt = new Tile("Dirt", RenderType.terrain, Material.dirt, 1, 0);
+        public static Tile TileStone = new Tile("Stone", RenderType.terrain, Material.stone, 2, 0);
+        public static Tile TileStoneBricks = new Tile("StoneBricks", RenderType.terrain, Material.stone, 0, 1).setDisplayName("Stone Bricks");
+        public static Tile TileGlass = new Tile("Glass", RenderType.alone, Material.stone, 1, 1).setTransparent().setWallBrightness(240);
+        public static Tile TileTorch = new TileTorch("Torch", RenderType.placed, Material.furniture, 2, 1).setTransparent().setLight(200).notSolid().notWall().setWashedAwayByWater();
+        public static Tile TileTree = new TileTree("Tree", RenderType.custom, Material.wood, 3, 1).setTransparent().notSolid();
+        public static Tile TileLeaf = new TileLeaf("Leaf", RenderType.custom, Material.wood, 4, 1, TileTree.index).setTransparent().notSolid();
+        public static Tile TileWood = new Tile("Wood", RenderType.terrain, Material.wood, 4, 0).setDisplayName("Wooden Plank");
+        public static Tile TileSand = new TileFalling("Sand", RenderType.terrain, Material.dirt, 5, 0);
+        public static Tile TileSapling = new TileMustRestOn("Sapling", RenderType.custom, Material.furniture, 5, 1, 3, 3, 0, 1, TileGrass, true).notSolid().notWall().setTransparent().setWashedAwayByWater();
+        public static Tile TileWoodDoor = new TileDoor("WoodDoor", RenderType.custom, 2, 2).notWall().setTransparent().setDisplayName("Wooden Door");
+        public static Tile TileWoodTable = new TileFurniture("WoodTable", RenderType.custom, 3, 2, 3, 2).notSolid().notWall().setTransparent().setDisplayName("Wooden Table");
+        public static Tile TileWoodChair = new TileFurniture("WoodChair", RenderType.custom, 4, 2, 1, 2).notSolid().notWall().setTransparent().setDisplayName("Wooden Chair");
+        public static Tile TilePlantGlow = new TileMustRestOn("GlowLeaf", RenderType.custom, Material.furniture, 5, 1, 2, 3, 0, 1, new Tile[] { TileDirt, TileStone }, true).notSolid().notWall().setTransparent().setLight(120).setWashedAwayByWater().setDisplayName("Glow Leaf").setDisplayNamePlural("Glow Leaves");
+        public static Tile TileLamp = new TileLightToggle("Lamp", RenderType.placed, Material.furniture, 6, 1).setTransparent().setLight(300).notSolid().notWall().setWashedAwayByWater();
 
         public int index;
         public string name;
-        public int renderType;
-        public int material;
+        public RenderType renderType;
+        public Material material;
 
         public bool transparent = false;
         private int light = 0;
@@ -62,7 +58,7 @@ namespace Specland {
 
         private bool defaultSolid = true;
 
-        public Tile(string name, int renderType, int material, int textureX, int textureY) {
+        public Tile(string name, RenderType renderType, Material material, int textureX, int textureY) {
             index = getNewIndex();
             TileList[index] = this;
             this.name = name;
@@ -126,7 +122,7 @@ namespace Specland {
 
 
         public virtual TextureInfo getTextureInfo(int x, int y, World world, bool isWall) {
-            if (renderType == RENDER_TYPE_TERRAIN || renderType == RENDER_TYPE_BUILDING || renderType == RENDER_TYPE_ATTACH_TO_SELF) {
+            if (renderType == RenderType.terrain || renderType == RenderType.building || renderType == RenderType.alone) {
                 
                 bool left = false;
                 bool right = false;
@@ -138,7 +134,7 @@ namespace Specland {
                 down = (world.getTileObject(x, y + 1, isWall)).renderType == renderType;
                 up = (world.getTileObject(x, y - 1, isWall)).renderType == renderType;
 
-                if(renderType == RENDER_TYPE_ATTACH_TO_SELF){
+                if(renderType == RenderType.alone){
                     left = (world.getTileObject(x - 1, y, isWall)).index == index;
                     right = (world.getTileObject(x + 1, y, isWall)).index == index;
                     down = (world.getTileObject(x, y + 1, isWall)).index == index;
@@ -224,7 +220,7 @@ namespace Specland {
                     }
                 }
                 return new TextureInfo(/*texture2D,*/ r, t);
-            } else if (renderType == RENDER_TYPE_PLACED) {
+            } else if (renderType == RenderType.placed) {
                 bool left = world.isTileSolid(x - 1, y, isWall);
                 bool right = world.isTileSolid(x + 1, y, isWall);
                 bool down = world.isTileSolid(x, y + 1, isWall);
@@ -285,7 +281,7 @@ namespace Specland {
         }
 
         public virtual bool canBePlacedHereOverridable(World world, int x, int y, bool isWall) {
-            if (renderType == RENDER_TYPE_PLACED) {
+            if (renderType == RenderType.placed) {
                 return (world.isTileSolid(x - 1, y, isWall) || world.isTileSolid(x + 1, y, isWall) || world.isTileSolid(x, y - 1, isWall) || world.isTileSolid(x, y + 1, isWall) || !world.getTileObject(x, y, !isWall).isAir()) && world.getTileObject(x, y, isWall).isAir();
             }
             return (!world.getTileObject(x - 1, y, isWall).isAir() || !world.getTileObject(x + 1, y, isWall).isAir() || !world.getTileObject(x, y - 1, isWall).isAir() || !world.getTileObject(x, y + 1, isWall).isAir() || !world.getTileObject(x, y, !isWall).isAir()) && world.getTileObject(x, y, isWall).isAir();

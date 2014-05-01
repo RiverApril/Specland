@@ -10,23 +10,17 @@ namespace Specland {
         
         public static int furniturePower = 256;
 
-        private int stonePower = 1;
-        private int dirtPower = 1;
-        private int woodPower = 1;
+        private byte[] powers = new byte[] { };
         private int delay = 1;
 
-        public ItemPick(string name, int renderType, Rectangle sourceRectangle, int stonePower, int dirtPower, int woodPower, int delay, int reach)
+        public ItemPick(string name, int renderType, Rectangle sourceRectangle, byte[] powers, int delay, int reach)
             : base(name, renderType, sourceRectangle, Math.Max(delay, 5)) {
-            this.stonePower = stonePower;
-            this.dirtPower = dirtPower;
-            this.woodPower = woodPower;
+            this.powers = powers;
             this.delay = delay;
             this.reach = reach;
         }
 
         public override ItemStack leftClick(Game game, ItemStack stack, int xTile, int yTile, int distance) {
-            
-            
 
             if (game.currentWorld.player.swingTime <= 0 && mine(game, stack, xTile, yTile, distance, false)) {
                 game.currentWorld.player.swingTime = swingMaxTime;
@@ -48,9 +42,9 @@ namespace Specland {
 
         public bool mine(Game game, ItemStack stack, int xTile, int yTile, int distance, bool isWall) {
             int del = delay;
-            int mat = game.currentWorld.getTileObjectNoCheck(xTile, yTile, isWall).material;
+            Tile.Material mat = game.currentWorld.getTileObjectNoCheck(xTile, yTile, isWall).material;
 
-            if (mat == Tile.MATERIAL_FURNITURE || mat == Tile.MATERIAL_NONE) {
+            if (mat == Tile.Material.furniture) {
                 del = 20;
             }
             int power = getPower(mat);
@@ -58,7 +52,7 @@ namespace Specland {
                 return false;
             }
             game.inventory.t++;
-            if (game.inventory.t > del && distance <= reach) {
+            if (game.inventory.t >= del && distance <= reach) {
                 game.inventory.t = 0;
                 Tile tile = game.currentWorld.getTileObject(xTile, yTile, isWall);
                 if (tile.index != Tile.TileAir.index) {
@@ -85,22 +79,8 @@ namespace Specland {
             return false;
         }
 
-        public int getPower(int mat) {
-            int power = 0;
-
-            if (mat == Tile.MATERIAL_STONE) {
-                power = stonePower;
-            } else if (mat == Tile.MATERIAL_DIRT) {
-                power = dirtPower;
-            } else if (mat == Tile.MATERIAL_WOOD) {
-                power = woodPower;
-            } else if (mat == Tile.MATERIAL_FURNITURE) {
-                power = furniturePower;
-            } else {
-                power = furniturePower;
-            }
-            power = Game.instance.inventory.applyMiningPowerModifier(power);
-            return power;
+        public int getPower(Tile.Material material) {
+            return Game.instance.inventory.applyMiningPowerModifier(powers[(int)material]);
         }
 
         public int getDelay() {
@@ -112,6 +92,19 @@ namespace Specland {
                 Rectangle r = new Rectangle((mouseTileX * World.tileSizeInPixels) - game.currentWorld.viewOffset.X, (mouseTileY * World.tileSizeInPixels) - game.currentWorld.viewOffset.Y, World.tileSizeInPixels, World.tileSizeInPixels);
                 Game.drawRectangle(Game.dummyTexture, r, r, new Color(.5f, .5f, .5f, .5f), Game.RENDER_DEPTH_HOVER);
             }
+        }
+
+        public static byte[] createPowers(float pick, float shovel, float axe) {
+
+            byte[] powers = new byte[(int)Tile.Material.SIZE];
+
+            powers[(int)Tile.Material.none] = 0;
+            powers[(int)Tile.Material.stone] = (byte)Math.Min(pick * (256.0 / 16.0), 255);
+            powers[(int)Tile.Material.dirt] = (byte)Math.Min(shovel * (256.0 / 16.0), 255);
+            powers[(int)Tile.Material.wood] = (byte)Math.Min(axe * (256.0 / 16.0), 255);
+            powers[(int)Tile.Material.furniture] = 255;
+
+            return powers;
         }
     }
 }

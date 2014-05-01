@@ -11,7 +11,8 @@ namespace Specland {
         private static int stateOpenRight = 1;
         private static int stateOpenLeft = 2;
 
-        public TileDoor(string name, int renderType, int textureX, int textureY) : base(name, renderType, MATERIAL_FURNITURE, textureX, textureY) {
+        public TileDoor(string name, RenderType renderType, int textureX, int textureY)
+            : base(name, renderType, Material.furniture, textureX, textureY) {
 
         }
 

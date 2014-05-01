@@ -106,9 +106,9 @@ namespace Specland {
                 }else if(item is ItemPick){
                     ItemPick pick = (ItemPick)item;
                     int p;
-                    p = pick.getPower(Tile.MATERIAL_STONE); if (p > 0) s += "\n  Rock Power: " + Math.Ceiling(((p / 256.0) * 100)) + "%";
-                    p = pick.getPower(Tile.MATERIAL_DIRT); if (p > 0) s += "\n  Soil Power: " + Math.Ceiling(((p / 256.0) * 100)) + "%";
-                    p = pick.getPower(Tile.MATERIAL_WOOD); if (p > 0) s += "\n  Wood Power: " + Math.Ceiling(((p / 256.0) * 100)) + "%";
+                    p = pick.getPower(Tile.Material.stone); if (p > 0) s += "\n  Rock Power: " + Math.Ceiling(((p / 256.0) * 100)) + "%";
+                    p = pick.getPower(Tile.Material.dirt); if (p > 0) s += "\n  Soil Power: " + Math.Ceiling(((p / 256.0) * 100)) + "%";
+                    p = pick.getPower(Tile.Material.wood); if (p > 0) s += "\n  Wood Power: " + Math.Ceiling(((p / 256.0) * 100)) + "%";
                     s += "\n  Speed: " + Math.Max((20 - pick.getDelay()) * 5, 1) + "%";
                 }
             }

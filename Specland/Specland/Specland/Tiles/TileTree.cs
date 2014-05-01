@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework;
 namespace Specland {
     class TileTree : Tile {
 
-        public TileTree(string name, int renderType, int material, int textureX, int textureY) : base(name, renderType, material, textureX, textureY){ }
+        public TileTree(string name, RenderType renderType, Material material, int textureX, int textureY) : base(name, renderType, material, textureX, textureY) { }
 
         public override TextureInfo getTextureInfo(int x, int y, World world, bool isWall) {
 

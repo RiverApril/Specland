@@ -4,9 +4,12 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Specland.Entities;
 
 namespace Specland {
     public class EntityPlayer : Entity{
+
+        public MovementHandeler movement = new MovementHandeler();
 
         private Rectangle drawBounds;
         public bool facingRight = true;
@@ -34,7 +37,9 @@ namespace Specland {
 
         public int swingTime = 0;
 
-        public EntityPlayer(int x, int y) : base(x, y) { }
+        public EntityPlayer(int x, int y) : base(x, y) {
+
+        }
 
         public override void init() {
             renderSize = new Vector2(2 * World.tileSizeInPixels, 3 * World.tileSizeInPixels);
@@ -48,7 +53,7 @@ namespace Specland {
         }
 
         public override void update(Game game, World world) {
-
+            
             if (swingTime > 0) {
                 swingTime -= 1;
             }
@@ -65,49 +70,49 @@ namespace Specland {
 
             if (inWater) {
 
-                if (game.inputState.getKeyboardState().IsKeyDown(Game.KEY_MOVE_LEFT)) {
+                if (movement.left) {
                     if (speed.X > -swimSpeed) speed.X += -swimAcc;
                     walking = true;
                     facingRight = false;
                 }
-                if (game.inputState.getKeyboardState().IsKeyDown(Game.KEY_MOVE_RIGHT)) {
+                if (movement.right) {
                     if (speed.X < swimSpeed) speed.X += swimAcc;
                     walking = true;
                     facingRight = true;
                 }
-                if (game.inputState.getKeyboardState().IsKeyDown(Game.KEY_MOVE_JUMP)) {
+                if (movement.jump) {
                     if (speed.Y > -swimSpeed) {
                         speed.Y -= swimSpeed;
                     }
                 }
             } else {
 
-                if (game.inputState.getKeyboardState().IsKeyDown(Game.KEY_MOVE_LEFT)) {
+                if (movement.left) {
                     if (speed.X > -walkSpeed) speed.X += -walkAcc;
                     facingRight = false;
                     walking = true;
                 }
-                if (game.inputState.getKeyboardState().IsKeyDown(Game.KEY_MOVE_RIGHT)) {
+                if (movement.right) {
                     if (speed.X < walkSpeed) speed.X += walkAcc;
                     facingRight = true;
                     walking = true;
                 }
 
                 if (collision(world, 0, 1)) {
-                    if (game.inputState.getKeyboardState().IsKeyDown(Game.KEY_MOVE_JUMP)) {
+                    if (movement.jump) {
                         speed.Y = -initalJumpSpeed;
                     }
 
                 }
 
                 if (speed.Y < 0) {
-                    if (game.inputState.getKeyboardState().IsKeyDown(Game.KEY_MOVE_JUMP)) {
+                    if (movement.jump) {
                         speed.Y -= jumpInAirAcc;
                     }
                 }
 
                 if(liquidBelow){
-                    if (game.inputState.getKeyboardState().IsKeyDown(Game.KEY_MOVE_JUMP)) {
+                    if (movement.jump) {
                         speed.Y -= jumpInWaterSpeed;
                     }
                 }
@@ -138,7 +143,7 @@ namespace Specland {
             } else {
                 bool moved = false;
                 bool goingRight = speed.X > 0;
-                if (!game.inputState.getKeyboardState().IsKeyDown(Game.KEY_MOVE_DOWN)) {
+                if (!movement.down) {
                     if (collision(world, 0, 4) && !collision(world, (goingRight ? World.tileSizeInPixels : -World.tileSizeInPixels) + speed.X, -(int)(World.tileSizeInPixels * 1.2))) {
 
                         finalSpeed.X += speed.X;

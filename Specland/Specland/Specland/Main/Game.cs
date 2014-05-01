@@ -83,6 +83,7 @@ namespace Specland {
         public static Keys KEY_CONSOLE_UP = Keys.Up;
         public static Keys KEY_CONSOLE_DOWN = Keys.Down;
 
+        private List<InputUser> userInputList = new List<InputUser>();
 
         private BlendState normalBlendState = new BlendState();
 
@@ -98,7 +99,7 @@ namespace Specland {
 
         public Inventory inventory = new Inventory();
 
-        public InputState inputState = new InputState();
+        private InputState inputState = new InputState();
 
         public static string drawMessage = "";
         public static string updateMessage = "";
@@ -108,7 +109,6 @@ namespace Specland {
         public static Game instance;
 
         public static SpriteFont fontNormal;
-        public static SpriteFont fontSmall;
 
         public static Texture2D dummyTexture;
 
@@ -171,13 +171,26 @@ namespace Specland {
             currentWorld.generate(WorldGenerator.TypeNatural);
             currentWorld.player = new EntityPlayer((currentWorld.sizeInTiles.X*World.tileSizeInPixels)/2, 10);
             currentWorld.EntityList.Add(currentWorld.player);
+
+            resetUserInputList();
+
             base.Initialize();
+        }
+
+        public void resetUserInputList() {
+            userInputList.Clear();
+            userInputList.Add(console);
+            userInputList.Add(inventory);
+            if(currentWorld!=null){
+                if (currentWorld.player!=null) {
+                    userInputList.Add(currentWorld.player.movement);
+                }
+            }
         }
 
         protected override void LoadContent() {
             spriteBatch = new SpriteBatch(GraphicsDevice);
             fontNormal = Content.Load<SpriteFont>("Fonts\\fontNormal");
-            fontSmall = Content.Load<SpriteFont>("Fonts\\fontSmall");
 
             dummyTexture = new Texture2D(GraphicsDevice, 1, 1);
             dummyTexture.SetData(new Color[] { Color.White });
@@ -209,12 +222,13 @@ namespace Specland {
             updateMessage = "";
             inputState.set(Keyboard.GetState(), Mouse.GetState());
 
+            foreach(InputUser i in userInputList){
+                inputState = i.update(this, inputState);
+            }
+            inputState.regergitateKeyboardAndMouse();
+
             if (inputState.pressed(Game.KEY_ESCAPE)) {
                 this.Exit();
-            }
-            if(inputState.pressed(Keys.P)){
-                currentWorld.EntityRemovalList.Add(currentWorld.player);
-                currentWorld.player = null;
             }
             if(inputState.pressed(Game.KEY_DEBUG_MENU)){
                 debugEnabled = !debugEnabled;
@@ -228,12 +242,6 @@ namespace Specland {
                     currentWorld.time += 10;
                 }
             }
-
-            if (inventory != null) {
-                inventory.update(this, gameTime);
-            }
-
-            console.update(this);
 
             EntityItem.playedSoundEffectRecently = false;
 

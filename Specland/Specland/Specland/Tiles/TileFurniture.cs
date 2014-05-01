@@ -10,8 +10,8 @@ namespace Specland {
 
         public Point size = new Point(0, 0);
 
-        public TileFurniture(string name, int renderType, int textureX, int textureY, int width, int height)
-            : base(name, renderType, MATERIAL_FURNITURE, textureX, textureY) {
+        public TileFurniture(string name, RenderType renderType, int textureX, int textureY, int width, int height)
+            : base(name, renderType, Material.furniture, textureX, textureY) {
             size = new Point(width, height);
         }
 
