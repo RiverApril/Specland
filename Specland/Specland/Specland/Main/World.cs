@@ -345,8 +345,10 @@ namespace Specland {
                 entity.update(game, this);
             }
 
-            viewOffset.X = (int)player.displayPosition.X - (viewPortInPixels.Width / 2);
-            viewOffset.Y = (int)player.displayPosition.Y - (viewPortInPixels.Height / 2);
+            if(player!=null){
+                viewOffset.X = (int)player.displayPosition.X - (viewPortInPixels.Width / 2);
+                viewOffset.Y = (int)player.displayPosition.Y - (viewPortInPixels.Height / 2);
+            }
 
             if (viewOffset.X < 0) {
                 viewOffset.X = 0;
@@ -717,11 +719,13 @@ namespace Specland {
         }*/
 
         public Color getBgColor() {
-            Color realColor = getRealBgColor();
-            currentBgColor.R += (byte)((realColor.R - currentBgColor.R) / 16);
-            currentBgColor.G += (byte)((realColor.G - currentBgColor.G) / 16);
-            currentBgColor.B += (byte)((realColor.B - currentBgColor.B) / 16);
-            currentBgColor.A = 1;
+            if(player!=null){
+                Color realColor = getRealBgColor();
+                currentBgColor.R += (byte)((realColor.R - currentBgColor.R) / 16);
+                currentBgColor.G += (byte)((realColor.G - currentBgColor.G) / 16);
+                currentBgColor.B += (byte)((realColor.B - currentBgColor.B) / 16);
+                currentBgColor.A = 1;
+            }
             return currentBgColor;
         }
 

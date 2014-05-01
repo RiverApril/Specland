@@ -49,22 +49,21 @@ namespace Specland {
 
         public override void update(Game game, World world) {
 
-            if (game.currentWorld.player.swingTime > 0) {
-                game.currentWorld.player.swingTime -= 1;
+            if (swingTime > 0) {
+                swingTime -= 1;
             }
 
             drawBounds = new Rectangle((int)(displayPosition.X - world.viewOffset.X - xoff + (facingRight ? 0 : renderSize.X)), (int)displayPosition.Y - world.viewOffset.Y - (yoff), (int)((renderSize.X) * (facingRight ? 1 : -1)), (int)renderSize.Y);
 
             #region Movement
 
-            inWater = false;
+            inWater = world.getLiquid((int)((position.X + (size.X / 2)) / World.tileSizeInPixels), (int)((position.Y + (size.Y / 2)) / World.tileSizeInPixels)) > 50;
 
             bool walking = false;
 
             bool liquidBelow = (world.getLiquid((int)((position.X + (size.X / 2)) / World.tileSizeInPixels), (int)((position.Y + (size.Y)) / World.tileSizeInPixels)) > 50);
 
-            if (world.getLiquid((int)((position.X + (size.X / 2)) / World.tileSizeInPixels), (int)((position.Y + (size.Y / 2)) / World.tileSizeInPixels)) > 50) {
-                inWater = true;
+            if (inWater) {
 
                 if (game.inputState.getKeyboardState().IsKeyDown(Game.KEY_MOVE_LEFT)) {
                     if (speed.X > -swimSpeed) speed.X += -swimAcc;
@@ -124,7 +123,7 @@ namespace Specland {
             }
 
             if (inWater) {
-                speed *= waterFriction;
+                //speed *= waterFriction;
             }
 
             int a = (speed.X > 0 ? 1 : (speed.X < 0 ? -1 : 0));
@@ -132,15 +131,17 @@ namespace Specland {
 
             walkUpPosition *= .7f;
 
+            Vector2 finalSpeed = Vector2.Zero;
+
             if(!collision(world, speed.X, 0)){
-                position.X += speed.X;
+                finalSpeed.X += speed.X;
             } else {
                 bool moved = false;
                 bool goingRight = speed.X > 0;
                 if (!game.inputState.getKeyboardState().IsKeyDown(Game.KEY_MOVE_DOWN)) {
                     if (collision(world, 0, 4) && !collision(world, (goingRight ? World.tileSizeInPixels : -World.tileSizeInPixels) + speed.X, -(int)(World.tileSizeInPixels * 1.2))) {
-                        
-                        position.X += speed.X;
+
+                        finalSpeed.X += speed.X;
                         position.Y -= World.tileSizeInPixels * 1.2f;
 
                         walkUpPosition.X += speed.X;
@@ -162,10 +163,13 @@ namespace Specland {
             }
 
             if (!collision(world, 0, speed.Y)) {
-                position.Y += speed.Y;
+                finalSpeed.Y += speed.Y;
             } else {
                 speed.Y = 0;
             }
+
+            position += finalSpeed;
+
             #endregion
 
             //displayPosition += (position - displayPosition)/4;

@@ -98,6 +98,11 @@ namespace Specland {
         }
 
         public override void draw(Game game, GameTime gameTime) {
+
+            if (game.currentWorld.player == null) {
+                return;
+            }
+
             int xx = 0;
             int yy = 0;
             int itemIndex = 0;
@@ -191,6 +196,11 @@ namespace Specland {
 
 
         public void update(Game game, GameTime gameTime) {
+
+            if(game.currentWorld.player==null){
+                return;
+            }
+
             #region Scrolling and Fading
 
             int xx = 0;

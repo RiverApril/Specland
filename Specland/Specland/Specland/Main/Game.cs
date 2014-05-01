@@ -212,6 +212,10 @@ namespace Specland {
             if (inputState.pressed(Game.KEY_ESCAPE)) {
                 this.Exit();
             }
+            if(inputState.pressed(Keys.P)){
+                currentWorld.EntityRemovalList.Add(currentWorld.player);
+                currentWorld.player = null;
+            }
             if(inputState.pressed(Game.KEY_DEBUG_MENU)){
                 debugEnabled = !debugEnabled;
             }
