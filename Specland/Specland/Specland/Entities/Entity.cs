@@ -76,6 +76,9 @@ namespace Specland {
                 return true;
             }
             foreach (Entity e in world.EntityList) {
+                if(e==null){
+                    continue;
+                }
                 if (e.isSolid) {
                     if (r.Intersects(new Rectangle((int)(e.position.X), (int)(e.position.Y), (int)(e.size.X), (int)(e.size.Y)))) {
                         return true;

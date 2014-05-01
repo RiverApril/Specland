@@ -170,7 +170,7 @@ namespace Specland {
             currentWorld = new World(World.defaultSize, "World");
             currentWorld.generate(WorldGenerator.TypeNatural);
             currentWorld.player = new EntityPlayer((currentWorld.sizeInTiles.X*World.tileSizeInPixels)/2, 10);
-            currentWorld.EntityList.Add(currentWorld.player);
+            currentWorld.EntityAddingList.Add(currentWorld.player);
 
             resetUserInputList();
 
@@ -226,6 +226,10 @@ namespace Specland {
                 inputState = i.update(this, inputState);
             }
             inputState.regergitateKeyboardAndMouse();
+
+            if(inputState.down(Keys.X)){
+                currentWorld.player.position.Y += 16;
+            }
 
             if (inputState.pressed(Game.KEY_ESCAPE)) {
                 this.Exit();

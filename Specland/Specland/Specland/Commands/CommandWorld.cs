@@ -56,6 +56,7 @@ namespace Specland {
                     Game.instance.currentWorld.calculateTileFrames(Game.instance);
                 }
 
+                Game.instance.resetUserInputList();
 
                 return true;
             } else {

@@ -569,7 +569,7 @@ namespace Specland {
         public void dropItem(Game game, ItemStack item) {
             if (item.getItem().index != Item.itemEmpty.index) {
                 Entity e = new EntityItem(game.currentWorld.player.position, item, 40);
-                game.currentWorld.EntityList.Add(e);
+                game.currentWorld.EntityAddingList.Add(e);
             }
         }
 

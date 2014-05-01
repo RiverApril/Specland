@@ -277,7 +277,7 @@ namespace Specland {
             if (setTile(x, y, Tile.TileAir.index, isWall)) {
                 Entity e = new EntityItem(new Vector2((x) * World.tileSizeInPixels, (y) * World.tileSizeInPixels), tile.dropStack(this, pick, Game.rand, x, y, isWall));
                 tile.mine(this, x, y, data, pick, isWall);
-                EntityList.Add(e);
+                EntityAddingList.Add(e);
                 return true;
             }
             return false;
@@ -366,6 +366,16 @@ namespace Specland {
                 entity.update(game, this);
             }
 
+            while (EntityRemovalList.Count() > 0) {
+                EntityList.Remove(EntityRemovalList[0]);
+                EntityRemovalList.RemoveAt(0);
+            }
+
+            while (EntityAddingList.Count() > 0) {
+                EntityList.Add(EntityAddingList[0]);
+                EntityAddingList.RemoveAt(0);
+            }
+
             if(player!=null){
                 viewOffset.X = (int)player.displayPosition.X - (viewPortInPixels.Width / 2);
                 viewOffset.Y = (int)player.displayPosition.Y - (viewPortInPixels.Height / 2);
@@ -396,16 +406,6 @@ namespace Specland {
             //TempLiquidMatrix = (int[,])LiquidMatrix.Clone();
 
             TileUpdates(tick);
-
-            while (EntityRemovalList.Count()>0) {
-                EntityList.Remove(EntityRemovalList[0]);
-                EntityRemovalList.RemoveAt(0);
-            }
-
-            while (EntityAddingList.Count() > 0) {
-                EntityList.Add(EntityAddingList[0]);
-                EntityAddingList.RemoveAt(0);
-            }
 
 
             if (time > 5000 && time < 8000) {
@@ -787,22 +787,13 @@ namespace Specland {
             byte[] xBytes = intToBytes(world.sizeInTiles.X);
             byte[] yBytes = intToBytes(world.sizeInTiles.Y);
 
-            bytes.Add(xBytes[0]);
-            bytes.Add(xBytes[1]);
-            bytes.Add(xBytes[2]);
-            bytes.Add(xBytes[3]);
+            bytes.AddRange(xBytes);
 
-            bytes.Add(yBytes[0]);
-            bytes.Add(yBytes[1]);
-            bytes.Add(yBytes[2]);
-            bytes.Add(yBytes[3]);
+            bytes.AddRange(yBytes);
 
             byte[] timeBytes = intToBytes((int)world.time);
 
-            bytes.Add(timeBytes[0]);
-            bytes.Add(timeBytes[1]);
-            bytes.Add(timeBytes[2]);
-            bytes.Add(timeBytes[3]);
+            bytes.AddRange(timeBytes);
 
             for (int x = 0; x < world.sizeInTiles.X; x++) {
                 for (int y = 0; y < world.sizeInTiles.Y; y++) {
@@ -860,7 +851,7 @@ namespace Specland {
 
             world.player = new EntityPlayer(0, 0);
             world.player.loadFrom(bytes, index);
-            world.EntityList.Add(world.player);
+            world.EntityAddingList.Add(world.player);
             world.calculateTileFrames(Game.instance);
 
             return world;
