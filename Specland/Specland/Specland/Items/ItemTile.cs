@@ -26,7 +26,7 @@ namespace Specland {
             if (Tile.getTileObject(stack.getData()) != null && distance <= reach) {
                 if (game.currentWorld.getTileIndex(xTile, yTile, false) == Tile.TileAir.index) {
                     if (Tile.getTileObject(stack.getData()).canBePlacedHere(game.currentWorld, xTile, yTile, false)) {
-                        if (!collision(game.currentWorld, xTile, yTile, Tile.getTileObject(stack.getData()).isSolid(xTile, yTile))) {
+                        if (!collision(game.currentWorld, xTile, yTile, Tile.getTileObject(stack.getData()).isSolid(game.currentWorld, xTile, yTile))) {
                             if (game.currentWorld.setTileWithUpdate(xTile, yTile, stack.getData(), false)) {
                                 game.currentWorld.getTileObjectNoCheck(xTile, yTile, false).justPlaced(game.currentWorld, xTile, yTile, false);
                                 stack.setCount(stack.getCount() - 1);

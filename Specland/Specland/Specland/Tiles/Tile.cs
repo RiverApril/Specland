@@ -10,7 +10,7 @@ namespace Specland {
     public class Tile {
 
         public enum RenderType {
-            none, terrain, placed, building, alone, custom
+            none, terrain, placed, building, alone, platform, custom
         }
 
         public enum Material {
@@ -34,10 +34,11 @@ namespace Specland {
         public static Tile TileSand = new TileFalling("Sand", RenderType.terrain, Material.dirt, 5, 0);
         public static Tile TileSapling = new TileMustRestOn("Sapling", RenderType.custom, Material.furniture, 5, 1, 3, 3, 0, 1, TileGrass, true).notSolid().notWall().setTransparent().setWashedAwayByWater();
         public static Tile TileWoodDoor = new TileDoor("WoodDoor", RenderType.custom, 2, 2).notWall().setTransparent().setDisplayName("Wooden Door");
-        public static Tile TileWoodTable = new TileFurniture("WoodTable", RenderType.custom, 3, 2, 3, 2).notSolid().notWall().setTransparent().setDisplayName("Wooden Table");
-        public static Tile TileWoodChair = new TileFurniture("WoodChair", RenderType.custom, 4, 2, 1, 2).notSolid().notWall().setTransparent().setDisplayName("Wooden Chair");
+        public static Tile TileWoodTable = new TileFurniture("WoodTable", RenderType.custom, 3, 2, 3, 2, true).notSolid().notWall().setTransparent().setDisplayName("Wooden Table");
+        public static Tile TileWoodChair = new TileFurniture("WoodChair", RenderType.custom, 4, 2, 1, 2, false).notSolid().notWall().setTransparent().setDisplayName("Wooden Chair");
         public static Tile TilePlantGlow = new TileMustRestOn("GlowLeaf", RenderType.custom, Material.furniture, 5, 1, 2, 3, 0, 1, new Tile[] { TileDirt, TileStone }, true).notSolid().notWall().setTransparent().setLight(120).setWashedAwayByWater().setDisplayName("Glow Leaf").setDisplayNamePlural("Glow Leaves");
         public static Tile TileLamp = new TileLightToggle("Lamp", RenderType.placed, Material.furniture, 6, 1).setTransparent().setLight(300).notSolid().notWall().setWashedAwayByWater();
+        public static Tile TileWoodPlatform = new Tile("WoodPlatform", RenderType.platform, Material.wood, 5, 2).setTransparent().notSolid().notWall().setPlatform().setDisplayName("Wooden Platform");
 
         public int index;
         public string name;
@@ -57,6 +58,7 @@ namespace Specland {
         private static int nextIndex=0;
 
         private bool defaultSolid = true;
+        private bool defaultPlatform = false;
 
         public Tile(string name, RenderType renderType, Material material, int textureX, int textureY) {
             index = getNewIndex();
@@ -99,6 +101,11 @@ namespace Specland {
             return this;
         }
 
+        private Tile setPlatform() {
+            defaultPlatform = true;
+            return this;
+        }
+
         private Tile setLight(int power) {
             light = power;
             return this;
@@ -129,16 +136,16 @@ namespace Specland {
                 bool down = false;
                 bool up = false;
 
-                left = (world.getTileObject(x - 1, y, isWall)).renderType == renderType;
-                right = (world.getTileObject(x + 1, y, isWall)).renderType == renderType;
-                down = (world.getTileObject(x, y + 1, isWall)).renderType == renderType;
-                up = (world.getTileObject(x, y - 1, isWall)).renderType == renderType;
-
                 if(renderType == RenderType.alone){
                     left = (world.getTileObject(x - 1, y, isWall)).index == index;
                     right = (world.getTileObject(x + 1, y, isWall)).index == index;
                     down = (world.getTileObject(x, y + 1, isWall)).index == index;
                     up = (world.getTileObject(x, y - 1, isWall)).index == index;
+                } else {
+                    left = (world.getTileObject(x - 1, y, isWall)).renderType == renderType;
+                    right = (world.getTileObject(x + 1, y, isWall)).renderType == renderType;
+                    down = (world.getTileObject(x, y + 1, isWall)).renderType == renderType;
+                    up = (world.getTileObject(x, y - 1, isWall)).renderType == renderType;
                 }
 
                 Rectangle r;
@@ -238,6 +245,20 @@ namespace Specland {
                     r = get8(0, 0);
                 }
                 return new TextureInfo(/*texture2D,*/ r, true);
+            } else if (renderType == RenderType.platform){
+                bool leftS = world.isTileSolid(x - 1, y, isWall);
+                bool rightS = world.isTileSolid(x + 1, y, isWall);
+                bool leftP = world.getTileIndex(x - 1, y, isWall) == index;
+                bool rightP = world.getTileIndex(x + 1, y, isWall) == index;
+                int i = leftP ? 0 : leftS ? 1 : 2;
+                int j = rightP ? 0 : rightS ? 1 : 2;
+                return new TextureInfo(get8(i, j), true);
+                /*
+                	                left platform	left solid	left none
+                    right platform	    -	            /-	        <-
+                    right solid	        -\	            /\	        <\
+                    right none	        ->	            />	        <>
+                */
             }
             return new TextureInfo(/*Game.dummyTexture,*/ Game.OnexOneRect, true);
         }
@@ -303,12 +324,16 @@ namespace Specland {
             return null;
         }
 
-        public virtual bool isSolid(int x, int y) {
+        public virtual bool isSolid(World world, int x, int y) {
             return defaultSolid;
         }
 
         public virtual bool isSolid() {
             return defaultSolid;
+        }
+
+        public virtual bool isPlatform(World world, int x, int y, bool isWall) {
+            return defaultPlatform;
         }
 
         public virtual Rectangle getItemRect() {

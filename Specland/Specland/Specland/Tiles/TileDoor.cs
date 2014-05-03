@@ -191,11 +191,11 @@ namespace Specland {
             game.currentWorld.setTileWithDataWithUpdate(mouseTileX, mouseTileY, index, newDoorState, false);
         }
 
-        public override bool isSolid(int x, int y) {
-            if(Game.instance.currentWorld==null){
+        public override bool isSolid(World world, int x, int y) {
+            if(world==null){
                 return true;
             }
-            return base.isSolid(x, y) && Game.instance.currentWorld.getTileDataNoCheck(x, y, false)==stateClosed;
+            return base.isSolid(world, x, y) && world.getTileDataNoCheck(x, y, false)==stateClosed;
         }
 
         public override float getDepth(int x, int y, bool isWall) {

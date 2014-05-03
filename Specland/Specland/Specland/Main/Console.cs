@@ -142,7 +142,8 @@ namespace Specland {
                     inputPosition = input.Length;
                 }
                 if (inputPosition != input.Length && tick % 60 < 30) {
-                    Game.drawString("|", new Vector2(8 + Game.fontNormal.MeasureString(input.Substring(0, inputPosition)).X, game.Window.ClientBounds.Height - 22), Color.White, Game.RENDER_DEPTH_CONSOLE);
+                    string m = input.Substring(0, inputPosition);
+                    Game.drawString("|", new Vector2(11+Game.fontNormal.MeasureString(m).X, game.Window.ClientBounds.Height - 22), Color.White, Game.RENDER_DEPTH_CONSOLE);
                 }
             }
 

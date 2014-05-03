@@ -9,10 +9,12 @@ namespace Specland {
     public class TileFurniture : Tile {
 
         public Point size = new Point(0, 0);
+        private bool topIsPlatform = false;
 
-        public TileFurniture(string name, RenderType renderType, int textureX, int textureY, int width, int height)
+        public TileFurniture(string name, RenderType renderType, int textureX, int textureY, int width, int height, bool platform)
             : base(name, renderType, Material.furniture, textureX, textureY) {
             size = new Point(width, height);
+            topIsPlatform = platform;
         }
 
         public override TextureInfo getTextureInfo(int x, int y, World world, bool isWall) {
@@ -139,8 +141,12 @@ namespace Specland {
 
         }
 
-        public override bool isSolid(int x, int y) {
-            return base.isSolid(x, y);
+        public override bool isSolid(World world, int x, int y) {
+            return base.isSolid(world, x, y);
+        }
+
+        public override bool isPlatform(World world, int x, int y, bool isWall) {
+            return topIsPlatform && Math.Abs(world.getTileData(x, y, isWall))%size.Y==0;
         }
     }
 }

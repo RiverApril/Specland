@@ -98,7 +98,7 @@ namespace Specland {
                     walking = true;
                 }
 
-                if (collision(world, 0, 1)) {
+                if (collision(world, 0, 1, movement.down)) {
                     if (movement.jump) {
                         speed.Y = -initalJumpSpeed;
                     }
@@ -119,7 +119,7 @@ namespace Specland {
 
             }
 
-            if (!collision(world, 0, 1)) {
+            if (!collision(world, 0, 1, movement.down)) {
                 speed.Y += gravityAcc;
             }
 
@@ -138,7 +138,7 @@ namespace Specland {
 
             Vector2 finalSpeed = Vector2.Zero;
 
-            if(!collision(world, speed.X, 0)){
+            if(!collision(world, speed.X, 0, movement.down)){
                 finalSpeed.X += speed.X;
             } else {
                 bool moved = false;
@@ -167,7 +167,7 @@ namespace Specland {
                 }
             }
 
-            if (!collision(world, 0, speed.Y)) {
+            if (!collision(world, 0, speed.Y, movement.down)) {
                 finalSpeed.Y += speed.Y;
             } else {
                 speed.Y = 0;

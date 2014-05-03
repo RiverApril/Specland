@@ -72,7 +72,7 @@ namespace Specland {
                 for (int j = (r.Top / World.tileSizeInPixels); j < (r.Bottom / World.tileSizeInPixels) + 1; j++) {
                     Tile t = world.getTileObject(i, j, isWall);
                     if (t != null) {
-                        if (t.isSolid(i, j)) {
+                        if (t.isSolid(world, i, j)) {
                             return true;
                         }
                     }

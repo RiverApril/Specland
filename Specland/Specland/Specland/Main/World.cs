@@ -878,7 +878,7 @@ namespace Specland {
         }
 
         public bool isTileSolid(int x, int y, bool isWall) {
-            return getTileObject(x, y, isWall).isSolid(x, y);
+            return getTileObject(x, y, isWall).isSolid(this, x, y);
         }
     }
 }
