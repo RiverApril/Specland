@@ -57,6 +57,13 @@ namespace Specland {
             return new TextureInfo(r, t);
         }
 
+        public override bool mustHaveTileBelow(World world, int x, int y, bool isWall) {
+            if(world.getTileData(x, y, isWall) == 0){
+                return false;
+            }
+            return true;
+        }
+
         public override void mine(World world, int x, int y, int data, ItemPick pick, bool isWall) {
             if (world.isTileSolid(x, y + 1, isWall)) {
                 if (world.getTileIndex(x + 1, y, isWall) == index) {

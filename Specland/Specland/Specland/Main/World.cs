@@ -236,6 +236,9 @@ namespace Specland {
         }
 
         public bool mineTile(int x, int y, ItemPick pick, bool isWall) {
+            if(!getTileObject(x, y, isWall).canBeDestroyed(this, x, y, isWall)){
+                return false;
+            }
             if (mineTileNoNearUpdate(x, y, pick, isWall)) {
                 setTileForUpdate(x - 1, y, isWall);
                 setTileForUpdate(x + 1, y, isWall);

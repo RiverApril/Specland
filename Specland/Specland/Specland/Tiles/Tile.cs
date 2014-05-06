@@ -294,6 +294,17 @@ namespace Specland {
 
         }
 
+        public bool canBeDestroyed(World world, int x, int y, bool isWall) {
+            if (world.getTileObject(x, y - 1, isWall).mustHaveTileBelow(world, x, y - 1, isWall)) {
+                return false;
+            }
+            return true;
+        }
+
+        public virtual bool mustHaveTileBelow(World world, int x, int y, bool isWall) {
+            return false;
+        }
+
         public bool canBePlacedHere(World world, int x, int y, bool isWall) {
             if(isWall && !canBeWall){
                 return false;
