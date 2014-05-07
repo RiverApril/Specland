@@ -285,8 +285,8 @@ namespace Specland {
                 string lq = "Liquid Fps:   " + currentWorld.liquidThreadFps.getFps() + " (ms/t:" + currentWorld.liquidThreadFps.getMpt() + ") ";
                 string p = "Rendering:\n  Gui: " + Profiler.get("draw gui") + "\n  Tile: " + Profiler.get("draw tiles") + "\n  Entity: " + Profiler.get("draw entities");
                 p += "\n\nLighting: " + Profiler.get("lighting");
-                string ti = "T: " + currentWorld.getTileIndex(inventory.mouseTileX, inventory.mouseTileY, false) + "`" + currentWorld.getTileData(inventory.mouseTileX, inventory.mouseTileY, false);
-                ti += "  W: " + currentWorld.getTileIndex(inventory.mouseTileX, inventory.mouseTileY, true) + "`" + currentWorld.getTileData(inventory.mouseTileX, inventory.mouseTileY, true);
+                string ti = "T: " + currentWorld.getTileIndex(inventory.mouseTileX, inventory.mouseTileY, World.TILEDEPTH) + "`" + currentWorld.getTileData(inventory.mouseTileX, inventory.mouseTileY, World.TILEDEPTH);
+                ti += "  W: " + currentWorld.getTileIndex(inventory.mouseTileX, inventory.mouseTileY, World.WALLDEPTH) + "`" + currentWorld.getTileData(inventory.mouseTileX, inventory.mouseTileY, World.WALLDEPTH);
                 string pp = "Position: " + currentWorld.player.position.X + ", " + currentWorld.player.position.Y;
 
                 spriteBatch.DrawString(fontNormal, d + "\n" + u + "\n" + l + "\n" + lq + "\n" + e + "\n" + t + "\n" + p + "\n" + ti + "\n" + pp + "\n" + drawMessage + "\n" + updateMessage, new Vector2(140, 10), Color.White);

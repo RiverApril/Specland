@@ -17,11 +17,11 @@ namespace Specland {
             topIsPlatform = platform;
         }
 
-        public override TextureInfo getTextureInfo(int x, int y, World world, bool isWall) {
+        public override TextureInfo getTextureInfo(int x, int y, World world, int tileDepth) {
 
             Rectangle r = get8(3, 3);
 
-            int l = world.getTileDataNoCheck(x, y, isWall);
+            int l = world.getTileDataNoCheck(x, y, tileDepth);
 
             int k = 1;
 
@@ -45,7 +45,7 @@ namespace Specland {
             return new TextureInfo(r, true, Point.Zero, l<0, false);
         }
 
-        public override void mine(World world, int x, int y, int data, ItemPick pick, bool isWall) {
+        public override void mine(World world, int x, int y, int data, ItemPick pick, int tileDepth) {
 
             int k = 1;
 
@@ -70,31 +70,31 @@ namespace Specland {
 
             for (int i = 0; i < size.X; i++) {
                 for (int j = size.Y - 1; j >= 0; j--) {
-                    world.setTileWithUpdate(x + i - ii, y + j - jj, Tile.TileAir.index, isWall);
+                    world.setTileWithUpdate(x + i - ii, y + j - jj, Tile.TileAir.index, tileDepth);
                 }
             }
 
         }
 
-        public override void updateNearChange(World world, int x, int y, bool isWall) {
-            if (!(world.isTileSolid(x, y + 1, isWall) || world.getTileIndex(x, y + 1, isWall) == index)) {
-                world.mineTile(x, y, Item.itemSupick, isWall);
+        public override void updateNearChange(World world, int x, int y, int tileDepth) {
+            if (!(world.isTileSolid(x, y + 1, tileDepth) || world.getTileIndex(x, y + 1, tileDepth) == index)) {
+                world.mineTile(x, y, Item.itemSupick, tileDepth);
             }
         }
 
-        public override bool canBePlacedHereOverridable(World world, int x, int y, bool isWall) {
+        public override bool canBePlacedHereOverridable(World world, int x, int y, int tileDepth) {
 
             for (int i = 0; i < size.X; i++) {
                 for (int j = size.Y - 1; j >= 0; j--) {
 
-                    if (!world.getTileObject(x + i, y + j - (size.Y - 1), isWall).isAir()) {
+                    if (!world.getTileObject(x + i, y + j - (size.Y - 1), tileDepth).isAir()) {
                         return false;
                     }
                 }
             }
 
             for (int i = 0; i < size.X; i++) {
-                if (!world.isTileSolid(x + i, y + 1, isWall)) {
+                if (!world.isTileSolid(x + i, y + 1, tileDepth)) {
                     return false;
                 }
             }
@@ -102,7 +102,7 @@ namespace Specland {
             return true;
         }
 
-        public override void justPlaced(World world, int x, int y, bool isWall) {
+        public override void justPlaced(World world, int x, int y, int tileDepth) {
 
             bool right = Game.instance.currentWorld.player.facingRight;
 
@@ -110,19 +110,19 @@ namespace Specland {
 
             for (int i = 0; i < size.X; i++) {
                 for (int j = size.Y - 1; j >= 0; j--) {
-                    world.setTileWithDataWithUpdate(x + i, y + j-(size.Y-1), index, right?k:-k, isWall);
+                    world.setTileWithDataWithUpdate(x + i, y + j-(size.Y-1), index, right?k:-k, tileDepth);
                     k++;
                 }
             }
 
         }
 
-        public override ItemStack dropStack(World world, ItemPick itemPick, Random rand, int x, int y, bool isWall) {
+        public override ItemStack dropStack(World world, ItemPick itemPick, Random rand, int x, int y, int tileDepth) {
             return new ItemStack(Item.itemTile, 1, index);
         }
 
         public override bool drawHover(Game game, int mouseTileX, int mouseTileY, ItemStack currentItem) {
-            if (canBePlacedHere(game.currentWorld, mouseTileX, mouseTileY, false)) {
+            if (canBePlacedHere(game.currentWorld, mouseTileX, mouseTileY, World.TILEDEPTH)) {
                 Rectangle rect = get8(0, 0);
                 rect.Width = 8 * size.X;
                 rect.Height = 8 * size.Y;
@@ -135,7 +135,7 @@ namespace Specland {
 
             for (int i = -size.X; i < size.X; i++) {
                 for (int j = -size.Y; j < size.Y; j++) {
-                    game.currentWorld.calculateTileFrame(game, x + i, y + j, false);
+                    game.currentWorld.calculateTileFrame(game, x + i, y + j, World.TILEDEPTH);
                 }
             }
 
@@ -145,8 +145,8 @@ namespace Specland {
             return base.isSolid(world, x, y);
         }
 
-        public override bool isPlatform(World world, int x, int y, bool isWall) {
-            return topIsPlatform && Math.Abs(world.getTileData(x, y, isWall))%size.Y==0;
+        public override bool isPlatform(World world, int x, int y, int tileDepth) {
+            return topIsPlatform && Math.Abs(world.getTileData(x, y, tileDepth))%size.Y==0;
         }
     }
 }

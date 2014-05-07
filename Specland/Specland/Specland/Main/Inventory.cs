@@ -373,10 +373,10 @@ namespace Specland {
                 }
                 if(inputState.pressed(Game.KEY_USE)){
                     ItemStack useItem = currentItem;
-                    Tile tileWall = game.currentWorld.getTileObject(mouseTileX, mouseTileY, true);
-                    Tile tileTile = game.currentWorld.getTileObject(mouseTileX, mouseTileY, false);
+                    Tile tileWall = game.currentWorld.getTileObject(mouseTileX, mouseTileY, World.WALLDEPTH);
+                    Tile tileTile = game.currentWorld.getTileObject(mouseTileX, mouseTileY, World.TILEDEPTH);
                     if (tileWall.index != Tile.TileAir.index || tileTile.index != Tile.TileAir.index) {
-                        useItem = (tileTile.index == Tile.TileAir.index ? tileWall : tileTile).use(game, currentItem, mouseTileX, mouseTileY, mouseTileDistanceFromPlayer, tileTile.index == Tile.TileAir.index);
+                        useItem = (tileTile.index == Tile.TileAir.index ? tileWall : tileTile).use(game, currentItem, mouseTileX, mouseTileY, mouseTileDistanceFromPlayer, tileTile.index == Tile.TileAir.index?World.WALLDEPTH:World.TILEDEPTH);
                     }
                     if(useItem!=null){
                         setCurrentItem(useItem);

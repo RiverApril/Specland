@@ -22,7 +22,11 @@ namespace Specland {
 
         public override ItemStack leftClick(Game game, ItemStack stack, int xTile, int yTile, int distance) {
 
-            if (game.currentWorld.player.swingTime <= 0 && mine(game, stack, xTile, yTile, distance, false)) {
+            if (getPower(game.currentWorld.getTileObjectNoCheck(xTile, yTile, World.TILEDEPTH).material) <= 0) {
+                return stack;
+            }
+
+            if (game.currentWorld.player.swingTime <= 0 && mine(game, stack, xTile, yTile, distance, World.TILEDEPTH)) {
                 game.currentWorld.player.swingTime = swingMaxTime;
             }
             return stack;
@@ -30,19 +34,19 @@ namespace Specland {
 
         public override ItemStack rightClick(Game game, ItemStack stack, int xTile, int yTile, int distance) {
 
-            if (getPower(game.currentWorld.getTileObjectNoCheck(xTile, yTile, false).material) <= 0) {
+            if (getPower(game.currentWorld.getTileObjectNoCheck(xTile, yTile, World.WALLDEPTH).material) <= 0) {
                 return stack;
             }
 
-            if (game.currentWorld.player.swingTime <= 0 && mine(game, stack, xTile, yTile, distance, true)) {
+            if (game.currentWorld.player.swingTime <= 0 && mine(game, stack, xTile, yTile, distance, World.WALLDEPTH)) {
                 game.currentWorld.player.swingTime = swingMaxTime;
             }
             return stack;
         }
 
-        public bool mine(Game game, ItemStack stack, int xTile, int yTile, int distance, bool isWall) {
+        public bool mine(Game game, ItemStack stack, int xTile, int yTile, int distance, int tileDepth) {
             int del = delay;
-            Tile.Material mat = game.currentWorld.getTileObjectNoCheck(xTile, yTile, isWall).material;
+            Tile.Material mat = game.currentWorld.getTileObjectNoCheck(xTile, yTile, tileDepth).material;
 
             if (mat == Tile.Material.furniture) {
                 del = 20;
@@ -54,7 +58,7 @@ namespace Specland {
             game.inventory.t++;
             if (game.inventory.t >= del && distance <= reach) {
                 game.inventory.t = 0;
-                Tile tile = game.currentWorld.getTileObject(xTile, yTile, isWall);
+                Tile tile = game.currentWorld.getTileObject(xTile, yTile, tileDepth);
                 if (tile.index != Tile.TileAir.index) {
                     SoundEffectPlayer.playSoundWithRandomPitch(SoundEffectPlayer.SoundTink);
                     int m = ((int)game.currentWorld.getCrackNoCheck(xTile, yTile));
@@ -69,7 +73,7 @@ namespace Specland {
                     game.currentWorld.setCrackNoCheck(xTile, yTile, (byte)n);
 
                     if (n == max) {
-                        if (game.currentWorld.mineTile(xTile, yTile, this, isWall)) {
+                        if (game.currentWorld.mineTile(xTile, yTile, this, tileDepth)) {
                             game.currentWorld.setCrackNoCheck(xTile, yTile, 0);
                         }
                     }
@@ -88,7 +92,7 @@ namespace Specland {
         }
 
         public override void drawHover(Game game, int mouseTileX, int mouseTileY, ItemStack currentItem) {
-            if (game.currentWorld != null && (game.currentWorld.getTileIndex(mouseTileX, mouseTileY, false) != Tile.TileAir.index || game.currentWorld.getTileIndex(mouseTileX, mouseTileY, true) != Tile.TileAir.index)) {
+            if (game.currentWorld != null && (game.currentWorld.getTileIndex(mouseTileX, mouseTileY, World.WALLDEPTH) != Tile.TileAir.index || game.currentWorld.getTileIndex(mouseTileX, mouseTileY, World.TILEDEPTH) != Tile.TileAir.index)) {
                 Rectangle r = new Rectangle((mouseTileX * World.tileSizeInPixels) - game.currentWorld.viewOffset.X, (mouseTileY * World.tileSizeInPixels) - game.currentWorld.viewOffset.Y, World.tileSizeInPixels, World.tileSizeInPixels);
                 Game.drawRectangle(Game.dummyTexture, r, r, new Color(.5f, .5f, .5f, .5f), Game.RENDER_DEPTH_HOVER);
             }

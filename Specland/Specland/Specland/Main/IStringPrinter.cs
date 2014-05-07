@@ -7,5 +7,6 @@ namespace Specland {
     public interface IStringPrinter {
 
         void println(string s);
+
     }
 }

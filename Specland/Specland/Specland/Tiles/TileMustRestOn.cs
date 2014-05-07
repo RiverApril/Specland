@@ -28,37 +28,37 @@ namespace Specland {
             this.drop = drop;
         }
 
-        public override TextureInfo getTextureInfo(int x, int y, World world, bool isWall) {
+        public override TextureInfo getTextureInfo(int x, int y, World world, int tileDepth) {
             if(renderType == RenderType.custom){
                 return new TextureInfo(get8(x8th, y8th), true);
             } else {
-                return base.getTextureInfo(x, y, world, isWall);
+                return base.getTextureInfo(x, y, world, tileDepth);
             }
         }
 
-        public override bool canBePlacedHereOverridable(World world, int x, int y, bool isWall) {
-            if(world.getTileIndex(x, y, isWall) != Tile.TileAir.index){
+        public override bool canBePlacedHereOverridable(World world, int x, int y, int tileDepth) {
+            if(world.getTileIndex(x, y, tileDepth) != Tile.TileAir.index){
                 return false;
             }
             for (int i = 0; i < restOns.Length;i++ ) {
-                if (world.getTileObject(x + restOnX, y + restOnY, isWall).index == restOns[i].index) {
+                if (world.getTileObject(x + restOnX, y + restOnY, tileDepth).index == restOns[i].index) {
                     return true;
                 }
             }
             return false;
         }
 
-        public override void updateNearChange(World world, int x, int y, bool isWall) {
-            if (!world.isTileSolid(x + restOnX, y + restOnY, isWall)) {
-                world.mineTile(x, y, Item.itemSupick,  isWall);
+        public override void updateNearChange(World world, int x, int y, int tileDepth) {
+            if (!world.isTileSolid(x + restOnX, y + restOnY, tileDepth)) {
+                world.mineTile(x, y, Item.itemSupick,  tileDepth);
             }
         }
 
-        public override ItemStack dropStack(World world, ItemPick itemPick, Random rand, int x, int y, bool isWall) {
+        public override ItemStack dropStack(World world, ItemPick itemPick, Random rand, int x, int y, int tileDepth) {
             return drop?new ItemStack(this, 1):new ItemStack(Item.itemEmpty);
         }
 
-        public override Rectangle getItemRect() {
+        public override Rectangle getItemRect(int data) {
             return get8(x8th, y8th);
         }
     }

@@ -11,11 +11,11 @@ namespace Specland {
 
         }
 
-        public override void updateNearChange(World world, int x, int y, bool isWall) {
-            if (world.getTileIndex(x, y + 1, isWall) == Tile.TileAir.index) {
-                world.setTile(x, y, Tile.TileAir, isWall);
-                world.EntityAddingList.Add(new EntityFallingTile(x*World.tileSizeInPixels, y*World.tileSizeInPixels, index, isWall));
-                world.setTileForUpdate(x, y-1, isWall);
+        public override void updateNearChange(World world, int x, int y, int tileDepth) {
+            if (world.getTileIndex(x, y + 1, tileDepth) == Tile.TileAir.index) {
+                world.setTile(x, y, Tile.TileAir, tileDepth);
+                world.EntityAddingList.Add(new EntityFallingTile(x*World.tileSizeInPixels, y*World.tileSizeInPixels, index, tileDepth));
+                world.setTileForUpdate(x, y-1, tileDepth);
             }
         }
 

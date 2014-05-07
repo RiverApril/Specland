@@ -153,6 +153,7 @@
     <Compile Include="Tiles\TileFalling.cs" />
     <Compile Include="Tiles\TileFurniture.cs" />
     <Compile Include="Tiles\TileLeaf.cs" />
+    <Compile Include="Tiles\TileLever.cs" />
     <Compile Include="Tiles\TileLightToggle.cs" />
     <Compile Include="Tiles\TileMustRestOn.cs" />
     <Compile Include="Tiles\TileTorch.cs" />

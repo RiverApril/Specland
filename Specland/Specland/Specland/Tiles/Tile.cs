@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Specland.Tiles;
 
 namespace Specland {
 
@@ -29,7 +30,7 @@ namespace Specland {
         public static Tile TileGlass = new Tile("Glass", RenderType.alone, Material.stone, 1, 1).setTransparent().setWallBrightness(240);
         public static Tile TileTorch = new TileTorch("Torch", RenderType.placed, Material.furniture, 2, 1).setTransparent().setLight(200).notSolid().notWall().setWashedAwayByWater();
         public static Tile TileTree = new TileTree("Tree", RenderType.custom, Material.wood, 3, 1).setTransparent().notSolid();
-        public static Tile TileLeaf = new TileLeaf("Leaf", RenderType.custom, Material.wood, 4, 1, TileTree.index).setTransparent().notSolid();
+        public static Tile TileLeaf = new TileLeaf("Leaf", RenderType.terrain, Material.wood, 4, 1, TileTree.index).setTransparent().notSolid();
         public static Tile TileWood = new Tile("Wood", RenderType.terrain, Material.wood, 4, 0).setDisplayName("Wooden Plank");
         public static Tile TileSand = new TileFalling("Sand", RenderType.terrain, Material.dirt, 5, 0);
         public static Tile TileSapling = new TileMustRestOn("Sapling", RenderType.custom, Material.furniture, 5, 1, 3, 3, 0, 1, TileGrass, true).notSolid().notWall().setTransparent().setWashedAwayByWater();
@@ -39,6 +40,7 @@ namespace Specland {
         public static Tile TilePlantGlow = new TileMustRestOn("GlowLeaf", RenderType.custom, Material.furniture, 5, 1, 2, 3, 0, 1, new Tile[] { TileDirt, TileStone }, true).notSolid().notWall().setTransparent().setLight(120).setWashedAwayByWater().setDisplayName("Glow Leaf").setDisplayNamePlural("Glow Leaves");
         public static Tile TileLamp = new TileLightToggle("Lamp", RenderType.placed, Material.furniture, 6, 1).setTransparent().setLight(300).notSolid().notWall().setWashedAwayByWater();
         public static Tile TileWoodPlatform = new Tile("WoodPlatform", RenderType.platform, Material.wood, 5, 2).setTransparent().notSolid().notWall().setPlatform().setDisplayName("Wooden Platform");
+        public static Tile TileLever = new TileLever("Lever", RenderType.placed, Material.furniture, 1, 3).setTransparent().notSolid();
 
         public int index;
         public string name;
@@ -128,7 +130,7 @@ namespace Specland {
         }
 
 
-        public virtual TextureInfo getTextureInfo(int x, int y, World world, bool isWall) {
+        public virtual TextureInfo getTextureInfo(int x, int y, World world, int tileDepth) {
             if (renderType == RenderType.terrain || renderType == RenderType.building || renderType == RenderType.alone) {
                 
                 bool left = false;
@@ -137,15 +139,15 @@ namespace Specland {
                 bool up = false;
 
                 if(renderType == RenderType.alone){
-                    left = (world.getTileObject(x - 1, y, isWall)).index == index;
-                    right = (world.getTileObject(x + 1, y, isWall)).index == index;
-                    down = (world.getTileObject(x, y + 1, isWall)).index == index;
-                    up = (world.getTileObject(x, y - 1, isWall)).index == index;
+                    left = (world.getTileObject(x - 1, y, tileDepth)).index == index;
+                    right = (world.getTileObject(x + 1, y, tileDepth)).index == index;
+                    down = (world.getTileObject(x, y + 1, tileDepth)).index == index;
+                    up = (world.getTileObject(x, y - 1, tileDepth)).index == index;
                 } else {
-                    left = (world.getTileObject(x - 1, y, isWall)).renderType == renderType;
-                    right = (world.getTileObject(x + 1, y, isWall)).renderType == renderType;
-                    down = (world.getTileObject(x, y + 1, isWall)).renderType == renderType;
-                    up = (world.getTileObject(x, y - 1, isWall)).renderType == renderType;
+                    left = (world.getTileObject(x - 1, y, tileDepth)).renderType == renderType;
+                    right = (world.getTileObject(x + 1, y, tileDepth)).renderType == renderType;
+                    down = (world.getTileObject(x, y + 1, tileDepth)).renderType == renderType;
+                    up = (world.getTileObject(x, y - 1, tileDepth)).renderType == renderType;
                 }
 
                 Rectangle r;
@@ -228,10 +230,10 @@ namespace Specland {
                 }
                 return new TextureInfo(/*texture2D,*/ r, t);
             } else if (renderType == RenderType.placed) {
-                bool left = world.isTileSolid(x - 1, y, isWall);
-                bool right = world.isTileSolid(x + 1, y, isWall);
-                bool down = world.isTileSolid(x, y + 1, isWall);
-                bool up = world.isTileSolid(x, y - 1, isWall);
+                bool left = world.isTileSolid(x - 1, y, tileDepth);
+                bool right = world.isTileSolid(x + 1, y, tileDepth);
+                bool down = world.isTileSolid(x, y + 1, tileDepth);
+                bool up = world.isTileSolid(x, y - 1, tileDepth);
                 Rectangle r;
                 if (down) {
                     r = get8(0, 0);
@@ -246,10 +248,10 @@ namespace Specland {
                 }
                 return new TextureInfo(/*texture2D,*/ r, true);
             } else if (renderType == RenderType.platform){
-                bool leftS = world.isTileSolid(x - 1, y, isWall);
-                bool rightS = world.isTileSolid(x + 1, y, isWall);
-                bool leftP = world.getTileIndex(x - 1, y, isWall) == index;
-                bool rightP = world.getTileIndex(x + 1, y, isWall) == index;
+                bool leftS = world.isTileSolid(x - 1, y, tileDepth);
+                bool rightS = world.isTileSolid(x + 1, y, tileDepth);
+                bool leftP = world.getTileIndex(x - 1, y, tileDepth) == index;
+                bool rightP = world.getTileIndex(x + 1, y, tileDepth) == index;
                 int i = leftP ? 0 : leftS ? 1 : 2;
                 int j = rightP ? 0 : rightS ? 1 : 2;
                 return new TextureInfo(get8(i, j), true);
@@ -278,41 +280,41 @@ namespace Specland {
             return null;
         }
 
-        public virtual void updateRandom(World world, int x, int y, bool isWall) {
+        public virtual void updateRandom(World world, int x, int y, int tileDepth) {
 
         }
 
-        public virtual void updateNearChange(World world, int x, int y, bool isWall) {
+        public virtual void updateNearChange(World world, int x, int y, int tileDepth) {
 
         }
 
-        public virtual ItemStack dropStack(World world, ItemPick itemPick, Random rand, int x, int y, bool isWall) {
+        public virtual ItemStack dropStack(World world, ItemPick itemPick, Random rand, int x, int y, int tileDepth) {
             return new ItemStack(Item.itemTile, 1, index);
         }
 
-        public virtual void mine(World world, int x, int y, int data, ItemPick pick, bool isWall) {
+        public virtual void mine(World world, int x, int y, int data, ItemPick pick, int tileDepth) {
 
         }
 
-        public bool canBePlacedHere(World world, int x, int y, bool isWall) {
-            if(isWall && !canBeWall){
+        public bool canBePlacedHere(World world, int x, int y, int tileDepth) {
+            if(tileDepth==World.WALLDEPTH && !canBeWall){
                 return false;
             }
-            return canBePlacedHereOverridable(world, x, y, isWall);
+            return canBePlacedHereOverridable(world, x, y, tileDepth);
         }
 
-        public virtual bool canBePlacedHereOverridable(World world, int x, int y, bool isWall) {
+        public virtual bool canBePlacedHereOverridable(World world, int x, int y, int tileDepth) {
             if (renderType == RenderType.placed) {
-                return (world.isTileSolid(x - 1, y, isWall) || world.isTileSolid(x + 1, y, isWall) || world.isTileSolid(x, y - 1, isWall) || world.isTileSolid(x, y + 1, isWall) || !world.getTileObject(x, y, !isWall).isAir()) && world.getTileObject(x, y, isWall).isAir();
+                return (world.isTileSolid(x - 1, y, tileDepth) || world.isTileSolid(x + 1, y, tileDepth) || world.isTileSolid(x, y - 1, tileDepth) || world.isTileSolid(x, y + 1, tileDepth) || !world.getTileObject(x, y, tileDepth == World.WALLDEPTH ? World.TILEDEPTH : World.WALLDEPTH).isAir()) && world.getTileObject(x, y, tileDepth).isAir();
             }
-            return (!world.getTileObject(x - 1, y, isWall).isAir() || !world.getTileObject(x + 1, y, isWall).isAir() || !world.getTileObject(x, y - 1, isWall).isAir() || !world.getTileObject(x, y + 1, isWall).isAir() || !world.getTileObject(x, y, !isWall).isAir()) && world.getTileObject(x, y, isWall).isAir();
+            return (!world.getTileObject(x - 1, y, tileDepth).isAir() || !world.getTileObject(x + 1, y, tileDepth).isAir() || !world.getTileObject(x, y - 1, tileDepth).isAir() || !world.getTileObject(x, y + 1, tileDepth).isAir() || !world.getTileObject(x, y, tileDepth == World.WALLDEPTH ? World.TILEDEPTH : World.WALLDEPTH).isAir()) && world.getTileObject(x, y, tileDepth).isAir();
         }
 
         public bool isAir() {
             return (index == TileAir.index);
         }
 
-        public virtual void justPlaced(World world, int x, int y, bool isWall) {
+        public virtual void justPlaced(World world, int x, int y, int tileDepth) {
 
         }
 
@@ -320,7 +322,7 @@ namespace Specland {
             return false;
         }
 
-        public virtual ItemStack use(Game game, ItemStack currentItem, int mouseTileX, int mouseTileY, int mouseTileDistanceFromPlayer, bool isWall) {
+        public virtual ItemStack use(Game game, ItemStack currentItem, int mouseTileX, int mouseTileY, int mouseTileDistanceFromPlayer, int tileDepth) {
             return null;
         }
 
@@ -332,20 +334,20 @@ namespace Specland {
             return defaultSolid;
         }
 
-        public virtual bool isPlatform(World world, int x, int y, bool isWall) {
+        public virtual bool isPlatform(World world, int x, int y, int tileDepth) {
             return defaultPlatform;
         }
 
-        public virtual Rectangle getItemRect() {
+        public virtual Rectangle getItemRect(int data) {
             return get8(3, 3);
         }
 
-        public virtual int getLight(int x, int y, bool isWall) {
+        public virtual int getLight(int x, int y, int tileDepth) {
             return light;
         }
 
-        public virtual float getDepth(int x, int y, bool isWall) {
-            return isWall?Game.RENDER_DEPTH_WALL:Game.RENDER_DEPTH_TILE;
+        public virtual float getDepth(int x, int y, int tileDepth) {
+            return tileDepth==World.WALLDEPTH?Game.RENDER_DEPTH_WALL:Game.RENDER_DEPTH_TILE;
         }
     }
 }

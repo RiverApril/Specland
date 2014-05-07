@@ -16,27 +16,27 @@ namespace Specland {
 
         }
 
-        public override TextureInfo getTextureInfo(int x, int y, World world, bool isWall) {
+        public override TextureInfo getTextureInfo(int x, int y, World world, int tileDepth) {
 
-            int state = world.getTileData(x, y, false);
+            int state = world.getTileData(x, y, World.TILEDEPTH);
 
-            int stateUp = world.getTileData(x, y - 1, false);
-            int stateUpUp = world.getTileData(x, y - 2, false);
+            int stateUp = world.getTileData(x, y - 1, World.TILEDEPTH);
+            int stateUpUp = world.getTileData(x, y - 2, World.TILEDEPTH);
 
-            int stateDown = world.getTileData(x, y + 1, false);
-            int stateDownDown = world.getTileData(x, y + 2, false);
+            int stateDown = world.getTileData(x, y + 1, World.TILEDEPTH);
+            int stateDownDown = world.getTileData(x, y + 2, World.TILEDEPTH);
 
-            int stateLeft = world.getTileData(x - 1, y, false);
-            int stateRight = world.getTileData(x + 1, y, false);
+            int stateLeft = world.getTileData(x - 1, y, World.TILEDEPTH);
+            int stateRight = world.getTileData(x + 1, y, World.TILEDEPTH);
 
 
-            int leftIndex = world.getTileObject(x - 1, y, isWall).index;
-            int rightIndex = world.getTileObject(x + 1, y, isWall).index;
+            int leftIndex = world.getTileObject(x - 1, y, tileDepth).index;
+            int rightIndex = world.getTileObject(x + 1, y, tileDepth).index;
 
-            int downIndex = world.getTileObject(x, y + 1, isWall).index;
-            int downdownIndex = world.getTileObject(x, y + 2, isWall).index;
-            int upIndex = world.getTileObject(x, y - 1, isWall).index;
-            int upupIndex = world.getTileObject(x, y - 2, isWall).index;
+            int downIndex = world.getTileObject(x, y + 1, tileDepth).index;
+            int downdownIndex = world.getTileObject(x, y + 2, tileDepth).index;
+            int upIndex = world.getTileObject(x, y - 1, tileDepth).index;
+            int upupIndex = world.getTileObject(x, y - 2, tileDepth).index;
 
 
             bool left = leftIndex == index && stateLeft == state;
@@ -49,10 +49,10 @@ namespace Specland {
             bool upup = upupIndex == index && stateUpUp == state;
 
 
-            bool leftSolid = world.isTileSolid(x - 1, y, isWall);
-            bool rightSolid = world.isTileSolid(x + 1, y, isWall);
-            bool downSolid = world.isTileSolid(x, y + 1, isWall);
-            bool upSolid = world.isTileSolid(x, y - 1, isWall);
+            bool leftSolid = world.isTileSolid(x - 1, y, tileDepth);
+            bool rightSolid = world.isTileSolid(x + 1, y, tileDepth);
+            bool downSolid = world.isTileSolid(x, y + 1, tileDepth);
+            bool upSolid = world.isTileSolid(x, y - 1, tileDepth);
 
             Rectangle r = get8(3, 3);
             Point offset = Point.Zero;
@@ -88,52 +88,52 @@ namespace Specland {
             return new TextureInfo(r, t, offset, hOff, false);
         }
 
-        public override void mine(World world, int x, int y, int data, ItemPick pick, bool isWall) {
-            if (world.getTileDataNoCheck(x, y, isWall)!=0) {
+        public override void mine(World world, int x, int y, int data, ItemPick pick, int tileDepth) {
+            if (world.getTileDataNoCheck(x, y, tileDepth)!=0) {
 
             }else{
-                if (world.getTileIndex(x, y - 1, isWall) == index && world.getTileIndex(x, y + 1, isWall) == index) {
-                    world.setTileWithUpdate(x, y - 1, Tile.TileAir.index, isWall);
-                    world.setTileWithUpdate(x, y + 1, Tile.TileAir.index, isWall);
-                }else if (world.getTileIndex(x, y - 1, isWall) == index && world.getTileIndex(x, y - 2, isWall) == index) {
-                    world.setTileWithUpdate(x, y - 1, Tile.TileAir.index, isWall);
-                    world.setTileWithUpdate(x, y - 2, Tile.TileAir.index, isWall);
-                }else if (world.getTileIndex(x, y + 1, isWall) == index && world.getTileIndex(x, y + 2, isWall) == index) {
-                    world.setTileWithUpdate(x, y + 1, Tile.TileAir.index, isWall);
-                    world.setTileWithUpdate(x, y + 2, Tile.TileAir.index, isWall);
+                if (world.getTileIndex(x, y - 1, tileDepth) == index && world.getTileIndex(x, y + 1, tileDepth) == index) {
+                    world.setTileWithUpdate(x, y - 1, Tile.TileAir.index, tileDepth);
+                    world.setTileWithUpdate(x, y + 1, Tile.TileAir.index, tileDepth);
+                }else if (world.getTileIndex(x, y - 1, tileDepth) == index && world.getTileIndex(x, y - 2, tileDepth) == index) {
+                    world.setTileWithUpdate(x, y - 1, Tile.TileAir.index, tileDepth);
+                    world.setTileWithUpdate(x, y - 2, Tile.TileAir.index, tileDepth);
+                }else if (world.getTileIndex(x, y + 1, tileDepth) == index && world.getTileIndex(x, y + 2, tileDepth) == index) {
+                    world.setTileWithUpdate(x, y + 1, Tile.TileAir.index, tileDepth);
+                    world.setTileWithUpdate(x, y + 2, Tile.TileAir.index, tileDepth);
                 }
             }
         }
 
-        public override void updateNearChange(World world, int x, int y, bool isWall) {
-            if (!(world.isTileSolid(x, y + 1, isWall) || world.getTileIndex(x, y + 1, isWall) == index)) {
-                world.mineTile(x, y, Item.itemSupick, isWall);
+        public override void updateNearChange(World world, int x, int y, int tileDepth) {
+            if (!(world.isTileSolid(x, y + 1, tileDepth) || world.getTileIndex(x, y + 1, tileDepth) == index)) {
+                world.mineTile(x, y, Item.itemSupick, tileDepth);
             }
         }
 
-        public override bool canBePlacedHereOverridable(World world, int x, int y, bool isWall) {
-            return world.getTileIndex(x, y + 1, isWall) != index && world.isTileSolid(x, y + 1, isWall) && world.getTileObject(x, y, isWall).isAir() && world.getTileObject(x, y - 1, isWall).isAir() && world.getTileObject(x, y - 2, isWall).isAir();
+        public override bool canBePlacedHereOverridable(World world, int x, int y, int tileDepth) {
+            return world.getTileIndex(x, y + 1, tileDepth) != index && world.isTileSolid(x, y + 1, tileDepth) && world.getTileObject(x, y, tileDepth).isAir() && world.getTileObject(x, y - 1, tileDepth).isAir() && world.getTileObject(x, y - 2, tileDepth).isAir();
         }
 
-        public override void justPlaced(World world, int x, int y, bool isWall) {
-            if (world.getTileDataNoCheck(x, y, isWall)!=0) {
-                world.setTileWithDataWithUpdate(x, y, index, 0, isWall);
-                world.setTileWithDataWithUpdate(x, y - 1, index, 0, isWall);
-                world.setTileWithDataWithUpdate(x, y - 2, index, 0, isWall);
+        public override void justPlaced(World world, int x, int y, int tileDepth) {
+            if (world.getTileDataNoCheck(x, y, tileDepth)!=0) {
+                world.setTileWithDataWithUpdate(x, y, index, 0, tileDepth);
+                world.setTileWithDataWithUpdate(x, y - 1, index, 0, tileDepth);
+                world.setTileWithDataWithUpdate(x, y - 2, index, 0, tileDepth);
             }else{
-                world.setTileWithDataWithUpdate(x, y - 1, index, 1, isWall);
-                world.setTileWithDataWithUpdate(x, y - 2, index, 1, isWall);
+                world.setTileWithDataWithUpdate(x, y - 1, index, 1, tileDepth);
+                world.setTileWithDataWithUpdate(x, y - 2, index, 1, tileDepth);
             }
 
             updateDoor(Game.instance, stateClosed, x, y);
         }
 
-        public override ItemStack dropStack(World world, ItemPick itemPick, Random rand, int x, int y, bool isWall) {
+        public override ItemStack dropStack(World world, ItemPick itemPick, Random rand, int x, int y, int tileDepth) {
             return new ItemStack(Item.itemTile, 1, index);
         }
 
         public override bool drawHover(Game game, int mouseTileX, int mouseTileY, ItemStack currentItem) {
-            if (canBePlacedHere(game.currentWorld, mouseTileX, mouseTileY, false)) {
+            if (canBePlacedHere(game.currentWorld, mouseTileX, mouseTileY, World.TILEDEPTH)) {
                 Rectangle rect = get8(0, 0);
                 rect.Height = 24;
                 Game.drawRectangle(Tile.TileSheet, new Rectangle((mouseTileX * World.tileSizeInPixels) - game.currentWorld.viewOffset.X, ((mouseTileY-2) * World.tileSizeInPixels) - game.currentWorld.viewOffset.Y, World.tileSizeInPixels, World.tileSizeInPixels*3), rect, new Color(.5f, .5f, .5f, .5f), Game.RENDER_DEPTH_HOVER);
@@ -141,18 +141,18 @@ namespace Specland {
             return true;
         }
 
-        public override ItemStack use(Game game, ItemStack currentItem, int mouseTileX, int mouseTileY, int mouseTileDistanceFromPlayer, bool isWall) {
+        public override ItemStack use(Game game, ItemStack currentItem, int mouseTileX, int mouseTileY, int mouseTileDistanceFromPlayer, int tileDepth) {
 
-            int oldState = game.currentWorld.getTileDataNoCheck(mouseTileX, mouseTileY, false);
+            int oldState = game.currentWorld.getTileDataNoCheck(mouseTileX, mouseTileY, World.TILEDEPTH);
             int newState = oldState == stateClosed ? (game.currentWorld.player.facingRight ? stateOpenRight : stateOpenLeft) : stateClosed;
 
             if(newState==stateOpenLeft){
-                if (!(game.currentWorld.isTileSolid(mouseTileX - 1, mouseTileY, false) || game.currentWorld.isTileSolid(mouseTileX - 1, mouseTileY - 1, false) || game.currentWorld.isTileSolid(mouseTileX - 1, mouseTileY + 1, false))) {
+                if (!(game.currentWorld.isTileSolid(mouseTileX - 1, mouseTileY, World.TILEDEPTH) || game.currentWorld.isTileSolid(mouseTileX - 1, mouseTileY - 1, World.TILEDEPTH) || game.currentWorld.isTileSolid(mouseTileX - 1, mouseTileY + 1, World.TILEDEPTH))) {
                     updateDoor(game, newState, mouseTileX, mouseTileY);
                 }
             }
             if (newState == stateOpenRight) {
-                if (!(game.currentWorld.isTileSolid(mouseTileX + 1, mouseTileY, false) || game.currentWorld.isTileSolid(mouseTileX + 1, mouseTileY - 1, false) || game.currentWorld.isTileSolid(mouseTileX + 1, mouseTileY + 1, false))) {
+                if (!(game.currentWorld.isTileSolid(mouseTileX + 1, mouseTileY, World.TILEDEPTH) || game.currentWorld.isTileSolid(mouseTileX + 1, mouseTileY - 1, World.TILEDEPTH) || game.currentWorld.isTileSolid(mouseTileX + 1, mouseTileY + 1, World.TILEDEPTH))) {
                     updateDoor(game, newState, mouseTileX, mouseTileY);
                 }
             }
@@ -161,44 +161,44 @@ namespace Specland {
             }
 
 
-            return base.use(game, currentItem, mouseTileX, mouseTileY, mouseTileDistanceFromPlayer, isWall);
+            return base.use(game, currentItem, mouseTileX, mouseTileY, mouseTileDistanceFromPlayer, tileDepth);
         }
 
         private void updateDoor(Game game, int newState, int x, int y) {
             changeDoorState(game, newState, x, y);
 
-            if (game.currentWorld.getTileIndex(x, y - 1, false) == index) {
+            if (game.currentWorld.getTileIndex(x, y - 1, World.TILEDEPTH) == index) {
                 changeDoorState(game, newState, x, y - 1);
-                if (game.currentWorld.getTileIndex(x, y - 2, false) == index) {
+                if (game.currentWorld.getTileIndex(x, y - 2, World.TILEDEPTH) == index) {
                     changeDoorState(game, newState, x, y - 2);
                 }
             }
-            if (game.currentWorld.getTileIndex(x, y + 1, false) == index) {
+            if (game.currentWorld.getTileIndex(x, y + 1, World.TILEDEPTH) == index) {
                 changeDoorState(game, newState, x, y + 1);
-                if (game.currentWorld.getTileIndex(x, y + 2, false) == index) {
+                if (game.currentWorld.getTileIndex(x, y + 2, World.TILEDEPTH) == index) {
                     changeDoorState(game, newState, x, y + 2);
                 }
             }
 
-            game.currentWorld.calculateTileFrame(game, x, y, false);
-            game.currentWorld.calculateTileFrame(game, x, y - 1, false);
-            game.currentWorld.calculateTileFrame(game, x, y - 2, false);
-            game.currentWorld.calculateTileFrame(game, x, y + 1, false);
-            game.currentWorld.calculateTileFrame(game, x, y - 1, false);
+            game.currentWorld.calculateTileFrame(game, x, y, World.TILEDEPTH);
+            game.currentWorld.calculateTileFrame(game, x, y - 1, World.TILEDEPTH);
+            game.currentWorld.calculateTileFrame(game, x, y - 2, World.TILEDEPTH);
+            game.currentWorld.calculateTileFrame(game, x, y + 1, World.TILEDEPTH);
+            game.currentWorld.calculateTileFrame(game, x, y - 1, World.TILEDEPTH);
         }
 
         private void changeDoorState(Game game, int newDoorState, int mouseTileX, int mouseTileY) {
-            game.currentWorld.setTileWithDataWithUpdate(mouseTileX, mouseTileY, index, newDoorState, false);
+            game.currentWorld.setTileWithDataWithUpdate(mouseTileX, mouseTileY, index, newDoorState, World.TILEDEPTH);
         }
 
         public override bool isSolid(World world, int x, int y) {
             if(world==null){
                 return true;
             }
-            return base.isSolid(world, x, y) && world.getTileDataNoCheck(x, y, false)==stateClosed;
+            return base.isSolid(world, x, y) && world.getTileDataNoCheck(x, y, World.TILEDEPTH) == stateClosed;
         }
 
-        public override float getDepth(int x, int y, bool isWall) {
+        public override float getDepth(int x, int y, int tileDepth) {
             return Game.RENDER_DEPTH_TILE_DOOR;
         }
     }

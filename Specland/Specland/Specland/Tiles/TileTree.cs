@@ -9,17 +9,17 @@ namespace Specland {
 
         public TileTree(string name, RenderType renderType, Material material, int textureX, int textureY) : base(name, renderType, material, textureX, textureY) { }
 
-        public override TextureInfo getTextureInfo(int x, int y, World world, bool isWall) {
+        public override TextureInfo getTextureInfo(int x, int y, World world, int tileDepth) {
 
-            bool left = world.getTileObject(x - 1, y, isWall).index == index;
-            bool right = world.getTileObject(x + 1, y, isWall).index == index;
-            bool down = world.getTileObject(x, y + 1, isWall).index == index;
-            bool up = world.getTileObject(x, y - 1, isWall).index == index;
+            bool left = world.getTileObject(x - 1, y, tileDepth).index == index;
+            bool right = world.getTileObject(x + 1, y, tileDepth).index == index;
+            bool down = world.getTileObject(x, y + 1, tileDepth).index == index;
+            bool up = world.getTileObject(x, y - 1, tileDepth).index == index;
 
-            bool leftSolid = world.isTileSolid(x - 1, y, isWall);
-            bool rightSolid = world.isTileSolid(x + 1, y, isWall);
-            bool downSolid = world.isTileSolid(x, y + 1, isWall);
-            bool upSolid = world.isTileSolid(x, y - 1, isWall);
+            bool leftSolid = world.isTileSolid(x - 1, y, tileDepth);
+            bool rightSolid = world.isTileSolid(x + 1, y, tileDepth);
+            bool downSolid = world.isTileSolid(x, y + 1, tileDepth);
+            bool upSolid = world.isTileSolid(x, y - 1, tileDepth);
 
             Rectangle r;
             bool t = transparent;
@@ -57,24 +57,24 @@ namespace Specland {
             return new TextureInfo(r, t);
         }
 
-        public override void mine(World world, int x, int y, int data, ItemPick pick, bool isWall) {
-            if (world.isTileSolid(x, y + 1, isWall)) {
-                if (world.getTileIndex(x + 1, y, isWall) == index) {
-                    world.mineTile(x + 1, y, pick, isWall);
+        public override void mine(World world, int x, int y, int data, ItemPick pick, int tileDepth) {
+            if (world.isTileSolid(x, y + 1, tileDepth)) {
+                if (world.getTileIndex(x + 1, y, tileDepth) == index) {
+                    world.mineTile(x + 1, y, pick, tileDepth);
                 }
-                if (world.getTileIndex(x - 1, y, isWall) == index) {
-                    world.mineTile(x - 1, y, pick, isWall);
+                if (world.getTileIndex(x - 1, y, tileDepth) == index) {
+                    world.mineTile(x - 1, y, pick, tileDepth);
                 }
             }
         }
 
-        public override void updateNearChange(World world, int x, int y, bool isWall) {
-            if (world.getTileIndex(x, y + 1, isWall) == Tile.TileAir.index) {
-                world.mineTile(x, y, Item.itemSupick, isWall);
+        public override void updateNearChange(World world, int x, int y, int tileDepth) {
+            if (world.getTileIndex(x, y + 1, tileDepth) == Tile.TileAir.index) {
+                world.mineTile(x, y, Item.itemSupick, tileDepth);
             }
         }
 
-        public override ItemStack dropStack(World world, ItemPick itemPick, Random rand, int x, int y, bool isWall) {
+        public override ItemStack dropStack(World world, ItemPick itemPick, Random rand, int x, int y, int tileDepth) {
             return rand.Next(2)==0?new ItemStack(Item.itemTile, 1, Tile.TileWood.index):new ItemStack(Item.itemEmpty);
         }
 

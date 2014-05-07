@@ -8,19 +8,19 @@ namespace Specland {
     class EntityFallingTile : Entity{
 
         private int index;
-        private bool isWall;
+        private int tileDepth;
         private ItemStack stack;
         private float terminalVelocity = World.tileSizeInPixels;
 
-        public EntityFallingTile(int x, int y, int index, bool isWall) : base(x, y) {
+        public EntityFallingTile(int x, int y, int index, int tileDepth) : base(x, y) {
             this.index = index;
-            this.isWall = isWall;
+            this.tileDepth = tileDepth;
             stack = new ItemStack(Item.itemTile, 1, index);
         }
 
         public override void init(){
             size = new Vector2(World.tileSizeInPixels * .75f, World.tileSizeInPixels * .75f);
-            if(isWall){
+            if (tileDepth == World.WALLDEPTH) {
                 isSolid = false;
             }else{
                 isSolid = index == 0 ? false : Tile.getTileObject(index).isSolid();
@@ -33,7 +33,7 @@ namespace Specland {
 
         public override void draw(Game game, World world) {
             byte a = (byte)MathHelper.Clamp(world.getLight((int)(position.X + (size.X / 2)) / World.tileSizeInPixels, (int)(position.Y + (size.Y / 2)) / World.tileSizeInPixels), 0, 255);
-            if (isWall) {
+            if (tileDepth==World.WALLDEPTH) {
                 Tile t = Tile.getTileObject(stack.getItem().index);
                 a = (byte)Clamp(a - (255 - t.wallBrightness), 0, t.wallBrightness);
             }
@@ -49,12 +49,12 @@ namespace Specland {
                 remove(game, world);
                 return;
             }
-            if (collisionCustom(world, 0, 0, isWall)) {
+            if (collisionCustom(world, 0, 0, tileDepth)) {
                 int x = (int)(position.X / World.tileSizeInPixels);
                 int y = (int)(position.Y / World.tileSizeInPixels);
                 remove(game, world);
-                if(world.getTileIndex(x, y, isWall) == Tile.TileAir.index){
-                    world.setTile(x, y, index, isWall);
+                if(world.getTileIndex(x, y, tileDepth) == Tile.TileAir.index){
+                    world.setTile(x, y, index, tileDepth);
                 } else {
                     world.EntityAddingList.Add(new EntityItem(position, new ItemStack(Item.itemTile, 1, index)));
                 }
@@ -66,11 +66,11 @@ namespace Specland {
             position += speed;
         }
 
-        public bool collisionCustom(World world, float x, float y, bool isWall) {
+        public bool collisionCustom(World world, float x, float y, int tileDepth) {
             Rectangle r = new Rectangle((int)(position.X + x), (int)(position.Y + y), (int)size.X, (int)size.Y);
             for (int i = (r.Left / World.tileSizeInPixels); i < (r.Right / World.tileSizeInPixels) + 1; i++) {
                 for (int j = (r.Top / World.tileSizeInPixels); j < (r.Bottom / World.tileSizeInPixels) + 1; j++) {
-                    Tile t = world.getTileObject(i, j, isWall);
+                    Tile t = world.getTileObject(i, j, tileDepth);
                     if (t != null) {
                         if (t.isSolid(world, i, j)) {
                             return true;

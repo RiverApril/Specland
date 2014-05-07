@@ -29,6 +29,8 @@ namespace Specland {
         public static Item itemBucket = new ItemBucket("Bucket", RenderTypeNormal, new Rectangle(16 * 2, 0, 16, 16));
         public static Item itemBucketWater = new ItemBucketFilled("BucketWater", RenderTypeNormal, new Rectangle(16 * 3, 0, 16, 16)).setDisplayName("Bucket of Water");
 
+
+
         public int index;
         public string name;
         public int maxStack = 1;

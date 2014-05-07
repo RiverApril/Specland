@@ -59,12 +59,12 @@ namespace Specland {
         public bool collisionOnlyTiles(World world, float x, float y, Rectangle r, bool ignorePlatforms = false) {
             for (int i = (r.Left / World.tileSizeInPixels); i < (r.Right / World.tileSizeInPixels) + 1; i++) {
                 for (int j = (r.Top / World.tileSizeInPixels); j < (r.Bottom / World.tileSizeInPixels) + 1; j++) {
-                    Tile t = world.getTileObject(i, j, false);
+                    Tile t = world.getTileObject(i, j, World.TILEDEPTH);
                     if (t != null) {
                         if (t.isSolid(world, i, j)) {
                             return true;
                         }
-                        if (!ignorePlatforms && t.isPlatform(world, i, j, false)) {
+                        if (!ignorePlatforms && t.isPlatform(world, i, j, World.TILEDEPTH)) {
                             if (r.Bottom <= ((j+1) * World.tileSizeInPixels) && speed.Y>=0) {
                                 return true;
                             }

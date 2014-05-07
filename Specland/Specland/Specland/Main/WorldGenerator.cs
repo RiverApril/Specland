@@ -219,7 +219,7 @@ namespace Specland {
                 int x = rand.Next(width);
                 int y = heightMap[x] + World.undergroundY;
                 y += rand.Next(height - y);
-                if (world.inWorld(x, y) && Tile.TilePlantGlow.canBePlacedHere(world, x, y, false)) {
+                if (world.inWorld(x, y) && Tile.TilePlantGlow.canBePlacedHere(world, x, y, World.TILEDEPTH)) {
                     world.TileMatrix[x, y, World.TILEDEPTH] = Tile.TilePlantGlow.index;
                 }
 
