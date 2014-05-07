@@ -146,8 +146,17 @@ namespace Specland {
                         if (world.TileMatrix[x, heightMap[x], World.TILEDEPTH] == Tile.TileGrass.index && world.TileMatrix[x + 1, heightMap[x + 1], World.TILEDEPTH] == Tile.TileGrass.index && world.TileMatrix[x - 1, heightMap[x - 1], World.TILEDEPTH] == Tile.TileGrass.index) {
                             if (rand.Next(5) == 0 && tree <= 0) {
                                 tree = 4;
+
+
                                 world.TileMatrix[x + 1, heightMap[x + 1] - 1, World.TILEDEPTH] = Tile.TileTree.index;
+                                world.TileDataMatrix[x + 1, heightMap[x + 1] - 1, World.TILEDEPTH] = 1;
+
                                 world.TileMatrix[x - 1, heightMap[x - 1] - 1, World.TILEDEPTH] = Tile.TileTree.index;
+                                world.TileDataMatrix[x - 1, heightMap[x - 1] - 1, World.TILEDEPTH] = 1;
+
+                                world.TileDataMatrix[x, heightMap[x] - 1, World.TILEDEPTH] = 1;
+
+
                                 int h = rand.Next(20) + 10;
                                 int right = 3;
                                 int left = 3;

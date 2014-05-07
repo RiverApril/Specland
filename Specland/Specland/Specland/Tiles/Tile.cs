@@ -296,8 +296,24 @@ namespace Specland {
 
         }
 
+<<<<<<< HEAD
         public bool canBePlacedHere(World world, int x, int y, int tileDepth) {
             if(tileDepth==World.WALLDEPTH && !canBeWall){
+=======
+        public bool canBeDestroyed(World world, int x, int y, bool isWall) {
+            if (world.getTileObject(x, y - 1, isWall).mustHaveTileBelow(world, x, y - 1, isWall)) {
+                return false;
+            }
+            return true;
+        }
+
+        public virtual bool mustHaveTileBelow(World world, int x, int y, bool isWall) {
+            return false;
+        }
+
+        public bool canBePlacedHere(World world, int x, int y, bool isWall) {
+            if(isWall && !canBeWall){
+>>>>>>> 2da5a6c59beeca087252165acb6320e91f6ced32
                 return false;
             }
             return canBePlacedHereOverridable(world, x, y, tileDepth);

@@ -229,12 +229,24 @@ namespace Specland {
             return false;
         }
 
+<<<<<<< HEAD
         public bool mineTile(int x, int y, ItemPick pick, int tileDepth) {
             if (mineTileNoNearUpdate(x, y, pick, tileDepth)) {
                 setTileForUpdate(x - 1, y, tileDepth);
                 setTileForUpdate(x + 1, y, tileDepth);
                 setTileForUpdate(x, y - 1, tileDepth);
                 setTileForUpdate(x, y + 1, tileDepth);
+=======
+        public bool mineTile(int x, int y, ItemPick pick, bool isWall) {
+            if(!getTileObject(x, y, isWall).canBeDestroyed(this, x, y, isWall)){
+                return false;
+            }
+            if (mineTileNoNearUpdate(x, y, pick, isWall)) {
+                setTileForUpdate(x - 1, y, isWall);
+                setTileForUpdate(x + 1, y, isWall);
+                setTileForUpdate(x, y - 1, isWall);
+                setTileForUpdate(x, y + 1, isWall);
+>>>>>>> 2da5a6c59beeca087252165acb6320e91f6ced32
                 return true;
             }
             return false;
