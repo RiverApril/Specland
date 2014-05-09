@@ -5,23 +5,23 @@ using System.Linq;
 using System.Text;
 
 namespace Specland {
-    class TileLightToggle : Tile{
+    public class TileLightToggle : Tile{
 
         public TileLightToggle(string name, RenderType renderType, Material material, int textureX, int textureY) : base(name, renderType, material, textureX, textureY) { }
 
-        public override ItemStack use(Game game, ItemStack currentItem, int mouseTileX, int mouseTileY, int mouseTileDistanceFromPlayer, int tileDepth) {
+        public override ItemStack use(Game game, ItemStack currentItem, int mouseTileX, int mouseTileY, int mouseTileDistanceFromPlayer, World.TileDepth tileDepth) {
             game.currentWorld.setTileWithDataWithUpdate(mouseTileX, mouseTileY, index, game.currentWorld.getTileData(mouseTileX, mouseTileY, tileDepth)==0?1:0, tileDepth);
             return base.use(game, currentItem, mouseTileX, mouseTileY, mouseTileDistanceFromPlayer, tileDepth);
         }
 
         
-        public override int getLight(int x, int y, int tileDepth) {
+        public override int getLight(int x, int y, World.TileDepth tileDepth) {
             if(Game.instance.currentWorld==null){
                 return 0;
             }
             return Game.instance.currentWorld.getTileData(x, y, tileDepth)==0?base.getLight(x, y, tileDepth):0;
         }
-        public override TextureInfo getTextureInfo(int x, int y, World world, int tileDepth) {
+        public override TextureInfo getTextureInfo(int x, int y, World world, World.TileDepth tileDepth) {
             
             if (renderType == RenderType.placed) {
                 bool left = world.isTileSolid(x - 1, y, tileDepth);

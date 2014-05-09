@@ -9,7 +9,7 @@ namespace Specland {
 
         public TileTree(string name, RenderType renderType, Material material, int textureX, int textureY) : base(name, renderType, material, textureX, textureY) { }
 
-        public override TextureInfo getTextureInfo(int x, int y, World world, int tileDepth) {
+        public override TextureInfo getTextureInfo(int x, int y, World world, World.TileDepth tileDepth) {
 
             bool left = world.getTileObject(x - 1, y, tileDepth).index == index;
             bool right = world.getTileObject(x + 1, y, tileDepth).index == index;
@@ -57,24 +57,17 @@ namespace Specland {
             return new TextureInfo(r, t);
         }
 
-<<<<<<< HEAD
-        public override void mine(World world, int x, int y, int data, ItemPick pick, int tileDepth) {
-            if (world.isTileSolid(x, y + 1, tileDepth)) {
-                if (world.getTileIndex(x + 1, y, tileDepth) == index) {
-                    world.mineTile(x + 1, y, pick, tileDepth);
-=======
-        public override bool mustHaveTileBelow(World world, int x, int y, bool isWall) {
-            if(world.getTileData(x, y, isWall) == 0){
+        public override bool mustHaveTileBelow(World world, int x, int y, World.TileDepth tileDepth) {
+            if (world.getTileData(x, y, tileDepth) == 0) {
                 return false;
             }
             return true;
         }
-
-        public override void mine(World world, int x, int y, int data, ItemPick pick, bool isWall) {
-            if (world.isTileSolid(x, y + 1, isWall)) {
-                if (world.getTileIndex(x + 1, y, isWall) == index) {
-                    world.mineTile(x + 1, y, pick, isWall);
->>>>>>> 2da5a6c59beeca087252165acb6320e91f6ced32
+        
+        public override void mine(World world, int x, int y, int data, ItemPick pick, World.TileDepth tileDepth) {
+            if (world.isTileSolid(x, y + 1, tileDepth)) {
+                if (world.getTileIndex(x + 1, y, tileDepth) == index) {
+                    world.mineTile(x + 1, y, pick, tileDepth);
                 }
                 if (world.getTileIndex(x - 1, y, tileDepth) == index) {
                     world.mineTile(x - 1, y, pick, tileDepth);
@@ -82,13 +75,13 @@ namespace Specland {
             }
         }
 
-        public override void updateNearChange(World world, int x, int y, int tileDepth) {
+        public override void updateNearChange(World world, int x, int y, World.TileDepth tileDepth) {
             if (world.getTileIndex(x, y + 1, tileDepth) == Tile.TileAir.index) {
                 world.mineTile(x, y, Item.itemSupick, tileDepth);
             }
         }
 
-        public override ItemStack dropStack(World world, ItemPick itemPick, Random rand, int x, int y, int tileDepth) {
+        public override ItemStack dropStack(World world, ItemPick itemPick, Random rand, int x, int y, World.TileDepth tileDepth) {
             return rand.Next(2)==0?new ItemStack(Item.itemTile, 1, Tile.TileWood.index):new ItemStack(Item.itemEmpty);
         }
 

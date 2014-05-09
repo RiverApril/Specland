@@ -11,7 +11,7 @@ namespace Specland {
         public TileGrass(string name, RenderType renderType, Material material, int textureX, int textureY) : base(name, renderType, material, textureX, textureY) { }
 
 
-        public override void updateRandom(World world, int x, int y, int tileDepth) {
+        public override void updateRandom(World world, int x, int y, World.TileDepth tileDepth) {
             if (world.getTileIndex(x - 1, y, tileDepth) == Tile.TileDirt.index) {
                 growTo(world, x - 1, y, tileDepth);
             }
@@ -39,7 +39,7 @@ namespace Specland {
             }
         }
 
-        private void growTo(World world, int x, int y, int tileDepth) {
+        private void growTo(World world, int x, int y, World.TileDepth tileDepth) {
             bool grow = false;
             if (world.getTileObject(x - 1, y, tileDepth).transparent) {
                 grow = true;
@@ -58,7 +58,7 @@ namespace Specland {
             }
         }
 
-        public override ItemStack dropStack(World world, ItemPick itemPick, Random rand, int x, int y, int tileDepth) {
+        public override ItemStack dropStack(World world, ItemPick itemPick, Random rand, int x, int y, World.TileDepth tileDepth) {
             return new ItemStack(Item.itemTile, 1, Tile.TileDirt.index);
         }
     }

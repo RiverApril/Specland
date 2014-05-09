@@ -129,6 +129,7 @@ namespace Specland {
 
 
         public static long tick = 0;
+        private bool needToResetUserInput = true;
 
         public Game() {
             instance = this;
@@ -178,14 +179,7 @@ namespace Specland {
         }
 
         public void resetUserInputList() {
-            userInputList.Clear();
-            userInputList.Add(console);
-            userInputList.Add(inventory);
-            if(currentWorld!=null){
-                if (currentWorld.player!=null) {
-                    userInputList.Add(currentWorld.player.movement);
-                }
-            }
+            needToResetUserInput = true;
         }
 
         protected override void LoadContent() {
@@ -221,6 +215,18 @@ namespace Specland {
             tick++;
             updateMessage = "";
             inputState.set(Keyboard.GetState(), Mouse.GetState());
+
+            if (needToResetUserInput) {
+                needToResetUserInput = false;
+                userInputList.Clear();
+                userInputList.Add(console);
+                userInputList.Add(inventory);
+                if(currentWorld!=null){
+                    if (currentWorld.player!=null) {
+                        userInputList.Add(currentWorld.player.movement);
+                    }
+                }
+            }
 
             foreach(InputUser i in userInputList){
                 inputState = i.update(this, inputState);
@@ -285,8 +291,8 @@ namespace Specland {
                 string lq = "Liquid Fps:   " + currentWorld.liquidThreadFps.getFps() + " (ms/t:" + currentWorld.liquidThreadFps.getMpt() + ") ";
                 string p = "Rendering:\n  Gui: " + Profiler.get("draw gui") + "\n  Tile: " + Profiler.get("draw tiles") + "\n  Entity: " + Profiler.get("draw entities");
                 p += "\n\nLighting: " + Profiler.get("lighting");
-                string ti = "T: " + currentWorld.getTileIndex(inventory.mouseTileX, inventory.mouseTileY, World.TILEDEPTH) + "`" + currentWorld.getTileData(inventory.mouseTileX, inventory.mouseTileY, World.TILEDEPTH);
-                ti += "  W: " + currentWorld.getTileIndex(inventory.mouseTileX, inventory.mouseTileY, World.WALLDEPTH) + "`" + currentWorld.getTileData(inventory.mouseTileX, inventory.mouseTileY, World.WALLDEPTH);
+                string ti = "T: " + currentWorld.getTileIndex(inventory.mouseTileX, inventory.mouseTileY, World.TileDepth.tile) + "`" + currentWorld.getTileData(inventory.mouseTileX, inventory.mouseTileY, World.TileDepth.tile);
+                ti += "  W: " + currentWorld.getTileIndex(inventory.mouseTileX, inventory.mouseTileY, World.TileDepth.wall) + "`" + currentWorld.getTileData(inventory.mouseTileX, inventory.mouseTileY, World.TileDepth.wall);
                 string pp = "Position: " + currentWorld.player.position.X + ", " + currentWorld.player.position.Y;
 
                 spriteBatch.DrawString(fontNormal, d + "\n" + u + "\n" + l + "\n" + lq + "\n" + e + "\n" + t + "\n" + p + "\n" + ti + "\n" + pp + "\n" + drawMessage + "\n" + updateMessage, new Vector2(140, 10), Color.White);
@@ -318,6 +324,10 @@ namespace Specland {
 
         public static void drawString(SpriteFont font, string text, Vector2 position, Color color, float depth) {
             instance.spriteBatch.DrawString(font, text, position, color, 0, Vector2.Zero, 1, SpriteEffects.None, depth);
+        }
+
+        internal Point getMousePosition() {
+            return new Point(inputState.mouseX(), inputState.mouseY());
         }
     }
 }

@@ -63,9 +63,19 @@ namespace Specland {
                 items[i] = new ItemStack(Item.itemEmpty);
             }
             pickUp(new ItemStack(Item.itemSupick));
-            pickUp(new ItemStack(Item.itemWoodPick));
             pickUp(new ItemStack(Item.itemStonePick));
-            //pickUp(new ItemStack(Item.ItemTile, 999, Tile.TileWoodTable.index));
+            pickUp(new ItemStack(Item.itemCopperPick));
+            pickUp(new ItemStack(Item.itemIronPick));
+            pickUp(new ItemStack(Item.itemSteelPick));
+            pickUp(new ItemStack(Item.itemQuartzPick));
+            pickUp(new ItemStack(Item.itemEmeraldPick));
+            pickUp(new ItemStack(Item.itemSaphirePick));
+            pickUp(new ItemStack(Item.itemDiamondPick));
+            pickUp(new ItemStack(Item.itemSteelDrill));
+            pickUp(new ItemStack(Item.itemQuartzDrill));
+            pickUp(new ItemStack(Item.itemEmeraldDrill));
+            pickUp(new ItemStack(Item.itemSaphireDrill));
+            pickUp(new ItemStack(Item.itemDiamondDrill));
             updateValaidRecipes();
         }
 
@@ -373,10 +383,10 @@ namespace Specland {
                 }
                 if(inputState.pressed(Game.KEY_USE)){
                     ItemStack useItem = currentItem;
-                    Tile tileWall = game.currentWorld.getTileObject(mouseTileX, mouseTileY, World.WALLDEPTH);
-                    Tile tileTile = game.currentWorld.getTileObject(mouseTileX, mouseTileY, World.TILEDEPTH);
+                    Tile tileWall = game.currentWorld.getTileObject(mouseTileX, mouseTileY, World.TileDepth.wall);
+                    Tile tileTile = game.currentWorld.getTileObject(mouseTileX, mouseTileY, World.TileDepth.tile);
                     if (tileWall.index != Tile.TileAir.index || tileTile.index != Tile.TileAir.index) {
-                        useItem = (tileTile.index == Tile.TileAir.index ? tileWall : tileTile).use(game, currentItem, mouseTileX, mouseTileY, mouseTileDistanceFromPlayer, tileTile.index == Tile.TileAir.index?World.WALLDEPTH:World.TILEDEPTH);
+                        useItem = (tileTile.index == Tile.TileAir.index ? tileWall : tileTile).use(game, currentItem, mouseTileX, mouseTileY, mouseTileDistanceFromPlayer, tileTile.index == Tile.TileAir.index?World.TileDepth.wall:World.TileDepth.tile);
                     }
                     if(useItem!=null){
                         setCurrentItem(useItem);

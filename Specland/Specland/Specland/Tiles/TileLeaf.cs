@@ -14,7 +14,7 @@ namespace Specland {
             this.tree = tree;
         }
 
-        /*public override TextureInfo getTextureInfo(int x, int y, World world, int tileDepth) {
+        /*public override TextureInfo getTextureInfo(int x, int y, World world, World.TileDepth tileDepth) {
             
             int leftIndex = world.getTileObject(x - 1, y, tileDepth).index;
             int rightIndex = world.getTileObject(x + 1, y, tileDepth).index;
@@ -112,17 +112,17 @@ namespace Specland {
             return new TextureInfo(r, t);
         }*/
 
-        public override void mine(World world, int x, int y, int data, ItemPick pick, int tileDepth) {
+        public override void mine(World world, int x, int y, int data, ItemPick pick, World.TileDepth tileDepth) {
 
         }
 
-        public override void updateNearChange(World world, int x, int y, int tileDepth) {
+        public override void updateNearChange(World world, int x, int y, World.TileDepth tileDepth) {
             if (world.getTileIndex(x, y + 1, tileDepth) != index && world.getTileIndex(x, y + 1, tileDepth) != tree) {
                 world.mineTile(x, y, Item.itemSupick, tileDepth);
             }
         }
 
-        public override ItemStack dropStack(World world, ItemPick itemPick, Random rand, int x, int y, int tileDepth) {
+        public override ItemStack dropStack(World world, ItemPick itemPick, Random rand, int x, int y, World.TileDepth tileDepth) {
             return rand.Next(8) == 0 ? new ItemStack(Item.itemTile, 1, Tile.TileSapling.index) : new ItemStack(Item.itemEmpty);
         }
 

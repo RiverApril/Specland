@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Specland.Tiles;
 
 namespace Specland {
 
@@ -130,7 +129,7 @@ namespace Specland {
         }
 
 
-        public virtual TextureInfo getTextureInfo(int x, int y, World world, int tileDepth) {
+        public virtual TextureInfo getTextureInfo(int x, int y, World world, World.TileDepth tileDepth) {
             if (renderType == RenderType.terrain || renderType == RenderType.building || renderType == RenderType.alone) {
                 
                 bool left = false;
@@ -280,57 +279,52 @@ namespace Specland {
             return null;
         }
 
-        public virtual void updateRandom(World world, int x, int y, int tileDepth) {
+        public virtual void updateRandom(World world, int x, int y, World.TileDepth tileDepth) {
 
         }
 
-        public virtual void updateNearChange(World world, int x, int y, int tileDepth) {
+        public virtual void updateNearChange(World world, int x, int y, World.TileDepth tileDepth) {
 
         }
 
-        public virtual ItemStack dropStack(World world, ItemPick itemPick, Random rand, int x, int y, int tileDepth) {
+        public virtual ItemStack dropStack(World world, ItemPick itemPick, Random rand, int x, int y, World.TileDepth tileDepth) {
             return new ItemStack(Item.itemTile, 1, index);
         }
 
-        public virtual void mine(World world, int x, int y, int data, ItemPick pick, int tileDepth) {
+        public virtual void mine(World world, int x, int y, int data, ItemPick pick, World.TileDepth tileDepth) {
 
         }
 
-<<<<<<< HEAD
-        public bool canBePlacedHere(World world, int x, int y, int tileDepth) {
-            if(tileDepth==World.WALLDEPTH && !canBeWall){
-=======
-        public bool canBeDestroyed(World world, int x, int y, bool isWall) {
-            if (world.getTileObject(x, y - 1, isWall).mustHaveTileBelow(world, x, y - 1, isWall)) {
+        public bool canBeDestroyed(World world, int x, int y, World.TileDepth tileDepth) {
+            if (world.getTileObject(x, y - 1, tileDepth).mustHaveTileBelow(world, x, y - 1, tileDepth)) {
                 return false;
             }
             return true;
         }
 
-        public virtual bool mustHaveTileBelow(World world, int x, int y, bool isWall) {
+        public virtual bool mustHaveTileBelow(World world, int x, int y, World.TileDepth tileDepth) {
             return false;
         }
 
-        public bool canBePlacedHere(World world, int x, int y, bool isWall) {
-            if(isWall && !canBeWall){
->>>>>>> 2da5a6c59beeca087252165acb6320e91f6ced32
+        public bool canBePlacedHere(World world, int x, int y, World.TileDepth tileDepth) {
+            if (tileDepth == World.TileDepth.wall && !canBeWall) {
                 return false;
             }
             return canBePlacedHereOverridable(world, x, y, tileDepth);
         }
 
-        public virtual bool canBePlacedHereOverridable(World world, int x, int y, int tileDepth) {
+        public virtual bool canBePlacedHereOverridable(World world, int x, int y, World.TileDepth tileDepth) {
             if (renderType == RenderType.placed) {
-                return (world.isTileSolid(x - 1, y, tileDepth) || world.isTileSolid(x + 1, y, tileDepth) || world.isTileSolid(x, y - 1, tileDepth) || world.isTileSolid(x, y + 1, tileDepth) || !world.getTileObject(x, y, tileDepth == World.WALLDEPTH ? World.TILEDEPTH : World.WALLDEPTH).isAir()) && world.getTileObject(x, y, tileDepth).isAir();
+                return (world.isTileSolid(x - 1, y, tileDepth) || world.isTileSolid(x + 1, y, tileDepth) || world.isTileSolid(x, y - 1, tileDepth) || world.isTileSolid(x, y + 1, tileDepth) || !world.getTileObject(x, y, tileDepth == World.TileDepth.wall ? World.TileDepth.tile : World.TileDepth.wall).isAir()) && world.getTileObject(x, y, tileDepth).isAir();
             }
-            return (!world.getTileObject(x - 1, y, tileDepth).isAir() || !world.getTileObject(x + 1, y, tileDepth).isAir() || !world.getTileObject(x, y - 1, tileDepth).isAir() || !world.getTileObject(x, y + 1, tileDepth).isAir() || !world.getTileObject(x, y, tileDepth == World.WALLDEPTH ? World.TILEDEPTH : World.WALLDEPTH).isAir()) && world.getTileObject(x, y, tileDepth).isAir();
+            return (!world.getTileObject(x - 1, y, tileDepth).isAir() || !world.getTileObject(x + 1, y, tileDepth).isAir() || !world.getTileObject(x, y - 1, tileDepth).isAir() || !world.getTileObject(x, y + 1, tileDepth).isAir() || !world.getTileObject(x, y, tileDepth == World.TileDepth.wall ? World.TileDepth.tile : World.TileDepth.wall).isAir()) && world.getTileObject(x, y, tileDepth).isAir();
         }
 
         public bool isAir() {
             return (index == TileAir.index);
         }
 
-        public virtual void justPlaced(World world, int x, int y, int tileDepth) {
+        public virtual void justPlaced(World world, int x, int y, World.TileDepth tileDepth) {
 
         }
 
@@ -338,7 +332,7 @@ namespace Specland {
             return false;
         }
 
-        public virtual ItemStack use(Game game, ItemStack currentItem, int mouseTileX, int mouseTileY, int mouseTileDistanceFromPlayer, int tileDepth) {
+        public virtual ItemStack use(Game game, ItemStack currentItem, int mouseTileX, int mouseTileY, int mouseTileDistanceFromPlayer, World.TileDepth tileDepth) {
             return null;
         }
 
@@ -350,7 +344,7 @@ namespace Specland {
             return defaultSolid;
         }
 
-        public virtual bool isPlatform(World world, int x, int y, int tileDepth) {
+        public virtual bool isPlatform(World world, int x, int y, World.TileDepth tileDepth) {
             return defaultPlatform;
         }
 
@@ -358,12 +352,12 @@ namespace Specland {
             return get8(3, 3);
         }
 
-        public virtual int getLight(int x, int y, int tileDepth) {
+        public virtual int getLight(int x, int y, World.TileDepth tileDepth) {
             return light;
         }
 
-        public virtual float getDepth(int x, int y, int tileDepth) {
-            return tileDepth==World.WALLDEPTH?Game.RENDER_DEPTH_WALL:Game.RENDER_DEPTH_TILE;
+        public virtual float getDepth(int x, int y, World.TileDepth tileDepth) {
+            return tileDepth == World.TileDepth.wall ? Game.RENDER_DEPTH_WALL : Game.RENDER_DEPTH_TILE;
         }
     }
 }

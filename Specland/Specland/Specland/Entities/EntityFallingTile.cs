@@ -8,11 +8,11 @@ namespace Specland {
     class EntityFallingTile : Entity{
 
         private int index;
-        private int tileDepth;
+        private World.TileDepth tileDepth;
         private ItemStack stack;
         private float terminalVelocity = World.tileSizeInPixels;
 
-        public EntityFallingTile(int x, int y, int index, int tileDepth) : base(x, y) {
+        public EntityFallingTile(int x, int y, int index, World.TileDepth tileDepth) : base(x, y) {
             this.index = index;
             this.tileDepth = tileDepth;
             stack = new ItemStack(Item.itemTile, 1, index);
@@ -20,7 +20,7 @@ namespace Specland {
 
         public override void init(){
             size = new Vector2(World.tileSizeInPixels * .75f, World.tileSizeInPixels * .75f);
-            if (tileDepth == World.WALLDEPTH) {
+            if (tileDepth == World.TileDepth.wall) {
                 isSolid = false;
             }else{
                 isSolid = index == 0 ? false : Tile.getTileObject(index).isSolid();
@@ -33,7 +33,7 @@ namespace Specland {
 
         public override void draw(Game game, World world) {
             byte a = (byte)MathHelper.Clamp(world.getLight((int)(position.X + (size.X / 2)) / World.tileSizeInPixels, (int)(position.Y + (size.Y / 2)) / World.tileSizeInPixels), 0, 255);
-            if (tileDepth==World.WALLDEPTH) {
+            if (tileDepth==World.TileDepth.wall) {
                 Tile t = Tile.getTileObject(stack.getItem().index);
                 a = (byte)Clamp(a - (255 - t.wallBrightness), 0, t.wallBrightness);
             }
@@ -53,7 +53,7 @@ namespace Specland {
                 int x = (int)(position.X / World.tileSizeInPixels);
                 int y = (int)(position.Y / World.tileSizeInPixels);
                 remove(game, world);
-                if(world.getTileIndex(x, y, tileDepth) == Tile.TileAir.index){
+                if (world.getTileIndex(x, y, tileDepth) == Tile.TileAir.index) {
                     world.setTile(x, y, index, tileDepth);
                 } else {
                     world.EntityAddingList.Add(new EntityItem(position, new ItemStack(Item.itemTile, 1, index)));
@@ -66,7 +66,7 @@ namespace Specland {
             position += speed;
         }
 
-        public bool collisionCustom(World world, float x, float y, int tileDepth) {
+        public bool collisionCustom(World world, float x, float y, World.TileDepth tileDepth) {
             Rectangle r = new Rectangle((int)(position.X + x), (int)(position.Y + y), (int)size.X, (int)size.Y);
             for (int i = (r.Left / World.tileSizeInPixels); i < (r.Right / World.tileSizeInPixels) + 1; i++) {
                 for (int j = (r.Top / World.tileSizeInPixels); j < (r.Bottom / World.tileSizeInPixels) + 1; j++) {

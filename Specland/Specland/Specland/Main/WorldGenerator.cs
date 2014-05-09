@@ -36,14 +36,14 @@ namespace Specland {
                     if (y < 100) {
                         continue;
                     } else if (y == 100) {
-                        world.TileMatrix[x, y, World.TILEDEPTH] = Tile.TileGrass.index;
+                        world.TileMatrix[x, y, (int)World.TileDepth.tile] = Tile.TileGrass.index;
                     } else if (y < 120) {
-                        world.TileMatrix[x, y, World.TILEDEPTH] = Tile.TileDirt.index;
-                        world.TileMatrix[x, y, World.WALLDEPTH] = Tile.TileDirt.index;
+                        world.TileMatrix[x, y, (int)World.TileDepth.tile] = Tile.TileDirt.index;
+                        world.TileMatrix[x, y, (int)World.TileDepth.wall] = Tile.TileDirt.index;
                     } else {
                         bool a = rand.Next(2) == 0;
-                        world.TileMatrix[x, y, World.TILEDEPTH] = ((a) ? Tile.TileDirt : Tile.TileStone).index;
-                        world.TileMatrix[x, y, World.WALLDEPTH] = ((a) ? Tile.TileDirt : Tile.TileStone).index;
+                        world.TileMatrix[x, y, (int)World.TileDepth.tile] = ((a) ? Tile.TileDirt : Tile.TileStone).index;
+                        world.TileMatrix[x, y, (int)World.TileDepth.wall] = ((a) ? Tile.TileDirt : Tile.TileStone).index;
                     }
                     world.LiquidNeedsUpdateMatrix[x, y] = true;
                 }
@@ -111,29 +111,29 @@ namespace Specland {
                         continue;
                     } else if (y == heightMap[x]) {
                         if (biome == biomeDesert) {
-                            world.TileMatrix[x, y, World.TILEDEPTH] = Tile.TileSand.index;
+                            world.TileMatrix[x, y, (int)World.TileDepth.tile] = Tile.TileSand.index;
                         } else if (biome == biomeWater) {
-                            world.TileMatrix[x, y, World.TILEDEPTH] = Tile.TileAir.index;
+                            world.TileMatrix[x, y, (int)World.TileDepth.tile] = Tile.TileAir.index;
 
                         } else {
-                            world.TileMatrix[x, y, World.TILEDEPTH] = Tile.TileGrass.index;
+                            world.TileMatrix[x, y, (int)World.TileDepth.tile] = Tile.TileGrass.index;
                         }
                     } else if (y < heightMap[x]+20) {
                         if (biome == biomeDesert) {
-                            world.TileMatrix[x, y, World.TILEDEPTH] = Tile.TileSand.index;
-                            world.TileMatrix[x, y, World.WALLDEPTH] = Tile.TileSand.index;
+                            world.TileMatrix[x, y, (int)World.TileDepth.tile] = Tile.TileSand.index;
+                            world.TileMatrix[x, y, (int)World.TileDepth.wall] = Tile.TileSand.index;
                         } else if (biome == biomeWater) {
-                            world.TileMatrix[x, y, World.TILEDEPTH] = Tile.TileAir.index;
-                            world.TileMatrix[x, y, World.WALLDEPTH] = Tile.TileDirt.index;
+                            world.TileMatrix[x, y, (int)World.TileDepth.tile] = Tile.TileAir.index;
+                            world.TileMatrix[x, y, (int)World.TileDepth.wall] = Tile.TileDirt.index;
                             world.LiquidMatrix[x, y] = 100;
                         } else {
-                            world.TileMatrix[x, y, World.TILEDEPTH] = Tile.TileDirt.index;
-                            world.TileMatrix[x, y, World.WALLDEPTH] = Tile.TileDirt.index;
+                            world.TileMatrix[x, y, (int)World.TileDepth.tile] = Tile.TileDirt.index;
+                            world.TileMatrix[x, y, (int)World.TileDepth.wall] = Tile.TileDirt.index;
                         }
                     } else {
                         bool a = rand.Next(2) == 0;
-                        world.TileMatrix[x, y, World.TILEDEPTH] = Tile.TileStone.index;
-                        world.TileMatrix[x, y, World.WALLDEPTH] = Tile.TileStone.index;
+                        world.TileMatrix[x, y, (int)World.TileDepth.tile] = Tile.TileStone.index;
+                        world.TileMatrix[x, y, (int)World.TileDepth.wall] = Tile.TileStone.index;
                     }
                 }
             }
@@ -142,35 +142,35 @@ namespace Specland {
             for (int x = 1; x < world.sizeInTiles.X - 1; x++) {
                 if (heightMap[x] == heightMap[x + 1] && heightMap[x] == heightMap[x - 1]) {
                     tree--;
-                    if (world.TileMatrix[x, heightMap[x] - 1, World.TILEDEPTH] == Tile.TileAir.index && world.TileMatrix[x + 1, heightMap[x + 1] - 1, World.TILEDEPTH] == Tile.TileAir.index && world.TileMatrix[x - 1, heightMap[x - 1] - 1, World.TILEDEPTH] == Tile.TileAir.index) {
-                        if (world.TileMatrix[x, heightMap[x], World.TILEDEPTH] == Tile.TileGrass.index && world.TileMatrix[x + 1, heightMap[x + 1], World.TILEDEPTH] == Tile.TileGrass.index && world.TileMatrix[x - 1, heightMap[x - 1], World.TILEDEPTH] == Tile.TileGrass.index) {
+                    if (world.TileMatrix[x, heightMap[x] - 1, (int)World.TileDepth.tile] == Tile.TileAir.index && world.TileMatrix[x + 1, heightMap[x + 1] - 1, (int)World.TileDepth.tile] == Tile.TileAir.index && world.TileMatrix[x - 1, heightMap[x - 1] - 1, (int)World.TileDepth.tile] == Tile.TileAir.index) {
+                        if (world.TileMatrix[x, heightMap[x], (int)World.TileDepth.tile] == Tile.TileGrass.index && world.TileMatrix[x + 1, heightMap[x + 1], (int)World.TileDepth.tile] == Tile.TileGrass.index && world.TileMatrix[x - 1, heightMap[x - 1], (int)World.TileDepth.tile] == Tile.TileGrass.index) {
                             if (rand.Next(5) == 0 && tree <= 0) {
                                 tree = 4;
 
 
-                                world.TileMatrix[x + 1, heightMap[x + 1] - 1, World.TILEDEPTH] = Tile.TileTree.index;
-                                world.TileDataMatrix[x + 1, heightMap[x + 1] - 1, World.TILEDEPTH] = 1;
+                                world.TileMatrix[x + 1, heightMap[x + 1] - 1, (int)World.TileDepth.tile] = Tile.TileTree.index;
+                                world.TileDataMatrix[x + 1, heightMap[x + 1] - 1, (int)World.TileDepth.tile] = 1;
 
-                                world.TileMatrix[x - 1, heightMap[x - 1] - 1, World.TILEDEPTH] = Tile.TileTree.index;
-                                world.TileDataMatrix[x - 1, heightMap[x - 1] - 1, World.TILEDEPTH] = 1;
+                                world.TileMatrix[x - 1, heightMap[x - 1] - 1, (int)World.TileDepth.tile] = Tile.TileTree.index;
+                                world.TileDataMatrix[x - 1, heightMap[x - 1] - 1, (int)World.TileDepth.tile] = 1;
 
-                                world.TileDataMatrix[x, heightMap[x] - 1, World.TILEDEPTH] = 1;
+                                world.TileDataMatrix[x, heightMap[x] - 1, (int)World.TileDepth.tile] = 1;
 
 
                                 int h = rand.Next(20) + 10;
                                 int right = 3;
                                 int left = 3;
                                 for (int i = 0; i > -h; i--) {
-                                    world.TileMatrix[x, heightMap[x] - 1 + i, World.TILEDEPTH] = Tile.TileTree.index;
+                                    world.TileMatrix[x, heightMap[x] - 1 + i, (int)World.TileDepth.tile] = Tile.TileTree.index;
                                     right--;
                                     if (right <= 0 && rand.Next(6) == 0) {
                                         right = 2;
-                                        world.TileMatrix[x + 1, heightMap[x + 1] - 1 + i, World.TILEDEPTH] = Tile.TileTree.index;
+                                        world.TileMatrix[x + 1, heightMap[x + 1] - 1 + i, (int)World.TileDepth.tile] = Tile.TileTree.index;
                                     }
                                     left--;
                                     if (left <= 0 && rand.Next(6) == 0) {
                                         left = 2;
-                                        world.TileMatrix[x - 1, heightMap[x - 1] - 1 + i, World.TILEDEPTH] = Tile.TileTree.index;
+                                        world.TileMatrix[x - 1, heightMap[x - 1] - 1 + i, (int)World.TileDepth.tile] = Tile.TileTree.index;
                                     }
                                 }
                                 CreateCircle(world, 5, x, heightMap[x + 1] - 1 - h, FillLeaf);
@@ -218,8 +218,8 @@ namespace Specland {
 
             for (int i = 0; i < world.sizeInTiles.X;i++ ) {
                 for (int j = 0; j < world.sizeInTiles.Y; j++) {
-                    //world.TileNeedsUpdateMatrix[i, j, World.TILEDEPTH] = true;
-                    //world.TileNeedsUpdateMatrix[i, j, World.WALLDEPTH] = true;
+                    //world.TileNeedsUpdateMatrix[i, j, World.TileDepth.tile] = true;
+                    //world.TileNeedsUpdateMatrix[i, j, World.TileDepth.wall] = true;
                     world.LiquidNeedsUpdateMatrix[i, j] = true;
                 }
             }
@@ -228,8 +228,8 @@ namespace Specland {
                 int x = rand.Next(width);
                 int y = heightMap[x] + World.undergroundY;
                 y += rand.Next(height - y);
-                if (world.inWorld(x, y) && Tile.TilePlantGlow.canBePlacedHere(world, x, y, World.TILEDEPTH)) {
-                    world.TileMatrix[x, y, World.TILEDEPTH] = Tile.TilePlantGlow.index;
+                if (world.inWorld(x, y) && Tile.TilePlantGlow.canBePlacedHere(world, x, y, World.TileDepth.tile)) {
+                    world.TileMatrix[x, y, (int)World.TileDepth.tile] = Tile.TilePlantGlow.index;
                 }
 
             }
@@ -266,30 +266,30 @@ namespace Specland {
         }
 
         public static void FillWater(World world, int x, int y) {
-            world.TileMatrix[x, y, World.TILEDEPTH] = Tile.TileAir.index;
+            world.TileMatrix[x, y, (int)World.TileDepth.tile] = Tile.TileAir.index;
             world.LiquidMatrix[x, y] = 50;
         }
 
         private static void FillAir(World world, int x, int y) {
-            world.TileMatrix[x, y, World.TILEDEPTH] = Tile.TileAir.index;
+            world.TileMatrix[x, y, (int)World.TileDepth.tile] = Tile.TileAir.index;
         }
 
         private static void FillDirt(World world, int x, int y) {
-            world.TileMatrix[x, y, World.TILEDEPTH] = Tile.TileDirt.index;
-            world.TileMatrix[x, y, World.WALLDEPTH] = Tile.TileDirt.index;
+            world.TileMatrix[x, y, (int)World.TileDepth.tile] = Tile.TileDirt.index;
+            world.TileMatrix[x, y, (int)World.TileDepth.wall] = Tile.TileDirt.index;
         }
 
         private static void FillSand(World world, int x, int y) {
-            world.TileMatrix[x, y, World.TILEDEPTH] = Tile.TileSand.index;
-            world.TileMatrix[x, y, World.WALLDEPTH] = Tile.TileSand.index;
+            world.TileMatrix[x, y, (int)World.TileDepth.tile] = Tile.TileSand.index;
+            world.TileMatrix[x, y, (int)World.TileDepth.wall] = Tile.TileSand.index;
         }
 
         private static void FillOre(World world, int x, int y, int index) {
-            world.TileMatrix[x, y, World.TILEDEPTH] = index;
+            world.TileMatrix[x, y, (int)World.TileDepth.tile] = index;
         }
 
         private static void FillLeaf(World world, int x, int y) {
-            world.TileMatrix[x, y, World.TILEDEPTH] = Tile.TileLeaf.index;
+            world.TileMatrix[x, y, (int)World.TileDepth.tile] = Tile.TileLeaf.index;
         }
     }
 }

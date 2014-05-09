@@ -9,6 +9,11 @@ using Microsoft.Xna.Framework.Input;
 namespace Specland {
     public class World {
 
+        public enum TileDepth {
+            tile=0, wall=1
+        }
+
+
         public string name = "";
 
         public Rectangle viewPortInTiles = new Rectangle();
@@ -17,9 +22,6 @@ namespace Specland {
 
         public static int tileSizeInPixels = 16;
         public static int tileScale = 2;
-
-        public static int WALLDEPTH = 1;
-        public static int TILEDEPTH = 0;
 
         public static int nearSurfaceY = 40;
         public static int undergroundY = 40;
@@ -109,8 +111,8 @@ namespace Specland {
             for (int x = 0; x < sizeInTiles.X; x++) {
                 setSkyTile(x);
                 for (int y = 0; y < sizeInTiles.Y; y++) {
-                    calculateTileFrame(game, x, y, World.TILEDEPTH);
-                    calculateTileFrame(game, x, y, World.WALLDEPTH);
+                    calculateTileFrame(game, x, y, World.TileDepth.tile);
+                    calculateTileFrame(game, x, y, World.TileDepth.wall);
                     calculateLiquidFrame(game, x, y);
                     lightUpdate1(x, y);
                 }
@@ -128,11 +130,11 @@ namespace Specland {
 
         }
 
-        public void calculateTileFrame(Game game, int x, int y, int tileDepth) {
+        public void calculateTileFrame(Game game, int x, int y, World.TileDepth tileDepth) {
             if ((textureTileInfo) != null) {
                 Tile tile = getTileObject(x, y, tileDepth);
                 if (tile != null && inWorld(x, y)) {
-                    textureTileInfo[x, y, tileDepth] = tile.getTextureInfo(x, y, this, tileDepth);
+                    textureTileInfo[x, y, (int)tileDepth] = tile.getTextureInfo(x, y, this, tileDepth);
                 }
             }
         }
@@ -166,41 +168,41 @@ namespace Specland {
             return new TextureInfo(/*Tile.TextureLiquidWater,*/ new Rectangle(((a % 3) * 8), (64) + ((a / 3) * 8), 8, 8), true);
         }
 
-        public Tile getTileObject(int x, int y, int tileDepth) {
+        public Tile getTileObject(int x, int y, World.TileDepth tileDepth) {
             Tile t = Tile.getTileObject(getTileIndex(x, y, tileDepth));
             return (t!=null?t:Tile.TileAir);
         }
 
-        public Tile getTileObjectNoCheck(int x, int y, int tileDepth) {
+        public Tile getTileObjectNoCheck(int x, int y, World.TileDepth tileDepth) {
             Tile t = Tile.getTileObject(getTileIndexNoCheck(x, y, tileDepth));
             return (t != null ? t : Tile.TileAir);
         }
 
-        public int getTileData(int x, int y, int tileDepth) {
+        public int getTileData(int x, int y, World.TileDepth tileDepth) {
             if (inWorld(x, y)) {
-                return TileDataMatrix[x, y, tileDepth];
+                return TileDataMatrix[x, y, (int)tileDepth];
             }
             return 0;
         }
 
-        public int getTileDataNoCheck(int x, int y, int tileDepth) {
-            return TileDataMatrix[x, y, tileDepth];
+        public int getTileDataNoCheck(int x, int y, World.TileDepth tileDepth) {
+            return TileDataMatrix[x, y, (int)tileDepth];
         }
 
-        public int getTileIndex(int x, int y, int tileDepth) {
+        public int getTileIndex(int x, int y, World.TileDepth tileDepth) {
             if(inWorld(x, y)){
-                return TileMatrix[x, y, tileDepth];
+                return TileMatrix[x, y, (int)tileDepth];
             }
             return Tile.TileDirt.index;
         }
 
-        public int getTileIndexNoCheck(int x, int y, int tileDepth) {
-            return TileMatrix[x, y, tileDepth];
+        public int getTileIndexNoCheck(int x, int y, World.TileDepth tileDepth) {
+            return TileMatrix[x, y, (int)tileDepth];
         }
 
-        internal void setTileForUpdate(int x, int y, int tileDepth) {
+        internal void setTileForUpdate(int x, int y, World.TileDepth tileDepth) {
             if (inWorld(x, y)) {
-                TileNeedsUpdateMatrix[x, y, tileDepth] = true;
+                TileNeedsUpdateMatrix[x, y, (int)tileDepth] = true;
             }
         }
 
@@ -229,32 +231,23 @@ namespace Specland {
             return false;
         }
 
-<<<<<<< HEAD
-        public bool mineTile(int x, int y, ItemPick pick, int tileDepth) {
+        public bool mineTile(int x, int y, ItemPick pick, World.TileDepth tileDepth) {
+            if (!getTileObject(x, y, tileDepth).canBeDestroyed(this, x, y, tileDepth)) {
+                return false;
+            }
             if (mineTileNoNearUpdate(x, y, pick, tileDepth)) {
                 setTileForUpdate(x - 1, y, tileDepth);
                 setTileForUpdate(x + 1, y, tileDepth);
                 setTileForUpdate(x, y - 1, tileDepth);
                 setTileForUpdate(x, y + 1, tileDepth);
-=======
-        public bool mineTile(int x, int y, ItemPick pick, bool isWall) {
-            if(!getTileObject(x, y, isWall).canBeDestroyed(this, x, y, isWall)){
-                return false;
-            }
-            if (mineTileNoNearUpdate(x, y, pick, isWall)) {
-                setTileForUpdate(x - 1, y, isWall);
-                setTileForUpdate(x + 1, y, isWall);
-                setTileForUpdate(x, y - 1, isWall);
-                setTileForUpdate(x, y + 1, isWall);
->>>>>>> 2da5a6c59beeca087252165acb6320e91f6ced32
                 return true;
             }
             return false;
         }
 
-        public bool setTileWithDataWithUpdate(int x, int y, int index, int data, int tileDepth) {
+        public bool setTileWithDataWithUpdate(int x, int y, int index, int data, World.TileDepth tileDepth) {
             if (setTileWithData(x, y, index, data, tileDepth)) {
-                TileNeedsUpdateMatrix[x, y, tileDepth] = true;
+                TileNeedsUpdateMatrix[x, y, (int)tileDepth] = true;
                 setTileForUpdate(x - 1, y, tileDepth);
                 setTileForUpdate(x + 1, y, tileDepth);
                 setTileForUpdate(x, y - 1, tileDepth);
@@ -264,9 +257,9 @@ namespace Specland {
             return false;
         }
 
-        public bool setTileWithUpdate(int x, int y, int index, int tileDepth) {
+        public bool setTileWithUpdate(int x, int y, int index, World.TileDepth tileDepth) {
             if (setTile(x, y, index, tileDepth)) {
-                TileNeedsUpdateMatrix[x, y, tileDepth] = true;
+                TileNeedsUpdateMatrix[x, y, (int)tileDepth] = true;
                 setTileForUpdate(x - 1, y, tileDepth);
                 setTileForUpdate(x + 1, y, tileDepth);
                 setTileForUpdate(x, y - 1, tileDepth);
@@ -277,7 +270,7 @@ namespace Specland {
         }
 
 
-        public bool mineTileNoNearUpdate(int x, int y, ItemPick pick, int tileDepth) {
+        public bool mineTileNoNearUpdate(int x, int y, ItemPick pick, World.TileDepth tileDepth) {
             Tile tile = getTileObject(x, y, tileDepth);
             int data = getTileDataNoCheck(x, y, tileDepth);
             if (setTile(x, y, Tile.TileAir.index, tileDepth)) {
@@ -289,10 +282,10 @@ namespace Specland {
             return false;
         }
 
-        public bool setTileWithData(int x, int y, int index, int data, int tileDepth) {
+        public bool setTileWithData(int x, int y, int index, int data, World.TileDepth tileDepth) {
             if (inWorld(x, y)) {
-                TileMatrix[x, y, tileDepth] = index;
-                TileDataMatrix[x, y, tileDepth] = data;
+                TileMatrix[x, y, (int)tileDepth] = index;
+                TileDataMatrix[x, y, (int)tileDepth] = data;
                 calculateTileFrame(Game.instance, x, y, tileDepth);
                 calculateTileFrame(Game.instance, x + 1, y, tileDepth);
                 calculateTileFrame(Game.instance, x - 1, y, tileDepth);
@@ -305,7 +298,7 @@ namespace Specland {
             return false;
         }
 
-        public bool setTile(int x, int y, int index, int tileDepth) {
+        public bool setTile(int x, int y, int index, World.TileDepth tileDepth) {
             return setTileWithData(x, y, index, 0, tileDepth);
         }
 
@@ -346,14 +339,14 @@ namespace Specland {
         private void setSkyTile(int x) {
             int i;
             for (i = 0; i < sizeInTiles.Y;i++ ) {
-                if (!getTileObject(x, i, World.TILEDEPTH).transparent) {
+                if (!getTileObject(x, i, World.TileDepth.tile).transparent) {
                     break;
                 }
             }
             skyY[x] = i;
         }
 
-        public bool setTile(int x, int y, Tile tile, int tileDepth) {
+        public bool setTile(int x, int y, Tile tile, World.TileDepth tileDepth) {
             return tile == null ? false : setTile(x, y, tile.index, tileDepth);
         }
 
@@ -447,14 +440,14 @@ namespace Specland {
                             updateLiquid(x, y);
                             LiquidNeedsUpdateMatrix[x, y] = false;
                         }
-                        if (TileNeedsUpdateMatrix[x, y, TILEDEPTH]) {
-                            getTileObjectNoCheck(x, y, World.TILEDEPTH).updateNearChange(this, x, y, World.TILEDEPTH);
-                            TileNeedsUpdateMatrix[x, y, TILEDEPTH] = false;
+                        if (TileNeedsUpdateMatrix[x, y, (int)World.TileDepth.tile]) {
+                            getTileObjectNoCheck(x, y, World.TileDepth.tile).updateNearChange(this, x, y, World.TileDepth.tile);
+                            TileNeedsUpdateMatrix[x, y, (int)World.TileDepth.tile] = false;
                             LiquidNeedsUpdateMatrix[x, y] = true;
                         }
-                        if (TileNeedsUpdateMatrix[x, y, WALLDEPTH]) {
-                            getTileObjectNoCheck(x, y, World.WALLDEPTH).updateNearChange(this, x, y, World.WALLDEPTH);
-                            TileNeedsUpdateMatrix[x, y, WALLDEPTH] = false;
+                        if (TileNeedsUpdateMatrix[x, y, (int)World.TileDepth.wall]) {
+                            getTileObjectNoCheck(x, y, World.TileDepth.wall).updateNearChange(this, x, y, World.TileDepth.wall);
+                            TileNeedsUpdateMatrix[x, y, (int)World.TileDepth.wall] = false;
                         }
                     }
                     /*if (x >= viewPortInTiles.X && y >= viewPortInTiles.Y && x <= viewPortInTiles.X + viewPortInTiles.Width + 1 && y <= viewPortInTiles.Y + viewPortInTiles.Height + 1) {
@@ -469,7 +462,7 @@ namespace Specland {
                 int x = Game.rand.Next(sizeInTiles.X);
                 int y = Game.rand.Next(sizeInTiles.Y);
                 int d = Game.rand.Next() % 2;
-                getTileObjectNoCheck(x, y, d).updateRandom(this, x, y, d);
+                getTileObjectNoCheck(x, y, (TileDepth)d).updateRandom(this, x, y, (TileDepth)d);
             }
         }
 
@@ -478,20 +471,20 @@ namespace Specland {
                 return;
             }
 
-            if (!isTileSolid(x, y - 1, World.TILEDEPTH)) LiquidNeedsUpdateMatrix[x, y - 1] = true;
-            if (!isTileSolid(x, y + 1, World.TILEDEPTH)) LiquidNeedsUpdateMatrix[x, y + 1] = true;
-            if (!isTileSolid(x + 1, y, World.TILEDEPTH)) LiquidNeedsUpdateMatrix[x + 1, y] = true;
-            if (!isTileSolid(x - 1, y, World.TILEDEPTH)) LiquidNeedsUpdateMatrix[x - 1, y] = true;
+            if (!isTileSolid(x, y - 1, World.TileDepth.tile)) LiquidNeedsUpdateMatrix[x, y - 1] = true;
+            if (!isTileSolid(x, y + 1, World.TileDepth.tile)) LiquidNeedsUpdateMatrix[x, y + 1] = true;
+            if (!isTileSolid(x + 1, y, World.TileDepth.tile)) LiquidNeedsUpdateMatrix[x + 1, y] = true;
+            if (!isTileSolid(x - 1, y, World.TileDepth.tile)) LiquidNeedsUpdateMatrix[x - 1, y] = true;
 
 
             int l = LiquidMatrix[x, y];
             int b = LiquidMatrix[x, y+1];
 
             if (l > 0) {
-                if (getTileObjectNoCheck(x, y, World.TILEDEPTH).washedAwayByWater) {
-                    mineTile(x, y, Item.itemSupick, World.TILEDEPTH);
+                if (getTileObjectNoCheck(x, y, World.TileDepth.tile).washedAwayByWater) {
+                    mineTile(x, y, Item.itemSupick, World.TileDepth.tile);
                 }
-                if (!isTileSolid(x, y + 1, World.TILEDEPTH)) {
+                if (!isTileSolid(x, y + 1, World.TileDepth.tile)) {
                     while(l>0 && b<100){
                         l--;
                         b++;
@@ -501,9 +494,9 @@ namespace Specland {
                 }
                 l = LiquidMatrix[x, y];
                 b = LiquidMatrix[x, y + 1];
-                if (isTileSolid(x, y + 1, World.TILEDEPTH) || b >= 50) {
-                    bool ls = isTileSolid(x - 1, y, World.TILEDEPTH);
-                    bool rs = isTileSolid(x + 1, y, World.TILEDEPTH);
+                if (isTileSolid(x, y + 1, World.TileDepth.tile) || b >= 50) {
+                    bool ls = isTileSolid(x - 1, y, World.TileDepth.tile);
+                    bool rs = isTileSolid(x + 1, y, World.TileDepth.tile);
 
                     int lb = getLiquid(x - 1, y);
                     int rb = getLiquid(x + 1, y);
@@ -560,21 +553,21 @@ namespace Specland {
             for (int x = viewPortInTiles.X; x < viewPortInTiles.X + viewPortInTiles.Width + 3; x++) {
                 for (int y = viewPortInTiles.Y; y < viewPortInTiles.Y + viewPortInTiles.Height + 3; y++) {
                     if (inWorld(x, y)) {
-                        Tile tile = getTileObjectNoCheck(x, y, World.TILEDEPTH);
-                        Tile wall = getTileObjectNoCheck(x, y, World.WALLDEPTH);
+                        Tile tile = getTileObjectNoCheck(x, y, World.TileDepth.tile);
+                        Tile wall = getTileObjectNoCheck(x, y, World.TileDepth.wall);
                         dr.X = (tileSizeInPixels * x) - viewOffset.X;
                         dr.Y = (tileSizeInPixels * y) - viewOffset.Y;
                         
-                        if (textureTileInfo[x, y, TILEDEPTH].transparent && wall.renderType != Tile.RenderType.none) {
+                        if (textureTileInfo[x, y, (int)World.TileDepth.tile].transparent && wall.renderType != Tile.RenderType.none) {
                             byte b = (byte)MathHelper.Clamp(LightMatrix[x, y] - (255 - wall.wallBrightness), 0, wall.wallBrightness);
-                            dr.X += textureTileInfo[x, y, WALLDEPTH].offset.X;
-                            dr.Y += textureTileInfo[x, y, WALLDEPTH].offset.Y;
-                            dr.Width = textureTileInfo[x, y, WALLDEPTH].rectangle.Width * tileScale;
-                            dr.Height = textureTileInfo[x, y, WALLDEPTH].rectangle.Height * tileScale;
-                            drawRect(game, Tile.TileSheet, dr, textureTileInfo[x, y, WALLDEPTH].rectangle, grayColors[b], wall.getDepth(x, y, World.WALLDEPTH), textureTileInfo[x, y, WALLDEPTH].flipH, textureTileInfo[x, y, WALLDEPTH].flipV);
+                            dr.X += textureTileInfo[x, y, (int)World.TileDepth.wall].offset.X;
+                            dr.Y += textureTileInfo[x, y, (int)World.TileDepth.wall].offset.Y;
+                            dr.Width = textureTileInfo[x, y, (int)World.TileDepth.wall].rectangle.Width * tileScale;
+                            dr.Height = textureTileInfo[x, y, (int)World.TileDepth.wall].rectangle.Height * tileScale;
+                            drawRect(game, Tile.TileSheet, dr, textureTileInfo[x, y, (int)World.TileDepth.wall].rectangle, grayColors[b], wall.getDepth(x, y, World.TileDepth.wall), textureTileInfo[x, y, (int)World.TileDepth.wall].flipH, textureTileInfo[x, y, (int)World.TileDepth.wall].flipV);
                         }
                         byte a = (byte)MathHelper.Clamp(LightMatrix[x, y], 0, 255);
-                        if (textureTileInfo[x, y, TILEDEPTH].transparent) {
+                        if (textureTileInfo[x, y, (int)World.TileDepth.tile].transparent) {
                             if (LiquidMatrix[x, y] > 0 && textureLiquidInfo[x, y] != null) {
                                 dr.X += textureLiquidInfo[x, y].offset.X;
                                 dr.Y += textureLiquidInfo[x, y].offset.Y;
@@ -584,12 +577,12 @@ namespace Specland {
                             }
                         }
                         if(tile.index != Tile.TileAir.index){
-                            if (textureTileInfo[x, y, TILEDEPTH] != null) {
-                                dr.X += textureTileInfo[x, y, TILEDEPTH].offset.X;
-                                dr.Y += textureTileInfo[x, y, TILEDEPTH].offset.Y;
-                                dr.Width = textureTileInfo[x, y, TILEDEPTH].rectangle.Width * tileScale;
-                                dr.Height = textureTileInfo[x, y, TILEDEPTH].rectangle.Height * tileScale;
-                                drawRect(game, Tile.TileSheet, dr, textureTileInfo[x, y, TILEDEPTH].rectangle, grayColors[a], tile.getDepth(x, y, World.TILEDEPTH), textureTileInfo[x, y, TILEDEPTH].flipH, textureTileInfo[x, y, TILEDEPTH].flipV);
+                            if (textureTileInfo[x, y, (int)World.TileDepth.tile] != null) {
+                                dr.X += textureTileInfo[x, y, (int)World.TileDepth.tile].offset.X;
+                                dr.Y += textureTileInfo[x, y, (int)World.TileDepth.tile].offset.Y;
+                                dr.Width = textureTileInfo[x, y, (int)World.TileDepth.tile].rectangle.Width * tileScale;
+                                dr.Height = textureTileInfo[x, y, (int)World.TileDepth.tile].rectangle.Height * tileScale;
+                                drawRect(game, Tile.TileSheet, dr, textureTileInfo[x, y, (int)World.TileDepth.tile].rectangle, grayColors[a], tile.getDepth(x, y, World.TileDepth.tile), textureTileInfo[x, y, (int)World.TileDepth.tile].flipH, textureTileInfo[x, y, (int)World.TileDepth.tile].flipV);
                             }
                          
                         }
@@ -685,13 +678,13 @@ namespace Specland {
         private void lightUpdate2(int x, int y, bool firstY) {
             if (inWorld(x, y)) {
                 //if (firstY && y < skyY[x]) {
-                if (textureTileInfo[x, y, TILEDEPTH].transparent && textureTileInfo[x, y, WALLDEPTH].transparent && y < heightMap[x] + undergroundY) {
+                if (textureTileInfo[x, y, (int)World.TileDepth.tile].transparent && textureTileInfo[x, y, (int)World.TileDepth.wall].transparent && y < heightMap[x] + undergroundY) {
                     setLightFromSource(x, y, true, skyLightBrightness);
                 }
-                Tile tile = getTileObject(x, y, World.TILEDEPTH);
-                Tile wall = getTileObject(x, y, World.WALLDEPTH);
-                if (tile.getLight(x, y, World.TILEDEPTH) > 0 || wall.getLight(x, y, World.WALLDEPTH) > 0) {
-                    setLightFromSource(x, y, false, Math.Max(tile.getLight(x, y, World.TILEDEPTH), wall.getLight(x, y, World.WALLDEPTH)));
+                Tile tile = getTileObject(x, y, World.TileDepth.tile);
+                Tile wall = getTileObject(x, y, World.TileDepth.wall);
+                if (tile.getLight(x, y, World.TileDepth.tile) > 0 || wall.getLight(x, y, World.TileDepth.wall) > 0) {
+                    setLightFromSource(x, y, false, Math.Max(tile.getLight(x, y, World.TileDepth.tile), wall.getLight(x, y, World.TileDepth.wall)));
                 }
             }
         }
@@ -716,7 +709,7 @@ namespace Specland {
                     return;
                 }
 
-                if (getTileObjectNoCheck(x, y, World.TILEDEPTH).transparent) {
+                if (getTileObjectNoCheck(x, y, World.TileDepth.tile).transparent) {
                     b = a - 10;
                     //t = true;
                 } else {
@@ -883,7 +876,7 @@ namespace Specland {
             TileUpdates(tick);
         }
 
-        public bool isTileSolid(int x, int y, int tileDepth) {
+        public bool isTileSolid(int x, int y, World.TileDepth tileDepth) {
             return getTileObject(x, y, tileDepth).isSolid(this, x, y);
         }
     }

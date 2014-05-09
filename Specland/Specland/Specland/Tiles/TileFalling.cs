@@ -11,7 +11,7 @@ namespace Specland {
 
         }
 
-        public override void updateNearChange(World world, int x, int y, int tileDepth) {
+        public override void updateNearChange(World world, int x, int y, World.TileDepth tileDepth) {
             if (world.getTileIndex(x, y + 1, tileDepth) == Tile.TileAir.index) {
                 world.setTile(x, y, Tile.TileAir, tileDepth);
                 world.EntityAddingList.Add(new EntityFallingTile(x*World.tileSizeInPixels, y*World.tileSizeInPixels, index, tileDepth));

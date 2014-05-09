@@ -8,7 +8,7 @@ namespace Specland {
 
         public static List<Recipe> Recipes = new List<Recipe>();
 
-        public static Recipe RecipeWoodenPick = new Recipe(new ItemStack[] { new ItemStack(Tile.TileWood, 12) }, new ItemStack(Item.itemWoodPick));
+        //public static Recipe RecipeWoodenPick = new Recipe(new ItemStack[] { new ItemStack(Tile.TileWood, 12) }, new ItemStack(Item.itemWoodPick));
         public static Recipe RecipeStonePick = new Recipe(new ItemStack[] { new ItemStack(Tile.TileWood, 6) , new ItemStack(Tile.TileStone, 6)}, new ItemStack(Item.itemStonePick));
         public static Recipe RecipeStoneBricks = new Recipe(new ItemStack[] { new ItemStack(Tile.TileStone, 2) }, new ItemStack(Tile.TileStoneBricks, 1));
         public static Recipe RecipeTorch = new Recipe(new ItemStack[] { new ItemStack(Tile.TileWood, 1) }, new ItemStack(Tile.TileTorch, 4));

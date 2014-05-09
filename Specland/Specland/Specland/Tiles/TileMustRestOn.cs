@@ -28,7 +28,7 @@ namespace Specland {
             this.drop = drop;
         }
 
-        public override TextureInfo getTextureInfo(int x, int y, World world, int tileDepth) {
+        public override TextureInfo getTextureInfo(int x, int y, World world, World.TileDepth tileDepth) {
             if(renderType == RenderType.custom){
                 return new TextureInfo(get8(x8th, y8th), true);
             } else {
@@ -36,8 +36,8 @@ namespace Specland {
             }
         }
 
-        public override bool canBePlacedHereOverridable(World world, int x, int y, int tileDepth) {
-            if(world.getTileIndex(x, y, tileDepth) != Tile.TileAir.index){
+        public override bool canBePlacedHereOverridable(World world, int x, int y, World.TileDepth tileDepth) {
+            if (world.getTileIndex(x, y, tileDepth) != Tile.TileAir.index) {
                 return false;
             }
             for (int i = 0; i < restOns.Length;i++ ) {
@@ -48,13 +48,13 @@ namespace Specland {
             return false;
         }
 
-        public override void updateNearChange(World world, int x, int y, int tileDepth) {
+        public override void updateNearChange(World world, int x, int y, World.TileDepth tileDepth) {
             if (!world.isTileSolid(x + restOnX, y + restOnY, tileDepth)) {
-                world.mineTile(x, y, Item.itemSupick,  tileDepth);
+                world.mineTile(x, y, Item.itemSupick, tileDepth);
             }
         }
 
-        public override ItemStack dropStack(World world, ItemPick itemPick, Random rand, int x, int y, int tileDepth) {
+        public override ItemStack dropStack(World world, ItemPick itemPick, Random rand, int x, int y, World.TileDepth tileDepth) {
             return drop?new ItemStack(this, 1):new ItemStack(Item.itemEmpty);
         }
 
