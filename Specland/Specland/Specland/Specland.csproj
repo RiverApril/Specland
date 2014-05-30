@@ -149,6 +149,7 @@
     <Compile Include="Main\Recipe.cs" />
     <Compile Include="Entities\EntityFallingTile.cs" />
     <Compile Include="Main\SoundEffectPlayer.cs" />
+    <Compile Include="Main\Universe.cs" />
     <Compile Include="Tiles\TileDoor.cs" />
     <Compile Include="Tiles\TileFalling.cs" />
     <Compile Include="Tiles\TileFurniture.cs" />

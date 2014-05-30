@@ -63,19 +63,6 @@ namespace Specland {
                 items[i] = new ItemStack(Item.itemEmpty);
             }
             pickUp(new ItemStack(Item.itemSupick));
-            pickUp(new ItemStack(Item.itemStonePick));
-            pickUp(new ItemStack(Item.itemCopperPick));
-            pickUp(new ItemStack(Item.itemIronPick));
-            pickUp(new ItemStack(Item.itemSteelPick));
-            pickUp(new ItemStack(Item.itemQuartzPick));
-            pickUp(new ItemStack(Item.itemEmeraldPick));
-            pickUp(new ItemStack(Item.itemSaphirePick));
-            pickUp(new ItemStack(Item.itemDiamondPick));
-            pickUp(new ItemStack(Item.itemSteelDrill));
-            pickUp(new ItemStack(Item.itemQuartzDrill));
-            pickUp(new ItemStack(Item.itemEmeraldDrill));
-            pickUp(new ItemStack(Item.itemSaphireDrill));
-            pickUp(new ItemStack(Item.itemDiamondDrill));
             updateValaidRecipes();
         }
 
